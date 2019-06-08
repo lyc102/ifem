@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>mgPoisson</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Poisson-type-Equations">Poisson-type Equations<a class="anchor-link" href="#Poisson-type-Equations">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>x = mg(A,b,elem)</code> attempts to solve the system of linear equations <code>Ax = b</code> for <code>x</code> using geometric multigrid solvers. Inside mg, a coarsening algorithm is applied. The method is designed for the system from several finite element descritzations of elliptic equations on a grid whose topology is given by the array <code>elem</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="PDE">PDE<a class="anchor-link" href="#PDE">&#182;</a></h2><p>The classic formulation of the Poisson equation reads as</p>
+$$ - \Delta u = f  \text{ in }  \Omega, \qquad u  = g_D  \text{ on }
+\Gamma _D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma _N, $$<p>where $\partial \Omega = \Gamma _D\cup \Gamma _N$ and $\Gamma _D\cap \Gamma _N=\emptyset$. 
+We assume $\Gamma _D$ is closed and $\Gamma _N$ open. The corresponding bilinear from $$ 
+a(u,v) := \int _{\Omega} \nabla u\cdot \nabla v\, {\rm dxdy}$$ will lead to a symmetric and positive definite (SPD) matrix.</p>
+<p>Variable diffusion coefficient is allowed, i.e. the operator $-\nabla \cdot( d \nabla u)$. When $d$ is highly oscillatory or anisotropic, the resulting SPD matrix is hard to solve.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Elements">Elements<a class="anchor-link" href="#Elements">&#182;</a></h2><p><code>x = mg(A,b,elem)</code> works for linear finite element and mesh <code>elem</code> is obtained by <code>uniformrefine</code>, <code>bisect</code>, or <code>uniformrefine3</code> by default. For other finite elements, more mesh structure, e.g., <code>edge</code> can be provided as <code>varargin</code>. If no extra input information, <code>mg</code> will try to guess the type of element by comparing the size of the system with the number of nodes and elements and construct needed data structure.</p>
+<p>For 3-D adaptive grids obtained by <code>bisect3</code>, <code>HB</code> is needed for the coarsening, and should be listed as the first parameter in varargin. Interesting enugh, for 2-D adaptive grids obtained by <code>bisect</code>, only <code>elem</code> is enough for the auotmatical coarsening. See <a href="../afem/coarsendoc.html">coarsen</a>.</p>
+<p>Here is a list of possible elements.</p>
+
+<pre><code>- mg(A,b,elem)                      work in most scenario 
+- mg(A,b,elem,option,edge)          2-D quadratic P2 element or linear CR element
+- mg(A,b,elem,option,HB)            3-D linear P1 element on adaptive meshes
+- mg(A,b,elem,option,HB,edge)       3-D quadratic P2 element on adaptive meshes
+- mg(A,b,elem,option,HB,face)       3-D non-conforming CR element on adaptive meshes</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="More-input-and-output">More input and output<a class="anchor-link" href="#More-input-and-output">&#182;</a></h2><p><code>x = mg(A,b,elem,options)</code> specifies options in the following list.</p>
+
+<pre><code>- option.x0: the initial guess. Default setting x0 = 0.
+- option.tol: the tolerance of the convergence. Default setting 1e-8.
+- option.maxIt: the maximum number of iterations. Default setting 200.
+- option.N0: the size of the coarest grid. Default setting 500.
+- option.mu: smoothing steps. Default setting 1.
+- option.coarsegridsolver: solver used in the coarest grid. Default
+  setting: direct solver.
+- option.freeDof: free d.o.f
+- option.solver: various cycles and Krylov space methods
+    * 'NO'     only setup the transfer matrix
+    * 'Vcycle'      V-cycle MultiGrid Method
+    * 'Wcycle'      W-cycle MultiGrid Method
+    * 'Fcycle'      Full cycle Multigrid Method
+    * 'cg'     mg-Preconditioned Conjugate Gradient
+    * 'minres' mg-Preconditioned Minimal Residual Method
+    * 'gmres'  mg-Preconditioned Generalized Minimal Residual Method
+    * 'bicg'   mg-Preconditioned BiConjugate Gradient Method
+    * 'bicgstable' mg-Preconditioned BiConjugate Gradient Stabilized Method
+    * 'bicgstable1' mg-Preconditioned BiConjugate Gradient Stabilized Method
+    The default setting is 'cg' which works well for SPD matrices. For
+    non-symmetric matrices, try 'gmres' and for symmetric but indefinite
+    matrices, try 'minres' or 'bicg' sequences.
+    The string option.solver is not case sensitive.
+- option.preconditioner:  multilevel preconditioners including:
+    * 'V'   V-cycle MultiGrid used as a Preconditioner
+    * 'W'   W-cycle MultiGrid used as a Preconditioner
+    * 'F'   Full cycle Multigrid used as a Preconditioner
+    * 'bpx' BPX-Preconditioner
+- option.printlevel: the level of screen print out
+    * 0: no output
+    * 1: name of solver and convergence information (step, err, time)
+    * 2: convergence history (err in each iteration step)
+
+
+</code></pre>
+<p><code>[x,info] = mg(A,b,elem)</code> also returns information of the solver</p>
+
+<pre><code>- info.flag:
+    * 0: mg converged to the desired tolerance tol within maxIt iterations
+    * 1: mg iterated maxIt times but did not converge.
+    * 2: direct solver
+- info.itStep: the iteration number at which x was computed.
+- info.time: the cpu time to get x
+- info.err: the approximate relative error in the energy norm in err(:,1) and the relative residual norm(b-A*x)/norm(b) in err(:,2). If flag is 0, then max(err(end,:)) &lt;= tol.
+- info.stopErr: the error when iteration stops</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Examples:-Jump-Coefficients">Examples: Jump Coefficients<a class="anchor-link" href="#Examples:-Jump-Coefficients">&#182;</a></h2><p>In <a href="solverintroduction.html">Introduction to Fast Solvers</a>, several examples has been presented for linear and quadratic elements. Here we present a harder example on a 3-D elliptic equation with jump coefficients. This documentation is based on <code>example/solver/Poisson3jumpmgrate.m</code>. Run this example to get more information.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+$$ -\nabla \cdot (\omega\nabla u) = f\quad  \text{ in } \Omega=(-1,1)^3$$<p>
+$$u = 1 \text{ on } x=1, \qquad u=0  \text{ on } x=-1$$ 
+$$\omega\nabla u \cdot n = 0$$ on other boundary faces.</p>
+<p>The diffusion coefficent $\omega$ is piecewise constant with large jump:</p>
+<ul>
+<li>$\omega(x) = 1$ if $x\in (-0.5, 0)^3$ or $x\in (0,0.5)^3$ and </li>
+<li>$\omega = \epsilon$ otherwise.  </li>
+</ul>
+<p><img src="jump3d.pdf" alt="Domain"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Reference</strong></p>
+<p>Xu, J, and Y Zhu. “Uniform Convergent Multigrid Methods for Elliptic Problems with Strongly Discontinuous Coefficients.” M3AS 18, no. 1 (2008): 77–106.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="c">%% Setting</span>
+<span class="c">% mesh</span>
+<span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="n">HB</span><span class="p">]</span> <span class="p">=</span> <span class="n">cubemesh</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">bdFlag</span> <span class="p">=</span> <span class="n">setboundary3</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="s">&#39;Dirichlet&#39;</span><span class="p">,</span><span class="s">&#39;(x==1) | (x==-1)&#39;</span><span class="p">);</span>
+<span class="n">mesh</span> <span class="p">=</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;node&#39;</span><span class="p">,</span><span class="n">node</span><span class="p">,</span><span class="s">&#39;elem&#39;</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="s">&#39;bdFlag&#39;</span><span class="p">,</span><span class="n">bdFlag</span><span class="p">);</span>
+<span class="c">% option</span>
+<span class="n">option</span><span class="p">.</span><span class="n">L0</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">maxIt</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">elemType</span> <span class="p">=</span> <span class="s">&#39;P1&#39;</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">printlevel</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">plotflag</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">dispflag</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">option</span><span class="p">.</span><span class="n">rateflag</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="c">% pde</span>
+<span class="n">pde</span> <span class="p">=</span> <span class="n">jumpmgdata2</span><span class="p">;</span>
+<span class="k">global</span> <span class="n">epsilon</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="c">%% MGCG (multigrid preconditioned CG) solver</span>
+<span class="k">for</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span>
+    <span class="n">epsilon</span> <span class="p">=</span> <span class="mi">10</span>^<span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">err</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">solver</span><span class="p">,</span><span class="n">eqn</span><span class="p">]</span> <span class="p">=</span> <span class="n">femPoisson3</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="n">pde</span><span class="p">,</span><span class="n">option</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="s">&#39;\n Table: Solver MGCG for epislon = %0.2e \n&#39;</span><span class="p">,</span><span class="n">epsilon</span><span class="p">);</span>
+    <span class="n">colname</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;#Dof&#39;</span><span class="p">,</span><span class="s">&#39;Steps&#39;</span><span class="p">,</span><span class="s">&#39;Time&#39;</span><span class="p">,</span><span class="s">&#39;Error&#39;</span><span class="p">};</span>
+    <span class="n">disptable</span><span class="p">(</span><span class="n">colname</span><span class="p">,</span><span class="n">solver</span><span class="p">.</span><span class="n">N</span><span class="p">,[],</span><span class="n">solver</span><span class="p">.</span><span class="n">itStep</span><span class="p">,</span><span class="s">&#39;%2.0u&#39;</span><span class="p">,</span><span class="n">solver</span><span class="p">.</span><span class="n">time</span><span class="p">,</span><span class="s">&#39;%4.2g&#39;</span><span class="p">,</span><span class="c">...</span>
+                      <span class="n">solver</span><span class="p">.</span><span class="n">stopErr</span><span class="p">,</span><span class="s">&#39;%0.4e&#39;</span><span class="p">);</span>
+<span class="k">end</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 12,   err = 8.24e-09,   time = 0.13 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 13,   err = 2.30e-09,   time = 0.21 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 13,   err = 4.14e-09,   time =    2 s
+
+ Table: Solver MGCG for epislon = 1.00e-01 
+ #Dof   Steps Time      Error    
+
+  4913   12   0.13   8.2382e-09
+ 35937   13   0.21   2.2998e-09
+274625   13      2   4.1353e-09
+
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 13,   err = 9.52e-09,   time = 0.06 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 14,   err = 7.92e-09,   time = 0.25 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 15,   err = 4.04e-09,   time =  1.8 s
+
+ Table: Solver MGCG for epislon = 1.00e-02 
+ #Dof   Steps Time      Error    
+
+  4913   13   0.06   9.5205e-09
+ 35937   14   0.25   7.9168e-09
+274625   15    1.8   4.0409e-09
+
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 14,   err = 2.22e-09,   time = 0.03 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 15,   err = 7.20e-09,   time = 0.22 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 16,   err = 3.47e-09,   time =  1.9 s
+
+ Table: Solver MGCG for epislon = 1.00e-03 
+ #Dof   Steps Time      Error    
+
+  4913   14   0.03   2.2209e-09
+ 35937   15   0.22   7.1950e-09
+274625   16    1.9   3.4668e-09
+
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 14,   err = 2.37e-09,   time = 0.04 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 16,   err = 4.41e-09,   time = 0.22 s
+Multigrid V-cycle Preconditioner with Conjugate Gradient Method
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 17,   err = 4.08e-09,   time =    2 s
+
+ Table: Solver MGCG for epislon = 1.00e-04 
+ #Dof   Steps Time      Error    
+
+  4913   14   0.04   2.3686e-09
+ 35937   16   0.22   4.4141e-09
+274625   17      2   4.0804e-09
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="c">%% V-cycle solver</span>
+<span class="k">for</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span>
+    <span class="n">epsilon</span> <span class="p">=</span> <span class="mi">10</span>^<span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">);</span>
+    <span class="n">option</span><span class="p">.</span><span class="n">mgoption</span><span class="p">.</span><span class="n">solver</span> <span class="p">=</span> <span class="s">&#39;Vcycle&#39;</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">err</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">solver</span><span class="p">,</span><span class="n">eqn</span><span class="p">]</span> <span class="p">=</span> <span class="n">femPoisson3</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="n">pde</span><span class="p">,</span><span class="n">option</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="s">&#39;\n Table: Solver MGCG for epislon = %0.2e \n&#39;</span><span class="p">,</span><span class="n">epsilon</span><span class="p">);</span>
+    <span class="n">colname</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;#Dof&#39;</span><span class="p">,</span><span class="s">&#39;Steps&#39;</span><span class="p">,</span><span class="s">&#39;Time&#39;</span><span class="p">,</span><span class="s">&#39;Error&#39;</span><span class="p">};</span>
+    <span class="n">disptable</span><span class="p">(</span><span class="n">colname</span><span class="p">,</span><span class="n">solver</span><span class="p">.</span><span class="n">N</span><span class="p">,[],</span><span class="n">solver</span><span class="p">.</span><span class="n">itStep</span><span class="p">,</span><span class="s">&#39;%2.0u&#39;</span><span class="p">,</span><span class="n">solver</span><span class="p">.</span><span class="n">time</span><span class="p">,</span><span class="s">&#39;%4.2g&#39;</span><span class="p">,</span><span class="c">...</span>
+                      <span class="n">solver</span><span class="p">.</span><span class="n">stopErr</span><span class="p">,</span><span class="s">&#39;%0.4e&#39;</span><span class="p">);</span>    
+<span class="k">end</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Multigrid Vcycle Iteration 
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 31,   err = 7.92e-09,   time = 0.05 s
+Multigrid Vcycle Iteration 
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 34,   err = 8.42e-09,   time = 0.31 s
+Multigrid Vcycle Iteration 
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 35,   err = 8.12e-09,   time =  2.7 s
+
+ Table: Solver MGCG for epislon = 1.00e-01 
+ #Dof   Steps Time      Error    
+
+  4913   31   0.05   7.9248e-09
+ 35937   34   0.31   8.4179e-09
+274625   35    2.7   8.1222e-09
+
+Multigrid Vcycle Iteration 
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 83,   err = 8.29e-09,   time = 0.14 s
+Multigrid Vcycle Iteration 
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 122,   err = 8.88e-09,   time =  1.2 s
+Multigrid Vcycle Iteration 
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 151,   err = 9.18e-09,   time =  9.7 s
+
+ Table: Solver MGCG for epislon = 1.00e-02 
+ #Dof   Steps  Time      Error    
+
+  4913    83   0.14   8.2928e-09
+ 35937   122    1.2   8.8789e-09
+274625   151    9.7   9.1830e-09
+
+Multigrid Vcycle Iteration 
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 122,   err = 9.89e-09,   time = 0.13 s
+Multigrid Vcycle Iteration 
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 200,   err = 2.44e-07,   time =  1.3 s
+NOTE: the iterative method does not converge! 
+Multigrid Vcycle Iteration 
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 200,   err = 4.59e-05,   time =   13 s
+NOTE: the iterative method does not converge! 
+
+ Table: Solver MGCG for epislon = 1.00e-03 
+ #Dof   Steps  Time      Error    
+
+  4913   122   0.13   9.8922e-09
+ 35937   200    1.3   2.4413e-07
+274625   200     13   4.5888e-05
+
+Multigrid Vcycle Iteration 
+#dof:     4913,  #nnz:    28747, smoothing: (1,1), iter: 130,   err = 8.91e-09,   time = 0.26 s
+Multigrid Vcycle Iteration 
+#dof:    35937,  #nnz:   230043, smoothing: (1,1), iter: 200,   err = 1.16e-06,   time =  1.3 s
+NOTE: the iterative method does not converge! 
+Multigrid Vcycle Iteration 
+#dof:   274625,  #nnz:  1838395, smoothing: (1,1), iter: 200,   err = 2.17e-04,   time =   14 s
+NOTE: the iterative method does not converge! 
+
+ Table: Solver MGCG for epislon = 1.00e-04 
+ #Dof   Steps  Time      Error    
+
+  4913   130   0.26   8.9149e-09
+ 35937   200    1.3   1.1554e-06
+274625   200     14   2.1676e-04
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h2><p>For 3-D jump coefficients problem, MGCG (multigrid preconditioned CG) solver converges uniformly both to the mesh size and the ratio of the jump.</p>
+<p>V-cycle alone doesn't converge for small epsilon and small h.</p>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

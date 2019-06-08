@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectFDM1D</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-1-D-Finite-Difference-Method">Project: 1-D Finite Difference Method<a class="anchor-link" href="#Project:-1-D-Finite-Difference-Method">&#182;</a></h1><p>The purpose of this project is to introduce the finite difference method for solving differential equations in 1-D. Consider 1-D Poisson equation in $(0,1)$ with Dirichlet boundary condition</p>
+$$ - u'' = f \,\; {\rm in }\, (0,1), \quad u(0) = a, u(1) = b. $$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Generate-a-grid">Step 1: Generate a grid<a class="anchor-link" href="#Step-1:-Generate-a-grid">&#182;</a></h2><p>Generate a vector representing a uniform grid with size <code>h</code> of (0,1).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">N</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">x</span> <span class="p">=</span> <span class="nb">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&#39;b.&#39;</span><span class="p">,</span><span class="s">&#39;Markersize&#39;</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+nN27dy9atOjuu+9euHBhaWmpkD1u2bJlw4YNemXYuXPnokWLfv7zn9vt9q1bt8Y/wKuvvrpo0aLc
+3Nybb775D3/4QywCnDVDSF9fX05OzmuvvRb/AKWlpXa7Pet7J06ciHMAv99/11133XnnnU6ns7i4
+OOp7P2uGvXv3ZkSYN2/exo0b4xlA07R33nknMzPznnvuufnmm5977rmo7/1cMrz88suhDHa7/Y9/
+/GOMMpwp1kehCzfVCunkyZM333zzp59+qmnaiRMnFi9efOjQIX33uHXr1vz8/Ouvvz52b4WJMzQ3
+N99yyy1+v1/TtH/84x92u93r9cYzwFdffZWZmdnR0aFp2pEjR66//vrQdjwzhD3++OO5ubmxKKSz
+BnjooYcOHjwY9f2eY4CxsbE777xz9+7dmqYNDg7efvvtf/vb3+KcIVJXV9eKFSu+/vrreAY4derU
+vHnzjhw5omnat99+e9NNN4W245nhk08+WbJkSVdXl6Zpx44dW7hw4VdffRX1DKeJw1EoKqbaJbuG
+hgar1epwOJRSFovF7XbX19fru0en0/nYY4/94he/0CvD0aNHnU7n7NmzlVJpaWnXXntta2trPAP0
+9vY+9NBDV199tVLKZrMlJCSMjo5GN8BZM4TU1taazWa73R71vZ9LgKNHj95www1tbW0xuk41cYAj
+R44YDIa8vDxN05KSkvbt2xeL78M5/gYcHR0tKCj4zW9+c91118UzgMFgMBqNobfijBkzpk+fnpiY
+GN0AZ83g9XqXLl165ZVXKqXmzJlz8803Hzx4MOoZThOHo1BUTLVC6uzsTE1NDS+tVuuJEyf03WNm
+Zuatt94a6gNdMuTl5b388suhbb/ff+zYsYyMjHgGWLhwYUFBwXfffff+++8/+uijDzzwQFpaWnQD
+nDWDUqq9vX3Hjh2PP/541Hd9LgH++c9/9vb2rlq16oEHHsjMzIzF39U2cYDm5mabzbZp0yaHw7Fk
+yZIY/WVx5/gb8O23305JSbntttviHOCSSy5Zv379mjVrfve7361evTovL+/GG2+Mc4aZM2e2t7eH
+tjVN6+joCC9jJw5HoaiYaoU0MjKSkJAQXhqNxuHh4Sm2x/PO4PV6H3jggYKCgjlz5sQ/wODg4Oef
+f97f39/b23vq1KnoBjhrhrGxsSeffLK4uDgpKSnquz6XAL29vXfddddrr722f//+mpqaV1999S9/
++Us8AwQCgf3791ut1oMHD27fvv3tt9/evXt3dAOcNUNIMBisqKjweDxR3/tZA4yOjn7zzTe9vb3t
+7e1DQ0NtbW09PT1xznDXXXcdPXr0pZde+uyzz5599tlTp04NDQ1FPcMkNdUKyWQyRV4PGRwcNJlM
+U2yP55FheHh4y5Ytv/71r0tKSn71q1/FP4BSymKxbNq06f33329ubq6trY1zNVYPtQAAA8NJREFU
+hh07dpjN5ksvvbS5ufnkyZNdXV1R/1g6cYA5c+a8+OKLV111lVLqpptuWrZs2aeffhrPAElJSZdf
+fvmjjz5qMpnmzZt37733HjhwILoBzpohZP/+/cnJyQsXLoz63s8awOv17tmzZ/fu3c8999x77703
+MjLy1ltvxTnDVVdd9eabb37zzTcvvfTSdddd53a7r7jiiqhnmKQmxx+ueu5mzZoV+TcktbS0zJ07
+d4rt8TwyeDweo9G4Z8+eGTNmxD/A73//+66urqefflopNW3atPnz5x87dizOGQKBQEtLS1FRkVKq
+o6MjMTFxeHi4uLg4bgEaGhoCgcCyZctCy7GxsajfSJs4QHp6emJiosFgCC0TExNjcSfvXH471NbW
+3nXXXVHf9bkE8Pl8aWlpKSkpSimDwWC323V5K46NjW3dujW0zM/Pv//++6OeYZKaamdImZmZQ0ND
+NTU1SqnGxsa6ujqXy6XLHqurq71eb0x3fY4ZPvroo7a2tvLy8hi10VkDzJ07d9euXY2NjUqp48eP
+f/zxx4sWLYpzhnXr1u3+3vLly1evXh3dNjprgGAwuHnz5ra2NqXUV199tX///ttvvz2eAZYuXTow
+MLB3716lVE9Pz65du3JycqIb4KwZQjOff/551O9inmOAjIyML7744tChQ0qpnp6evXv3xuLJjokz
+JCQkPPTQQ3//+9+VUp988onP5+OvMviB3o/5Rd/HH3/scDiWLl06f/78V155Ra89OhyOl156KTzz
+yiuvxPSBywkybNq06YYbbrgpwp/+9Kd4BtA07aWXXpo/f/5Pf/pTu91eXl4e9b2fS4aw3/72tzH6
+/5AmDlBeXr5w4cI77rhj6dKlb775ZvwDHDly5Gc/+1lOTs7ixYv/67/+a2RkJP4ZAoHA9ddfH9MH
+nScO8Prrr4f+b7AFCxZs2rRpdHQ0/hneeeedO++887bbbrv11ltDT4fHR6yPQhduav7hqpqmdXd3
+m81mozFO1yTjv0eBGSYOMDo62t3dfeWVV0be741zhjiYOMDIyMjJkyctFoteAZRSgUAgJSXlYv4p
+jI2Nhb46ffp0vTIopU6ePHmOf/n1xWNqFhIAYNKZaveQAACTFIUEABCBQgIAiEAhAQBEoJAAACJQ
+SAAAESgkAIAIFBIAQAQKCQAgAoUEABCBQgIAiEAhAQBEoJAAACJQSAAAESgkAIAIFBIAQAQKCQAg
+AoUEABCBQgIAiEAhAQBEoJAAACJQSAAAESgkAIAIFBIAQAQKCQAgAoUEABDh/wBK5HQ3UswAywAA
+AABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Generate-A-Matrix-Equation">Step 2: Generate A Matrix Equation<a class="anchor-link" href="#Step-2:-Generate-A-Matrix-Equation">&#182;</a></h2><p>Based on a grid, the function $u$ is discretized by a vector <code>u</code>. The
+derivative $u', u''$ are approximated by centeral finite difference:</p>
+$$ u'(x_i) \approx \frac{u(i+1) - u(i-1)}{2h}$$$$ u''(x_i) \approx \frac{u(i-1) - 2u(i) + u(i+1)}{h^2}$$<p></p>
+<p>The equation $-u''(x) = f(x)$ is discretized at $x_i, i=1,...,N$ as</p>
+$$ \frac{-u(i-1) + 2u(i) - u(i+1)}{h^2} \quad = f(i),$$<p>where $f(i) = f(x_i)$. These linear equations can be written as a matrix
+equation <code>A*u = f</code>, where <code>A</code> is a tri-diagonal matrix <code>(-1,2,-1)/h^2</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">n</span> <span class="p">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">e</span> <span class="p">=</span> <span class="nb">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">A</span> <span class="p">=</span> <span class="n">spdiags</span><span class="p">([</span><span class="n">e</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">e</span> <span class="n">e</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">full</span><span class="p">(</span><span class="n">A</span><span class="p">));</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+ans =
+
+    -2     1     0     0     0
+     1    -2     1     0     0
+     0     1    -2     1     0
+     0     0     1    -2     1
+     0     0     0     1    -2
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We use <code>spdiags</code> to speed up the generation of the matrix since the matrix is sparse. Compare <code>diag</code> and <code>spdiags</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Stpe-3:-Modify-the-Matrix-Equation-to-Impose-Boundary-Conditions">Stpe 3: Modify the Matrix Equation to Impose Boundary Conditions<a class="anchor-link" href="#Stpe-3:-Modify-the-Matrix-Equation-to-Impose-Boundary-Conditions">&#182;</a></h2><p>The discretization fails at boundary vertices since no nodes outside the
+interval. Howevery the boundary value is given by the problem: <code>u(1) = a,
+u(N) = b</code>.</p>
+<p>These two equations can be included in the matrix by changing <code>A(1,:) =
+[1, 0 ..., 0]</code> and <code>A(:,N) = [0, 0, ..., 1]</code> and <code>f(1) = a/h^2, f(N) =
+b/h^2</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">A</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">A</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">display</span><span class="p">(</span><span class="n">full</span><span class="p">(</span><span class="n">A</span><span class="p">));</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+ans =
+
+     1     0     0     0     0
+     1    -2     1     0     0
+     0     1    -2     1     0
+     0     0     1    -2     1
+     0     0     0     0     1
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Test-the-Correctness">Step 4: Test the Correctness<a class="anchor-link" href="#Step-4:-Test-the-Correctness">&#182;</a></h2>
+<pre><code>[u,x] = poisson1D(0,1,5);
+plot(x,sin(x),x,u,'r*');
+legend('exact solution','approximate solution')
+
+</code></pre>
+<p>Choose an exact solution $u=\sin(x)$ and run your code to show the computed solution fits well on the curve of the true solution.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-5:-Check-the-Convergence-Rate">Step 5: Check the Convergence Rate<a class="anchor-link" href="#Step-5:-Check-the-Convergence-Rate">&#182;</a></h2>
+<pre><code>err = zeros(4,1);
+h = zeros(4,1);
+for k = 1:4
+    [u,x] = poisson1D(0,1,2^k+1);
+    uI = sin(x);
+    err(k) = max(abs(u-uI));
+    h(k) = 1/2^k;
+end
+display(err)
+loglog(h,err,h,h.^2);
+legend('error','h^2');
+axis tight;
+
+</code></pre>
+<p>Change mesh size and show the convergence rate is second order, i.e. $h^2$.</p>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectFMM</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-Fast-Multipole-Methods">Project: Fast Multipole Methods<a class="anchor-link" href="#Project:-Fast-Multipole-Methods">&#182;</a></h1><p>The purpose of this project is to implement the tree code and fast multipole
+methods for the N-body summation problem. Given $\boldsymbol x = (x_j)\in \mathbb R^N, \boldsymbol y = (y_i)\in \mathbb R^N$, let</p>
+$$A_{i,j} = \frac{1}{\|x_j - y_i\|^2}.$$<p></p>
+<p>For a given vector $\boldsymbol q \in \mathbb R^N$, we will compute the matrix-vector product</p>
+$$\boldsymbol u = A \boldsymbol q$$<p></p>
+<p>in $\mathcal O(N\log N)$ and $\mathcal O(N)$ operations.</p>
+<p>Reference:</p>
+<p><a href="http://math.uci.edu/~chenlong/226/FMMsimple.pdf">Fast Multipole Methods</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Direct-Sum">Step 1: Direct Sum<a class="anchor-link" href="#Step-1:-Direct-Sum">&#182;</a></h2><p>Generate two random vectors <code>x, y</code> with length <code>N</code>. Although the direct sum
+can be implemented in the double for loops, in MATLAB, it is better to
+generate the matrix first and then compute the matrix-vector product for
+another random vector <code>q</code>.</p>
+<ul>
+<li>Use double <code>for</code> loops to generate the matrix <code>A</code></li>
+<li>Use vector product to generat <code>A</code> in one line</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Compute-the-weight">Step 2: Compute the weight<a class="anchor-link" href="#Step-2:-Compute-the-weight">&#182;</a></h2><ul>
+<li><p>Loop over cells <code>for i=1:N</code> to compute the weight</p>
+</li>
+<li><p>Try to remove the for loop using vectorization.</p>
+</li>
+</ul>
+<p>The loop over levels is small (only $log N$ times) and thus can be kept. To store the weight in different levels, use <code>cell</code> structure.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Evaluation-procedure">Step 3: Evaluation procedure<a class="anchor-link" href="#Step-3:-Evaluation-procedure">&#182;</a></h2><ul>
+<li>Find the interaction list. </li>
+<li>Loop over each cell in a given level and compute the far field in the interaction list. </li>
+<li>In the fines level, add the near field by direct sum or matrix-vector product using a small matrix.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Test">Step 4: Test<a class="anchor-link" href="#Step-4:-Test">&#182;</a></h2><ul>
+<li><p>Choose small <code>N</code> and <code>J = 1</code>. Make sure the code works for one level (only four intervals) first by comparing the result using tree algorithm with the result in Step 1.</p>
+</li>
+<li><p>Test the performance for different <code>N</code> and plot the CPU time vs N for both direct method and your tree code.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-5-(optional):-Fast-Multipole-Methods">Step 5 (optional): Fast Multipole Methods<a class="anchor-link" href="#Step-5-(optional):-Fast-Multipole-Methods">&#182;</a></h2><p>Modify the tree code to fast multipole methods.</p>
+<ul>
+<li><p>Compute the weight by restriction from the fine grid to coarse grid.</p>
+</li>
+<li><p>Implement the <code>M2L</code>: multipole expansion to local expansion</p>
+</li>
+<li><p>Change the evaluation of far field in the interaction list to the merge of coefficients <code>b</code> in the local expansion.</p>
+</li>
+<li><p>Translate the local expansion using the prolongation operator.</p>
+</li>
+<li><p>Evaluate in the finest level.</p>
+</li>
+<li><p>Plot the CPU time vs N to confirm the <code>O(N)</code> complexity.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectFDM</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-Finite-Difference-Methods">Project: Finite Difference Methods<a class="anchor-link" href="#Project:-Finite-Difference-Methods">&#182;</a></h1><p>The purpose of this project is to implement the finite difference method (5-point stencil) for
+solving the Poisson equation in a rectangular domain using matrix-free or tensor product matrix.</p>
+<p>Reference:</p>
+<ul>
+<li><a href="http://math.uci.edu/~chenlong/226/FDM.pdf">Finite Difference Methods</a></li>
+<li><a href="http://math.uci.edu/~chenlong/226/FDMcode.pdf">Programming of Finite Difference Methods</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Grid-and-Grid-Function">Step 1: Grid and Grid Function<a class="anchor-link" href="#Step-1:-Grid-and-Grid-Function">&#182;</a></h2><p>Use <code>meshgrid</code> or <code>ndgrid</code> to generate a uniform grid of $(0,1)\times
+(0,2)$ for a given mesh size $h$.</p>
+<p>Evaluate a function <code>f(x,y)</code> on this uniform grid.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Matrix-Vector-Product">Step 2: Matrix-Vector Product<a class="anchor-link" href="#Step-2:-Matrix-Vector-Product">&#182;</a></h2><p>Compare the following three ways of computing <code>A*u</code></p>
+<ul>
+<li><p>Generate a big sparse matrix using the tensor product of 1-D tri-diagonal finite difference matrix and compute <code>A*u</code> using this matrix</p>
+</li>
+<li><p>Code matrix-free version of <code>A*u</code></p>
+</li>
+<li><p>Use the 1-D matrix and tensor product structure to compute <code>A*u</code></p>
+</li>
+</ul>
+<p>Use them to verify the truncation error. That is, choosing the exact
+solution <code>u</code> and compute the max norm of <code>A*u - f</code>. Change <code>h</code> and show the
+order of the truncation error using the functino <code>showrateh</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Boundary-Conditions">Step 3: Boundary Conditions<a class="anchor-link" href="#Step-3:-Boundary-Conditions">&#182;</a></h2><p><strong>Dirichlet boundary condition.</strong> Evaluate the boundary condition at
+boundary vertices and move to the right hand side.</p>
+<p><strong>Neumann boundary condition.</strong> Change the stencil near the boundary and
+modify the right hand side.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Solve-the-Linear-Algebraic-Systems">Step 4: Solve the Linear Algebraic Systems<a class="anchor-link" href="#Step-4:-Solve-the-Linear-Algebraic-Systems">&#182;</a></h2><ul>
+<li><p>Direct methods: Use the big matrix to solve <code>u = A\f</code>.</p>
+</li>
+<li><p>Iterative methods: Implement Gauss-Seidel method as a function <code>B(u,f)</code> and iterate</p>
+
+<pre><code>while err &gt; tol
+     u = B(u,f);
+     err = norm(f-A*u)/norm(f);
+end</code></pre>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-5:-Convergence">Step 5: Convergence<a class="anchor-link" href="#Step-5:-Convergence">&#182;</a></h2><ul>
+<li><p>Choose a smooth solution and calculate the right hand side f and boundary conditions for the unit square.</p>
+</li>
+<li><p>Compute the error <code>uI - uh</code> in maximum norm, where uI is the nodal interpolation.</p>
+</li>
+<li><p>Change mesh size h and show the order of convergence</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

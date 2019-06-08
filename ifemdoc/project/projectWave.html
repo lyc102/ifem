@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectWave</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-Wave-Equation">Project: Wave Equation<a class="anchor-link" href="#Project:-Wave-Equation">&#182;</a></h1><p>In this project we will implement finite element and finite difference methods for solving the wave equation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Wave-Equation">Wave Equation<a class="anchor-link" href="#Wave-Equation">&#182;</a></h2><p>We consider the wave equation
+\begin{align<em>}
+u<em>{tt} - \Delta u &amp;= f, \quad x\in \Omega, t\in (0,T],\
+u(x,0) &amp;= g(x), \quad x\in \Omega,\
+u</em>{t}(x,0) &amp;= h(x), \quad x\in \Omega,\
+u &amp;= u_D, \quad x\in \partial \Omega, t\in (0,T].
+\end{align</em>}</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Leapfrog-Method">Leapfrog Method<a class="anchor-link" href="#Leapfrog-Method">&#182;</a></h2><p>It is a second order explicit method for solving the wave equation.</p>
+$$ (1) \quad \frac{u_j^{n+1}-2u_j^n+ u_{j}^{n-1}}{(\Delta t)^2} - (\Delta _h u^n)_j
+= f^n_j,$$<p>where $u_j^n$ represents the function at the $n$-th time step $t_n = n\delta t$ and $j$-th node in space, and $\Delta _h$ is a discretization of $\Delta$ operator using either finite difference or finite element method. You are free to chose the one you like. When using finite element methods, you can use the mass lumping and multiply the inverse of the mass matrix to get a formulation like (1).</p>
+<p>Choose $u^0$ by the nodal interpolation, i.e., $u^0_j=g(x_j)$. To get
+$u^1$, we introduce the ghost point $u^{-1}$ and discretizate the
+initial velocity using the central difference:</p>
+$$ (2) \quad \frac{u^1_j-u^{-1}_j}{2\Delta t} = h(x_j). $$<p>We use (1) and (2) at $n =0$ to eliminate the ghost point and obtain a
+formula for $u^1$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Test-Example">Test Example<a class="anchor-link" href="#Test-Example">&#182;</a></h2><p>We choose the domain as $\Omega = (0,12)\times (0,12)$ and the source term as</p>
+$$ f(x,t) = \exp(-7|x-x_S|) 2a(2a(t-b)^2-1)\exp(-a(t-b)^2), $$<p>where
+$$ a = (\frac{\pi}{1.31})^2, \quad b=1.35, \quad x_S = (6,6). $$</p>
+<p>The boundary and initial conditions</p>
+$$ g = h = 0, \quad u_D = 0. $$<ul>
+<li><p>Check the rate of convergence is second order in both time and space.</p>
+<p><em>Hint</em> When the exact solution is not known, use the double grid principle to estimate the errors. That is, compute the difference between solutions of two consective meshes (the finer one is the uniform refinemen of the coarser one).</p>
+<p>When you verify the rate of <code>h</code>, choose <code>dt</code> small enough. Similarly fix a small <code>h</code> and vary <code>dt</code> to verify the rate in time.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Visulization">Step 3: Visulization<a class="anchor-link" href="#Step-3:-Visulization">&#182;</a></h2><ul>
+<li>Use <code>showsolution(node,elem,u)</code> to plot the solution and together with <code>pause(0.01)</code> to get an animation. Use <code>axis</code> to fix the axis scaling.</li>
+</ul>
+<blockquote><p>For small time step, do not plot the solution at every time step. Instead plot every 10 or 100 steps.</p>
+</blockquote>
+<ul>
+<li>You can save the plot into a movie. Read <code>doc getframe</code> for an example.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

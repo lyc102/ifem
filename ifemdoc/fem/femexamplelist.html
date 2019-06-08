@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>femexamplelist</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Examples-on-Finite-Element-Methods">Examples on Finite Element Methods<a class="anchor-link" href="#Examples-on-Finite-Element-Methods">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We collect a list of finite element methods implemented in iFEM for solving various PDEs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Poisson-Equation-2D">Poisson Equation 2D<a class="anchor-link" href="#Poisson-Equation-2D">&#182;</a></h2><ul>
+<li><a href="Poissonfemrate.html">Poisson 2D: P1 Linear Element</a></li>
+<li><a href="PoissonP2femrate.html">Poisson 2D: P2 Quadratic Element</a></li>
+<li><a href="PoissonP3femrate.html">Poisson 2D: P3 Cubic Element</a></li>
+<li><a href="PoissonCRfemrate.html">Poisson 2D: CR Non-conforming Linear Element</a></li>
+<li><a href="PoissonWGfemrate.html">Poisson 2D: WG Weak Galerkin Element</a></li>
+<li><a href="Poisson3vemrate.html">Poisson 3D: Linear Virtual Element</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Poisson-Equation-3D">Poisson Equation 3D<a class="anchor-link" href="#Poisson-Equation-3D">&#182;</a></h2><ul>
+<li><a href="Poisson3femrate.html">Poisson 3D: P1 Linear Element</a></li>
+<li><a href="Poisson3P2femrate.html">Poisson 3D: P2 Quadratic Element</a> </li>
+<li><a href="Poisson3CRfemrate.html">Poisson 3D: CR Non-conforming Linear Element</a></li>
+<li><a href="Poisson3WGfemrate.html">Poisson 3D: WG Weak Galerkin Element</a></li>
+<li><a href="Poisson3vemrate.html">Poisson 3D: Linear Virtual Element</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Poisson-Equation-2D:-Mixed-Formulation">Poisson Equation 2D: Mixed Formulation<a class="anchor-link" href="#Poisson-Equation-2D:-Mixed-Formulation">&#182;</a></h2><ul>
+<li><a href="PoissonRT0mfemrate.html">Poisson 2D: RT0 Element</a></li>
+<li><a href="PoissonBDM1mfemrate.html">Poisson 2D: BDM1 Element</a> </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Poisson-Equation-3D:-Mixed-Formulation">Poisson Equation 3D: Mixed Formulation<a class="anchor-link" href="#Poisson-Equation-3D:-Mixed-Formulation">&#182;</a></h2><ul>
+<li><a href="Poisson3RT0mfemrate.html">Poisson 3D: RT0 Element</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Stokes-Equations">Stokes Equations<a class="anchor-link" href="#Stokes-Equations">&#182;</a></h2><h2 id="Maxwell-Equations">Maxwell Equations<a class="anchor-link" href="#Maxwell-Equations">&#182;</a></h2><h2 id="Hodge-Laplacian-Equations">Hodge Laplacian Equations<a class="anchor-link" href="#Hodge-Laplacian-Equations">&#182;</a></h2><h2 id="Cahn-Hillard-Equations">Cahn-Hillard Equations<a class="anchor-link" href="#Cahn-Hillard-Equations">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

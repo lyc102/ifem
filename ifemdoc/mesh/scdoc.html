@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>scdoc</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Simplicial-Complex-in-Two-Dimensions">Simplicial Complex in Two Dimensions<a class="anchor-link" href="#Simplicial-Complex-in-Two-Dimensions">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We dsecribe the data structure of the simplicial complex associated to a
+two dimensional trianglulation give by <code>node,elem</code> . The <code>node</code> records
+the coordinates of vertices and <code>elem</code> is the pointer from local to
+global incices of vertices. See <a href="meshbasicdoc.html">Basic mesh data structure</a>.</p>
+<p>A brief summary.</p>
+<ul>
+<li><p><code>edge</code>: asecond ordering, <code>i.e. edge(:,1)&lt;edge(:,2)</code></p>
+</li>
+<li><p><code>locEdge</code>: The default one is the consistent orientation which will be counter-clockwise if elem is positive ordered. The asecond orientation is used for edge elements.</p>
+<ul>
+<li>consistent orientation <code>[2 3; 3 1; 1 2];</code></li>
+<li>asecond orientation    <code>[2 3; 1 3; 1 2];</code> </li>
+</ul>
+</li>
+<li><p><code>elem</code>: positive ordering or ascend ordering. The default one is positive ordering and the asecond ordering is used for edge elements.</p>
+</li>
+<li><p>Use <code>[elem,bdFlag] = sortelem(elem,bdFlag)</code> to change the ordering to the ascend ordering. Note that <code>bdFlag</code> should be switched together.</p>
+</li>
+</ul>
+<blockquote><p>The multigrid solvers use the original ordering of <code>elem</code> obtained from either uniform refinement or bisection methods. So let <code>elemold=elem</code> before sort.</p>
+</blockquote>
+<ul>
+<li>Examples on the usage: <code>PoissonRT0, PoissonBDM1</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">node</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>    <span class="c">% nodes</span>
+<span class="n">elem</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>          <span class="c">% elements</span>
+<span class="n">N</span> <span class="p">=</span> <span class="nb">size</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="n">NT</span> <span class="p">=</span> <span class="nb">size</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="c">% NE = size(edge,1); </span>
+<span class="n">showmesh</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findelem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findnode</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The basic data structure of a mesh consists of node and elem:
+In iFEM, <code>N, NE, NT</code> represents the muber of vertice, edges, triangles
+respectively.</p>
+<p>The corresponding simplicial complex consists of vertices, edges and
+triangles. We shall discuss the following three issues:</p>
+<ul>
+<li><em>Indexing</em> of simplexes</li>
+<li><em>Ordering</em> of vertices of simplexes</li>
+<li><em>Orientatoin</em> of simplexes</li>
+</ul>
+<p>The indexing and ordering are related and the ordering and orientation
+are mixed together. However the indexing has nothing to do with the
+orientation. The indexing and ordering are the combinarotry structure,
+i.e. only <code>elem</code> is needed, while the orientation also depends on <code>node</code>,
+the geometry emembdding of vertices.</p>
+<p>For indexing, ordering and orientation, there are always local and global versions. The relation between the local and global version is the most complicated issue.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Indexing-of-Simplexes">Indexing of Simplexes<a class="anchor-link" href="#Indexing-of-Simplexes">&#182;</a></h2><p>The indexing refers to the numbering of simplexes, e.g., which edge is
+numbered as the first one. There are two types of the indexing: local and
+global. Each simplex in the simplicial complex has a unique index which
+is called the global index. In one triangle, the three vertices and three
+edges have their local index from 1:3.</p>
+<p>In the assembling procedure of finite element methods, an element-wise
+matrix using the local indexing is first computed and then assembled to get a
+big matrix using the global indexing. Thus the pointer from the local
+indexing to the global indexing is indispensible. For bases independent of
+the ordering and orientation, e.g., <code>P1</code> and <code>P2</code> elements, this pointer
+is sufficient, otherwise, the inconsistency of the local ordering/orientation
+and the global ordering/orientation should be taken into account.</p>
+<h3 id="Indexing-pointers-of-vertices">Indexing pointers of vertices<a class="anchor-link" href="#Indexing-pointers-of-vertices">&#182;</a></h3><p>The <code>NT x 3</code> matrix <code>elem</code> is indeed the pointer from the local to the
+global indices of vertices of triangles. For example <code>elem(t,1)=25</code> means
+the first vertex of the triangle t is the 25-th vertex.</p>
+<p>Similiary, the <code>NE x 2</code> matrix <code>edge</code> records the pointer from the local
+to the global indices of vertices of edges.</p>
+<h3 id="Local-indexing-of-edges">Local indexing of edges<a class="anchor-link" href="#Local-indexing-of-edges">&#182;</a></h3><p>The triangle constists of three vertices indexed as [1,2,3]. Each
+triangle contains three edges. There are two indexing schemes for edges.</p>
+<ul>
+<li>Opposite indexing     <code>locEdge = [2,3; 3,1; 1,2]</code></li>
+</ul>
+<p>In <code>locEdge</code>, the <code>i-th</code> edge is opposite to the <code>i-th</code> verices and thus
+called <em>opposite indexing</em>.</p>
+<ul>
+<li>Lexicogrphic indexing <code>locEdgel = [1,2; 1,3; 2,3]</code></li>
+</ul>
+<p>In <code>locEdgel</code>, the indexing is induced from the lexicographic ordering of
+the three edges.</p>
+<p>For 2-D triangulations, <strong>we shall always chose opposite indexing</strong>. The lexicographic indexing is mainly used in the construction of <code>face2edge</code> of 3-D triangulations; see <a href="sc3doc.html">Simplicial Complex in Three
+Dimensions</a>. Note that the ordering of vertices of each edge will not change the indexing. For example, <code>locEdge = [2,3; 1,3; 1,2]</code> use the same opposite indexing but different ordering. Choosing <code>[1 3]</code> or <code>[3 1]</code> for the second edge will depend on the consideration of orientation and ordering.</p>
+<h3 id="Global-indexing-of-edges">Global indexing of edges<a class="anchor-link" href="#Global-indexing-of-edges">&#182;</a></h3><p>One can easily collect all edges elementwise. The issue is the
+duplication. For example, each interior edge will be counted twice. The
+<code>unique</code> funciton is applied such that each edge has a unique global
+index.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">totalEdge</span> <span class="p">=</span> <span class="n">uint32</span><span class="p">([</span><span class="n">elem</span><span class="p">(:,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span> <span class="n">elem</span><span class="p">(:,[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]);</span> <span class="n">elem</span><span class="p">(:,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])]);</span>
+<span class="n">sortedTotalEdge</span> <span class="p">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">totalEdge</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">[</span><span class="n">edge</span><span class="p">,</span><span class="n">tempvar</span><span class="p">,</span><span class="n">je</span><span class="p">]</span> <span class="p">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">sortedTotalEdge</span><span class="p">,</span><span class="s">&#39;rows&#39;</span><span class="p">);</span>
+<span class="n">NE</span> <span class="p">=</span> <span class="nb">size</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Edge-pointer">Edge pointer<a class="anchor-link" href="#Edge-pointer">&#182;</a></h3><p><code>elem2edge(1:NT,1:3)</code> records the pointer from the local index to the
+global index of edges. For example, <code>elem2edge(t,1)</code> = 10 means the first
+edge of triangle <code>t</code> (which is formed by [2 3] vertices of <code>t</code>) is the
+<code>10-th</code> one in the <code>edge</code> array.</p>
+<p>Such information is stored in the third output of <code>unique</code> function.
+<code>elem2edge = uint32(reshape(je,NT,3));</code></p>
+<p>Note that the pointer <code>elem2edge</code> depends on the local indexing of edges
+used in the generation of <code>totalEdge</code>. Here the opposite indexing of
+three local edges is used.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Ordering-of-Vertices">Ordering of Vertices<a class="anchor-link" href="#Ordering-of-Vertices">&#182;</a></h2><p>We discuss the ordering of vertices of simplexes. Again there are local
+ordering and global ordering. They may not be consistent and a sign array
+is used to record the inconsistency.</p>
+<p>The local ordering refers to the ordering of local veritces of a simplex.
+The local ordering could be used in the formulation of the local basis
+and thus the ordering does matter.</p>
+<p>The global ordering refers to the ordering of the global index of
+vertices of a simplex.</p>
+<h3 id="elem">elem<a class="anchor-link" href="#elem">&#182;</a></h3><p>The local ordering is always [1,2,3]. Any permutation of three
+veritces of a triangle still represents the same triangle. Such
+freedom provide a room to record more information like:</p>
+<ul>
+<li>global ordering of vertices</li>
+<li>an orientation of triangles</li>
+<li>refinement rules</li>
+</ul>
+<p>Two types of ordering of <code>elem</code> is of particular importance</p>
+<ul>
+<li>Positive ordering</li>
+<li>Ascend ordering</li>
+</ul>
+<p>In the positive ordering, the three vertices are ordered such that the
+signed area, det(v12,v13), is positive. If <code>elem</code> is not positive
+ordered, <code>elem = fixorder(node,elem)</code> will compute the signed area by
+<code>simplexvolume(node,elem)</code> and switch the vertices for triangles with
+negative areas.</p>
+<p>For 2-D triangulations, three vertices of a triangle in 2-D is sorted
+counter-cloclwise and the first vertex is chosen as the newest vertex.
+Such ordering enables the efficient implementation of local refinement
+and coarsening in 2-D; see <a href="bisectdoc.html">Bisection in Two Dimensions</a>
+and <a href="coarsendoc.html">Coarsening in Two Dimensions</a>. <strong>Such ordering scheme
+is the default choice and used in most places</strong>.</p>
+<p>In ascend ordering, the vertices of <code>elem</code> is sorted such that</p>
+
+<pre><code>elem(t,1)&lt;elem(t,2)&lt;elem(t,3)
+
+</code></pre>
+<p>This can be easily achieved by <code>elem = sort(elem,2)</code>. Howevery, one has to rotate the boundary flag
+accordingly using <code>sortelem</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">bdFlag</span> <span class="p">=</span> <span class="n">setboundary</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="s">&#39;Dirichlet&#39;</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="s">&#39;Before rotation&#39;</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">bdFlag</span><span class="p">);</span>
+
+<span class="p">[</span><span class="n">elem</span><span class="p">,</span><span class="n">bdFlag</span><span class="p">]</span> <span class="p">=</span> <span class="n">sortelem</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="n">bdFlag</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="s">&#39;After rotation&#39;</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">bdFlag</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Before rotation
+
+elem =
+
+     2     3     1
+     4     1     3
+
+
+bdFlag =
+
+    0    1    1
+    0    1    1
+
+After rotation
+
+elem =
+
+     1     2     3
+     1     3     4
+
+
+bdFlag =
+
+    1    0    1
+    1    1    0
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ascend ordering will benefit the construction of local bases for high
+order basis or basis with orientation.</p>
+<p>We may switch the default positive ordering of <code>elem</code> to ascend ordering
+when generating data structure for finite element basis. However such
+sorting is always hidden in the subroutines when a finite element basis
+requiring ordering is generated; see <code>PoissonRT0</code> and <code>PoissonBDM1</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="edge">edge<a class="anchor-link" href="#edge">&#182;</a></h3><p>The global ordering of edges is always ascended, i.e.</p>
+
+<pre><code>edge(:,1) &lt; edge(:,2);
+
+</code></pre>
+<p>Indeed in the generation of <code>edge</code>, the <code>totalEdge</code> is sorted to the
+ascend ordering such that <code>unique</code> can be applied to eliminate the duplication.</p>
+<p>Recall that we always use the opposite indexing of edges. For the ordering</p>
+<ul>
+<li>asecond ordering    <code>[2 3; 1 3; 1 2];</code> </li>
+<li>(orientation) consistent ordering <code>[2 3; 3 1; 1 2];</code></li>
+</ul>
+<p>It is consistent since the local ordering orientation of edges is
+consistent with the induced orientation as the boundary of a triangle; see the
+discussion on the orientation.</p>
+<p>There might be an inconsistency between the local and global ordering
+(even for the orientation consistent ordering). That is
+<code>edge(elem2edge(t,1),1) &gt; edge(elem2edge(t,1),2)</code> may happen. It will be more clear from the discussion of
+the corresponding orientation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Orientation-of-Simplexes">Orientation of Simplexes<a class="anchor-link" href="#Orientation-of-Simplexes">&#182;</a></h2><p>The orientation of a triangle is either positive or negative. The
+orientation of an edge is given by a tangential or normal vector. A
+normal vector is obtained by rotate a given tangential vector by 90
+degree clockwise. For example, when edges are given counter clockwise
+orientation, the corresponding normal vector is the outwards normal
+vector.</p>
+<p>The orientation of a d-simplex will induce an orientation of its d-1
+subcomplex on the boundary and is called <em>the induced orientation</em>. For example, a positive
+orientated triangle will induce the counter clockwise orientation of its
+three edges.</p>
+<p>The ordering of vertices will naturally introduce an orientation and will
+be called <em>the ordering-orientation</em>. More specifically</p>
+<ul>
+<li>The vector from <code>edge(:,1)</code> to <code>edge(:,2)</code> defines an orientation of
+edges.</li>
+<li>The sign of <code>det(v12,v13)</code> defines an orientation of triangles.</li>
+</ul>
+<p>The orientation of a simplex in the simplicial complex should be
+uniquely determined which will be called <em>the global orientation</em>. It can be
+chosen as the global ordering-orientation but not always the case.</p>
+<p>Inside one triangle, the local orientation of three edges is more
+involved. The local ordering of edges will introduce a local ordering
+orientation. The orientation of the triangle will also induce an induced
+orientation. The local ordering-orientation is used in the computation of
+local bases and the induced orientation is used when computing the
+differential operator locally. They may or may not be consisitent with
+the global orientation of edges.</p>
+<p>In general, there will be an inconsistency of the following types of
+orientation and apporipate data structure should be constructured to
+record such inconsistency.</p>
+<ul>
+<li>a global orientation</li>
+<li>the global ordering-orientation</li>
+<li>the local ordering-orientation</li>
+<li>the local induced orientation</li>
+</ul>
+<h3 id="elem">elem<a class="anchor-link" href="#elem">&#182;</a></h3><p>The orientation of a triangle is either positive or negative. For
+the global ordering-orientation, it is the sign of the signed area
+(output of <code>simplexvolume</code>).</p>
+
+<pre><code>[Dlambda,area,elemSign] = gradbasis(node,elem);
+
+</code></pre>
+<p>In the output of <code>gradbasis</code>, <code>area</code> is always positive and an additional
+array <code>elemSign</code> is used to record the sign of the signed area.</p>
+<p><code>Dlambda(t,:,k)</code> is the gradient of the barycentric coordinate $\lambda_k$. Therefore the outward normal direction of the kth face can be obtained by <code>-Dlambda(t,:,k)</code> which is independent of the ordering and orientation of triangle <code>t</code>.</p>
+<h3 id="edge">edge<a class="anchor-link" href="#edge">&#182;</a></h3><p>For 2-D triangulations, <strong>we shall always chose the global ordering
+orientation</strong>, i.e., from the lower index to the bigger index.</p>
+<p>The local ordering-orientation is implicitly used when computing finite
+element basis in each element. For example, the edge element on edge <code>[i j]</code>
+in <code>locEdge</code> is defined as</p>
+$$\phi_{i,j} = 2(\lambda_i \nabla \lambda_j - \lambda_j \nabla \lambda_i).$$<p></p>
+<p>Permutation of <code>[i j]</code> to <code>[j i]</code> will change the sign of the basis. Note
+that this is locally, i.e., element by element.</p>
+<p>The global basis associated to this edge, however, depends only on its 
+global orientation. We introduce <code>elem2edgeSign(1:NT, 1:3)</code>
+to record the inconsistency of a local ordering-orientation and a global
+orientation.</p>
+<p>For the consistent local ordering [2 3; 3 1; 1 2] and the global ascend
+ordering-orientation, the elem2edgeSign can be generated as follows:</p>
+
+<pre><code>elem2edgeSign = ones(NT,3,'int8');
+totalEdge = uint32([elem(:,[2,3]); elem(:,[3,1]); elem(:,[1,2])]);
+idx = (totalEdge(:,1)&gt;totalEdge(:,2));
+elem2edgeSign(idx) = -1;</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>There is one more inconsistency between the induced orientation and the
+global orientation of edges. If a triangle is positive orientated, the
+induced edge orientation should be given by the outwards (relative to a
+triangle) normal vector. This induced orientation may not be consistent
+with the global orientation of edges.</p>
+<p>It depends on the ordering of <code>elem</code> and <code>locEdge</code>. When <code>elem</code> is
+positive ordered and <code>locEdge</code> is consistently ordered, it is.</p>
+<p>For the ascend ordering of <code>elem</code> and <code>edge</code>, we denote the direction as +1
+if the direction of an edge is the same with the induced direction in a
+certain elem, and -1 otherwise. Then the consistency is given by
+<code>elem2edgeSign = [+1 -1 +1];</code></p>
+<p>The second sign is -1 because the local edge in the ascend ordering is <code>[1
+3]</code> not <code>[3 1]</code>.</p>
+<p>The <code>elem2edgeSign</code> will be used when assembling differential operators.
+For example, when computing <code>div</code> operators on a positive orientated
+triangle, the edge should have outwards normal direction or equivalently
+the counter clockwise orientation.</p>
+<p>We summarize the two popular ordering and orientation schemes below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Positive-Ordering-and-Orientation">Positive Ordering and Orientation<a class="anchor-link" href="#Positive-Ordering-and-Orientation">&#182;</a></h2><p>The vertice of the <code>eleme</code> is sorted such that the area is always
+positive. i.e. the three vertices of the elem are ordered
+counter-clockwisely. Furthermore the first vertex is always the newest
+vertex of the triangle for the easy of local mesh refinement and
+coarsening.</p>
+<p>The local edge is using opposite indexing and consistent ordering</p>
+
+<pre><code>locEdge = [2,3; 3,1; 1,2]
+
+</code></pre>
+<p>The ascend ordering is used for global edges, i.e., <code>edge</code> is sorted s.t.</p>
+
+<pre><code> edge(:,1) &lt; edge(:,2)
+
+</code></pre>
+<p>The inconsistency of the orientation is recorded in <code>elem2edgeSign</code>.</p>
+<p><strong>This is the default ordering and orientation scheme.</strong></p>
+<h2 id="Ascend-Ordering-and-Orientation">Ascend Ordering and Orientation<a class="anchor-link" href="#Ascend-Ordering-and-Orientation">&#182;</a></h2><p>For H(curl) and H(div) elements and high order (cubic and above) H(grad) elements, we use the ascend Ordering and Orientation.</p>
+<p><em>Ascend ordering</em>. The vertices of <code>elem</code> is sorted such that</p>
+
+<pre><code>elem(t,1)&lt;elem(t,2)&lt;elem(t,3)
+
+</code></pre>
+<p>The local edge is also in the ascend ordering</p>
+
+<pre><code>locEdge = [2,3; 1,3; 1,2]
+
+</code></pre>
+<p>The ascend ordering is used for edges, i.e., <code>edge</code> is sorted s.t.</p>
+
+<pre><code>edge(:,1) &lt; edge(:,2)
+
+</code></pre>
+<p>It is easy to see the benefit of the ascend ordering: the ordering of local edges is consistent with the global ones and so is the corresponding orientation.</p>
+<p><em>Orientation</em>. We choose the ordering-orientation.</p>
+<ul>
+<li>elem: sign(det(v12,v13))</li>
+<li>edge: from the node with the smaller global index to the bigger one</li>
+</ul>
+<p>For <code>edge</code>, the local and the global ordering-orientation is consistent. But they are not consistent with the induced orientation inside one triangle. Such inconsistency is recorded in</p>
+
+<pre><code>elem2edgeSign = [+1 -1 +1]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="An-Example">An Example<a class="anchor-link" href="#An-Example">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">node</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>    <span class="c">% nodes</span>
+<span class="n">elem</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>          <span class="c">% elements</span>
+
+<span class="c">% Poistive ordering and orientation</span>
+<span class="p">[</span><span class="n">elem2edge</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="n">elem2edgeSign</span><span class="p">]</span> <span class="p">=</span> <span class="n">dofedge</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">showmesh</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findnode</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+<span class="n">findelem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="s">&#39;vec&#39;</span><span class="p">);</span>
+<span class="c">%%</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">edge</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem2edge</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem2edgeSign</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+elem =
+
+     2     3     1
+     4     1     3
+
+
+edge =
+
+           1           2
+           1           3
+           1           4
+           2           3
+           3           4
+
+
+elem2edge =
+
+           2           1           4
+           2           5           3
+
+
+elem2edgeSign =
+
+    -1     1     1
+     1     1    -1
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAAGkCAIAAACgjIjwAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA
+B3RJTUUH4QgDBhc69AunPgAAACR0RVh0U29mdHdhcmUATUFUTEFCLCBUaGUgTWF0aFdvcmtzLCBJ
+bmMuPFjdGAAAACJ0RVh0Q3JlYXRpb24gVGltZQAwMy1BdWctMjAxNyAxNDoyMzo1OOm85b0AACAA
+SURBVHic7d17dFT1ufDxJ3ILHQwxlLAOMDJRLj3msBbtcgmJaCLIqdADWsFQkaWJFXs5vDaWdlmP
+riaxa3FsLRK0Xl6hJLRYj1Ep+J4XqLdMVJJw0RPAFCRCxo6oCRJDwgBCwpw/dhyGSSaZTPblt/d8
+P4s/hj1hz6Nh+Gbv356ZpGAwKAAAWO0SqwcAAECEIAEAFEGQAABKIEgAACUQJACAEggSAEAJBAkA
+oASCBABQAkECACiBIAEAlECQAABKIEgAACUQJACAEggSAEAJBAkAoASCBABQAkECACiBIAEAlECQ
+AABKIEgAACUQJACAEggSAEAJBAkAoASCpKKysrL58+fPnz//9ddft3oW9C1JD1b/R8BwnZ2dq1ev
+vv7669PS0saPHz9v3rzXXnvN6qHUkhQMBq2eARd57733srOzz549KyLr1q374Q9/aPVE6I2OLeHJ
+6GBnzpyZNWtWTU1NxPbCwsLVq1dbMpKCOEJSS1tb2+LFi7UawU6CwQH9gtP95je/0WqUnJxcUFCw
+YMGCoUOHikhpaenmzZutnk4VBEkty5YtO3z4sNVTANBTMBj8wx/+ICKDBw8+fPjw+vXrt2zZ8utf
+/1q7d+vWrZZOpxCCpJBnn322oqIiOTn5zjvvtHoWALppaGhoa2sTkeuuu27s2LHaxptvvlm7cebM
+GcsmU8xgqwdAl717995///0ismbNmpMnT5o/wLlmf5u3QkTaKisyntlp/gCAU2VkZDQ1NYnI8OHD
+tS3nz59/7rnntNtz5syxbDLFECQlnDx5Mi8v78yZMz/4wQ/uvffexx9/3JzHDUXoeMWq8O2n6qu/
+kZltzgxO5vXKf/xH5MbqaitGgZWGDBmSnp6u3T5w4MCPfvSjgwcPHjt2bNCgQQ8//PCSJUusHU8d
+BEkJP/7xjw8dOjRx4sTQD03GiRahcKfrawiSDmpqpNtVVUhw7e3t77zzjnZ7xIgREyZMuOQSlk66
+ECTrrV+//vnnnx82bFhFRcWll15qxEPEEqFwp+qrR8kKIyZJLPX1IiJr18qNN1o9ClQxceLEP//5
+z0eOHFm3bp3f77/77rt37Nixbt06q+dSAq9DMpXP59uwYYPP57vrrrtyc3O1jXl5eS+99NLw4cPH
+jRunbfnyyy+PHz8uIunp6SkpKWvWrJk3b15/H6u/ERKRIaPdKTfkDc/M4vAodl2vQ+rxefTtb0td
+nXz4oUyeLJ2dMmhQL3sRXofkCD0+x0+fPq29lmPEiBGDvv5rcPToUbfbHQwGXS7XF198kZycbNXM
+6uAIyTzl5eUFBQWh22VlZfn5+aF7T58+/dFHH0X8kebm5ubm5vb29tgfRetQ7BHShEfodH3N6XpO
+NA1YZ6ccPCiDB0tZmTzzjJw9Kzk5snatjB9v9WQwitfrveGGG7Tb5eXlxcXFRUVFIlJSUvLb3/5W
+RLZs2bJgwQLtC8aNGzd27NijR48GAoH33nvv2muvtWpsdXCEZJ6Il/R7PJ7GxkYRWbt27Z49e8Lv
+2rdvX21trYjk5ORMmTJl2bJlV199dYyP4i9aSE7MNOWVz0R6OkI6dEimTBERGT5cMjLk0CHp6JAr
+r5QDB2TIkMgv5gjJEaI9x//0pz/dddddInLnnXdu2LBBu3f37t3XXHONdvv48eNpaWnmDqsigmQS
+n8+XkZFh9KN8f8LwR69ONfpREC5qkGpr5eGHZcQIee45SU+X2lqZOVM6O+Uvf5Hbb4/8Yt7LzqEa
+Gxs9Hs/Ro0evuuoq7aVIhYWFCxcu3Lt371NPPXXgwAERueaaa3bu5IUWIgTJND0GqfjTni8cqPm/
+7/2txCsiC1b963dunxr7o7haAjM21qQ3NMc7JvotapC6mzVLKivlgQfk0Ucj70pKkuh/H2AXpdPX
+tvrbwreE/oFdt27dsmXLuv+Ryy67bM+ePVdccYUZ8ymPNSSTeDyesrKy0BqSiOS/nKf7owTSXLVL
+s6Zu3e9qOdmvLAXSXEem85SIixak7l59VQ4elG99S75eM+g6DOp+vg5OkTp+ZHiQKisrQ7fvuece
+j8dTWFhYr117KTJo0KDbb7/9kUceMeHciV1whGQqn89XUFDg++rwLaU3pbpTDH0sV0sgvaFpTENz
+7HEKpLmaJ41pmpTeSJxiVjx2lUhPR0jFxVJSIqmpcviwpKXJ3r1y9dXS0SFbtlxIVAhHSPa3uXC7
+iOSuyN5cuN0z7MqioqLQVXbhWltbP/zwwxEjRkycOHHYsGFmT6k2jpBM5fF4cnNzve1fGV0jEQmk
+uRqnX6GlJcY4uVoCGTuPZOw8MqahuXbpDKMndLglS2T1amltlcsvlxkzpLZWOjrk+utl/nyrJ4P+
+tBrdUnqTiHiyx+demttjjUQkNTV1+vTpZs5mIwQpIfQ3Tk2T0s0d0IkmT5atW6WwUPbskTfflEsu
+kaVLZfVqrl9wnvAaYSAIUsKJJU7Nk8ZYN6CDXHut7N4tx49LU5NkZMjXb6wJJ6FGOiJICS1anAJp
+LqtHc5BRo2TUKKuHgCGokb4IErqExwlAn6iR7niXWQDoN2pkBIIEAP1DjQzCKTtAD1w7lzCokXE4
+QgIGRK9Xs/KqWFugRobiCAkYKFqSIKiR0ThCAoC+USMTECQA6AM1MgdBAoDeUCPTECQAiIoamYkg
+AUDPqJHJCBIA9IAamY8gAUAkamQJggQAF6FGViFIAHABNbIQQQKALtTIWgQJAESokQIIEgBQIyUQ
+JACJjhopgiABSGjUSB0ECUDiokZKIUgAEhQ1Ug1BApCIqJGC+MRYU51r9t99ft+CtmNvtgQCaS6r
+xwESi6slMHXrflfLyaOBTjGmRq6WwG+GnBr3+dZzzXcPSXfrvn9nSwoGg1bPkEAOLRqr3QikuV4t
+udnaYYDE4WoJZNQembptf2jLm/fNbp40RvcHmv3EG+kNzSIyZLQ745mduu/f2ThCMk9bZUXotqsl
+kN7QZMTzAUCEf9m6PzxFxklvaNJqJCLnjvlP1Vd/IzPbhMd1DNaQzHPumD/8t6G/uAAM4moJzH7i
+jR5rZMSPg66WQPhvT9fX6P4QzsYRknlO1VeH/3bMR00fyFSrhgGcrfs5unC1S2cY8aBjLv4p81R9
+9ShZYcQDORVBMk/Ej0uu44FoXwlgIHo/R9c8Kb1x+hVGPG56Q1P4bzuaPzHiURyMU3YmCV9A0mjL
+SJYMAzhVL+foQvbPNeTMRHpDU8QpO20ZyYjHciqOkEwSsYCkSW9o5roGQBe9n6MLaZx+hUFPuoga
+aU7X13BdQ+wIkkl6/EGJZSRAF7FfR2fQ6pF0W0DSsIzULwTJJD1eb8MyEjBArpbAjI01MV6zalyN
+pNsCkoZlpH4hSGbovoCk4dVIQNxiPEcXYty1DNLTApKGVyP1C0EyQ48LSBqWkYA4ZOw8MmNjbb/+
+iEHXMmh6rJGGZaTYcZWdGXq50mbMR1xoB/Rb97eCbJ6U3jwpPdrXG3ctg6bHBSQNF9rFjiCZoZcX
+bLOMBMShedKYUH4Caa4375stvb77iaGrRxJlAUnDMlLsCJLhoi0gaXg1EhCf2qVZIrJ/7tRXS26e
+um2/tTXq5ZQdr0aKHUEyXC8LSBre1A6IQyDN9cKTSz6YNzX0BtuaiHN3hl7LoOmlRhre1C5GBMlw
+ff5wxDISELfuNWqaOCZ8i6HXMmh6WUDScIQUI4JkuD5/OGIZCYhP9xrVLs0KvxDc6GsZNH2edWcZ
+KUYEyVi9LyBpWEYC4tC9Rm/ed+OMjRf9/Gf06pH0uoA0PDNLu8EyUowIkrHCF5BScvPC7wo/zc0y
+EtAvPdYo/PPxxJQaycULSL0sVrGMFAuCZKzwH4siXhzXNPHCmQSWkYDY9Vgj7Xbo9UkmXMugCV9A
+arr4hVCj8i68ix1HSLEgSMYK/7EodPyuaZxx4dnCMhIQo15q1DxpzJs/u1G7isGEaxk04efbI9ar
+hox2h26zjBQLgmSgiAWkIenu8N+Gv9ScZSQgFr3USBNIc30wb+oLTy4x5x25IhaQIt4/Yki6m2Wk
+fiFIBhqemTUqb4X2NzJiAUmjLSMF0lz7504NjBph9nyArfRZI/MFRo3YP3eq9kTu5QzhkNHuUXkr
+wg+Y0KOkYDBo9QzOd67ZLyJD0t2HFo0NbXzhySWulkD3t+QC0J2CNQqnHScF0ly3/5+/hDZOfvnT
+c83+iFMj6AXv9m2GaH8jqREQC8VrJNGfy9SoXzhlB0Bp6tcIeiFIANRFjRIKQQKgKGqUaAgSABVR
+owREkAAohxolJoIEQC3UKGERJAAKoUaJjCABUAU1SnAECYASqBEIEgDrUSMIQQJgOWoEDUECYCVq
+hBCCBMAy1AjhCBIAa1AjRCBIACxAjdAdQQJgNmqEHhEkAKaiRoiGIAEwDzVCLwgSAJNQI/SOIAEw
+AzVCnwgSAMNRI8SCIAEwFjVCjAgSAANRI8SOIAEwCjVCvxAkAIagRugvggRAf9QIcSBIAHRGjRAf
+ggRAT9QIcSNIAHRDjTAQBAmAPqgRBoggAdABNcLAESQAA0WNoAuCBGBAqBH0QpAAxI8aQUcECUCc
+qBH0RZAAxIMaQXcECUC/USMYgSAB6B9qBIMQJAD9QI1gHIIEIFbUCIYabPUAQL+1+tvqKj4I3fZk
+u6flZVo7UiKgRjAaQYI9tPrbWv0nfDX+uor6Vn9b+F11FfWbC7enulM8We5peZmebLdVQzoYNYIJ
+CBJsoNXf5l1VXVdRH9ri8Uh+vuTkSFWVeL3i9Uqrv63OX19XUe/Jct9SelOqO8XCgR2GGsEcBAmq
+a/W3bS7c7qvxhyKUm3vh3txcKSoSn0+8Xqmq0m74yxe9mP/yYpqkC2oE03BRA5QWqlF+vjQ2SlHR
+RTUK0VpVViaVlVJcLK3+tvJFL0ac2UMcqBHMRJCgrvAalZXF+qeKimiSPqgRTEaQoKj4aqShSQNH
+jWA+ggRFeVdVx1cjTahJ3lXVOk+WAKgRLEGQoKK6inrtmrruNdqwQbKzJSVFJk6UX/5STpyIuhNt
+wamuot5X7TdyWKehRrAKQYKKtITk50duX7lS8vOlpkba2+XwYfn972XBAunsjLof7QoIXw1BihU1
+goUIElSkJSQn56KNLS3y6KMiIsXF0toqTzwhIvL22/LWW1H3o+0h/AVM6AU1grUIElSkXYkQcYT0
+/vvS3i5pafLQQzJypCxfLuPHi4js3x91Px5P1964tKFP1AiWI0hQjnZA0/18XVKSzJ0rd9whgweL
+iHR0SCAgIjJuXNRdeTxdZ+1a/dHXmkCNoAaCBOVoC0jawU242bNl69auM3XBoBQWypdfSmqqzJrV
+2960IHlX1RgwqUNQIyiCtw6CoiZMiHrXsWOSny9bt8rQobJ+vYwe3fd+eBuhaKgR1EGQoBxtvefj
+j3u+t6ZGbrtNjh6V8ePl+efl+uv72Fu0/UCoERTDKTsoJ3dFloh4vT3cVVkpN94oR4/K3Lmyd2/f
+NQrth8+k6I4aQTUcIUE5qe6RIuLzRW4PBGTJEjl1Sr73PdmyRQYNimlvXUHKIkgXoUZQEEdIUI72
+UXvaJ0qE27hRPv9cRGTbNhk2TAYP7vq1YkXUXZWXd+2QNaRw1AhqIkhQkSd7vIhs2HDRxn37um6c
+Py+dnRd+nT8fdT9VVSIcHl2MGkFZBAkq0hIScYT01FMSDPbwa/XqqPthASkCNYLKCBJUlOoeOS0v
+0+eTkpL4d1JQID6fTMvLnJaXqd9oNkaNoDiCBBWlulNyV2SnulOKi+NsUkGBlJdLqjvlltKb9J7O
+lqgR1EeQoKhUd0r+y4vja1KoRoU7lxkznc1QI9gCQYK64msSNYpAjWAXBAlKC29SRkZXbLrTrhEv
+KZGMDGp0EWoEG+GFsVCd1qTNhdt9Nf7ycikv7zpays+XnBypqhKv96Lr8TxZ7vxX8iwaVi3UCPZC
+kGAD2rUJrf4TdRX1rf427eP7iosjv2ZaXqYny81F3hpqBNshSLAH7d0WtNhoTdI+pUJ7C4bcFdkW
+z6cYagQ7Ikiwn1R3yjQ3ry6KihrBprioAXAUagT7IkiAc1Aj2BpBAhyCGsHuCBLgBNQIDkCQANuj
+RnAGggTYGzWCYxAkwMaoEZyEIAF2RY3gMAQJsCVqBOchSID9UCM4EkECbIYawakIEmAn1AgORpAA
+26BGcDaCBNgDNYLjESTABqgREgFBAlRHjZAgCBKgNGqExEGQAHVRIyQUggQoihoh0RAkQEXUCAmI
+IAHKoUZITAQJUAs1QsIiSIBCqBESGUECVEGNkOAIEqAEagQQJMB61AgQggRYjhoBmqRgMGj1DI6S
+lJQ08J0Uf7pi4DuBaYrHrhr4Tj5c+E9CjWxCl+84//Z2xxGSnnSpkej01x3m0OubNeWVz6iRLej1
+HdfrnwsnGWz1AE40wB98+GtqR3p806mRnfA0NwBHSAAAJRAkAIASCBIAQAkEyUQdHbJypWRmissl
+mZlSWiqdnVbPBINt2CDZ2ZKSIhMnyi9/KSdOWD0QTNHYKDNnSna2/OMfVo9iJ1zUYKKf/ETWrRMR
+GTZM/v53uf9+OXRInn7a6rFgmJUr5aGHum63t8vvfy+7dslbb8mgQZaOBYN1dsrSpVJdLSJy+rTV
+09gJR0hmOXxY/vhHEZGNG6W9XR57TERk7VoJBKydC0ZpaZFHHxURKS6W1lZ54gkRkbfflrfesnYu
+GG7lyq4aoZ8Ikll275ZgUK68Uu64Q4YMkXvvFRHp6OAcjmO9/760t0tamjz0kIwcKcuXy/jxIiL7
+91s9GYy0c6c88ojMm2f1HLZEkMyyeLF0dMihQ9LRIc3N8rvfiYhMnSpjx1o9GYyRlCRz58odd8jg
+wSIiHR1dR8Pjxlk7Fwx08qQsXSqXXdZ1cl54vVH/sIZklqSkrpWD//ovueMOERG3W95809qhYKDZ
+s2X27K7bwaAUFsqXX0pqqsyaZelYMFJhoXz0kfz1rzJmjNWj2BJHSKa7/HK56SZJTRW/XxYvlvZ2
+qweCwY4dk3/7N3n6aRk6VNavl9GjrR4Ixti0Sf74RykokFtusXoUuyJIZjl3Tr76Sjo7ZeZM2bZN
+6utl+HCprJRt26yeDEaqqZFvf1u2bpXx4+X11+X737d6IBjmqadERPx+WbhQFi3q2rh8uaxZY+FQ
+9kKQzHLPPZKcfOEi4LFjZcIEEZFduywcCsaqrJQbb5SjR2XuXNm7V66/3uqBYCTt3e3eeEM2bZK/
+/rVr4+uvy549Fg5lL6whmeVb3xIRefFFefBBGTlS/ud/5OBBEZGrrrJ2LhglEJAlS+TUKfne92TL
+Fl575HzFxfLv/951+/x5ycsTEXniCZkxw8Kh7IUgmWXZMnn8cfH55J//WaZMkXffFRHJyOAcjmNt
+3Ciffy4ism2bDBt2YfvPfiar+HgRJwo/Aj5/vuvGd78rkydbMo4dccrOLN/8pvztbzJ9unz2mXi9
+0tEhc+fK9u1y2WVWTwZj7NvXdeP8eensvPAr9E8VgItxhGSi73xHamvlxAn55BOZMEFGjLB6IBjp
+qae6VrmRgC65ZKAfmJSQCJLpRo6UkSOtHgIAlMMpOwCAEggSAEAJBAkAoATWkAzA2ykmIL7piYbv
+uAE4QtJTUKfraoo/XaHLfmC0zYXbp+Vl6rIrvul2odd3Sq9/Lpwkif8pJispKfG2/y13RbbVg2Cg
+NhduF5FbSm+yehCoxbuqOvfS7xYVFVk9iP1whATEgxoBuiNIQL9RI8AIBAnoH2oEGIQgAf1AjQDj
+ECQgVtQIMBRBAmJCjQCjESSgb9QIMAFBAvpAjQBzECSgN9QIMA1BAqKiRoCZCBLQM2oEmIwgAT2g
+RoD5CBIQiRoBliBIwEWoEWAVggRcQI0ACxEkoAs1AqxFkAARagQogCAB1AhQAkFCoqNGgCIIEhIa
+NQLUQZCQuKgRoBSChARFjQDVECQkImoEKIggIeFQI0BNBAmJhRoByiJISCDUCFAZQUKioEaA4gZb
+PQBgBmoUTau/ra7ig9BtT7Z7Wl6mtSMhYREkOB81itDqb2v1n/DV+Osq6lv9beF31VXUby7cnupO
+8WS5p+VlerLdVg2JBESQ4HDUKEKrv827qrquoj60xeOR/HzJyZGqKvF6xeuVVn9bnb++rqLek+W+
+pfSmVHeKhQMjcRAkOBk1itDqb9tcuN1X4w9FKDf3wr25uVJUJD6feL1SVaXd8JcvejH/5cU0CSbg
+ogY4FjWKEKpRfr40NkpR0UU1CtFaVVYmlZVSXCyt/rbyRS9GnNkDjECQ4EzUKEJ4jcrKYv1TRUU0
+CeYhSHAgahQhvhppaBJMQ5DgNNSoO++q6vhqpAk1ybuqWufJgDAECY5Cjbqrq6jXrqmLr0YabcGp
+rqLeV+3XbTLgYgQJzkGNeqQlJD8/6hc8+KBkZ8uuXX3sR7sCwldDkGAUggSHoEbRaAnJyen53l27
+ZM0aqamREyf62I+2h/AXMAH6IkhwAmrUC+1KhO5HSKWlsnChXHednD4d0348nq69cWkDDEKQYHvU
+qBfaAU2P5+vKy2XTJjl7NtZdeTxdZ+1a/X0dTAFxIUiwN2rUO20BSTu4ifD447Jpk2za1I+9aUHy
+rqrRYTKgG946CDZGjWI0YUIPG2fNinM/vI0QDMIREuyKGsVCW+/5+GN99qbXfoAeESTYEjWKUe6K
+LBHxevXZm7YfPpMCBiFIsB9qFLtU90gR8fn02VtXkLIIEgxBkGAz1KhftI/a0z5RYoDKy7t2yBoS
+DEKQYCfUKA6e7PEismHDQPdTVSXC4RGMRJBgG9QoPlpCBn6ExAISjEaQYA/UKG6p7pHT8jJ9Pikp
+6fkLgkEJBmXOnN52UlAgPp9My8uclpdpxJCAECTYAjUaiFR3Su6K7FR3SnFx1Cb1rqBAyssl1Z3C
+twCGIkhQHTUauFR3Sv7Li+NrUqhGhTuXGTMd0IUgQWnUSC/xNYkawUwECeqiRvoKb1JGRldsutOu
+ES8pkYwMagRT8V52UBQ1MoLWpM2F2301/vJyKS/vOlrKz5ecHKmqEq/3ouvxPFnu/FfyLBoWCYcg
+QUXUyDjatQmt/hN1FfWt/jbt4/uKiyO/ZlpepifLzUXeMBNBgnKokdG0d1vQYqM1SfuUCu0tGHJX
+ZFs8HxIVQYJaqJHJUt0p09y8ughK4KIGKIQaAYmMIEEV1AhIcAQJSqBGAAgSrEeNAAhBguWoEQAN
+QYKVqBGAEIIEy1AjAOEIEqxBjQBEIEiwADUC0B1BgtmoEYAeESSYihoBiIYgwTzUCEAvCBJMQo0A
+9I4gwQzUCECfCBIMR40AxIIgwVjUCECMCBIMRI0AxI4gwSjUCEC/ECQYghoB6C+CBP1RIwBxIEjQ
+GTUCEB+CBD1RIwBxI0jQDTUCMBAECfqgRgAGiCBBB9QIwMARJAwUNQKgC4KEAaFGAPRCkBA/agRA
+RwQJcaJGAPRFkBAPagRAdwQJ/UaNABiBIKF/qBEAgxAk9AM1AmAcgoRYUSMAhiJIiAk1AmA0goS+
+USMAJiBI6AM1AmAOgoTeUCMApiFIiIoaATATQULPqBEAkxEk9IAaATAfQUIkagTAEgQJF6FGAKxC
+kHABNQJgIYKELtQIgLUIEkSoEQAFECRQIwBKIEiJjhoBUARBSmjUCIA6CFLiokYAlEKQEhQ1AqAa
+gpSIqBEABRGkhEONAKiJICUWagRAWQQpgVAjACojSImCGgFQHEFKCNQIgPoIkvNRIwC2QJAcjhoB
+sAuC5GTUCICNECTHokYA7IUgORM1AmA7BMmBqBEAOyJITkONANgUQXIUagTAvgiSc1AjALZGkByC
+GgGwO4LkBNQIgAMQJNujRgCcgSDZGzUC4BgEycaoEQAnIUh2RY0AOAxBsiVqBMB5CJL9UCMAjkSQ
+bIYaAXAqgmQn1AiAgxEk26BGAJyNINkDNQLgeATJBqgRgERAkFRHjQAkCIKkNGoEIHEQJHVRIwAJ
+hSApihoBSDSDrR4APaBG9lI8dpUOO/l0xcB3AtgaR0jKeSF/85F3/3Hqy9PHGlqsngV906VGOu4H
+KnvllVduvfVWj8czatSomTNnPv300x0dHVYPpRCOkNSyuXD7sYbjbZ+2t33aPnP5NVaPg5gFgwP6
+40lJOs0BRQWDwZ/+9KfPPvtsaMuOHTt27NhRXl7+9ttvJycnWzibOjhCUsjLP/n/n+79vKWx1epB
+AOjspZde0mo0dOjQ+fPnZ2dna9t37979i1/8wtLRFEKQlLBv04H/nPxk/f/7sPnD41bPAkB/RUVF
+2o0XXnjh1Vdf3bFjx8aNG7UtFRUV1s2lFoKkhJ3r3v/q5Nng+YGd9gESw+wn3pixsTZj5xGrB4lV
+IBA4ePCgiEyePPnWW2/VNt52222pqakicuzYsc8++8zK+ZTBGpL1Nhdud33zGzc+dJ322/c27vvy
+4xPWjgSoLL2hWaQ5Y+eRGRtrA2mu5kljmialN06/wuq5ovrkk08uvfRSEbn66qtDG8+fP3/mzBkR
+SU5OHj16tGXDqYQgWUy7wnvJn74f2vLRW40EyWkefFCqqqS0VK7hQpWBijgwcrUEMnYeUTxOU6ZM
+aWtri9i4cuVKLUjZ2dmDB/NPsQhBshavN0oIu3bJmjVy+rSc4OcMHYxpaI52ly3iJCJnz5791a9+
+tXr1ahEZNmzYk08+afVEqiBIpvL5fF6v1/fVJ74sf11FvVAjZystlXfekf/+bzl71upRnGP/vKlN
+k9LHNDS7Wk6mqxenVn+br/oT7zBvTk5Obm5u9y/Yu3fv0qVLP/jgAxFJS0vbtGnTVVddZfRUdkGQ
+zOP1em+44QbtdvkivyfLnf9KnrUjwVjl5bJ3b+xf/i9b9xs3i8OcTHOdTHMF0kakNzS5WgK9f3H3
+OO2fNzWQ5tJ9Kl+1v3xRhYj4xO/1eouLi0MX12nWrFnzwAMPfPXVVyIyZ86c/DaCpgAAAqpJREFU
+devWXX755bqPYV8EyTyhGmlaP+EEjtM9/njXabqvL6zq3dRtBMlwWpzSG5peLblZ951vvn97+G/L
+y8tDQQoGgz//+c9LS0tFJDk5+bHHHlu+fLnuA9hdUnCArzBHbHw+X0ZGhtVTwDC9P4+0N2J47TWZ
+M6eXL/hw4T/pPheiefLv7X84cNLoR2lsbPR4PCJSWlp6//33i4jL5XrttddCL4xFOIJkkh6D1OP/
+/Nzc3KqqKhF59913r732WjOGwwAkabEhSLYyZLQ745mduu82qdtbQGnP8S+++GLixIknTpwQkRkz
+ZsyYMSPiy+677z5+YBVO2ZnG4/GUlZUVFBSEtlRWVlo4DxQ0Ko83/O63c83+Nm8/3ulgyGh3yg15
+wzOzjBgm4jleVlam3dixY8eJr6+xrK2tra2tjfiDCxcuJEhCkMyUn5+fm5tbUlLi8XiiXYGDREaQ
+YqRF6FR99en6mli+XouQGP9/ONpzvL6+3tDHdQxO2QEDouMpO56MsfAXLYylQ6ZFCDriCAmAnYzM
+XRwtSETI7ggSADuJWP4hQk5CkADjcS5OP0PS3cMzs76RmS1EyHFYQwIGJKY1pBj2IqwhIeHxeUgA
+ACUQJACAElhDAvTQ7SX6APqLIyRgQPRa+GEBCeCiBgCAEjhCAgAogSABAJRAkAAASiBIAAAlECQA
+gBIIEgBACQQJAKAEggQAUAJBAgAogSABAJRAkAAASiBIAAAlECQAgBIIEgBACQQJAKAEggQAUAJB
+AgAogSABAJRAkAAASiBIAAAlECQAgBIIEgBACQQJAKAEggQAUAJBAgAogSABAJRAkAAASiBIAAAl
+ECQAgBIIEgBACQQJAKAEggQAUAJBAgAogSABAJRAkAAASiBIAAAlECQAgBIIEgBACf8LaLkiIIqv
++hUAAAAASUVORK5CYII=
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">node</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>    <span class="c">% nodes</span>
+<span class="n">elem</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span> <span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>          <span class="c">% elements</span>
+
+<span class="c">%%</span>
+<span class="c">% Ascend Ordering and Orientation</span>
+<span class="n">bdFlag</span> <span class="p">=</span> <span class="n">setboundary</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="s">&#39;Dirichlet&#39;</span><span class="p">);</span>
+<span class="p">[</span><span class="n">elem</span><span class="p">,</span><span class="n">bdFlag</span><span class="p">]</span> <span class="p">=</span> <span class="n">sortelem</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="n">bdFlag</span><span class="p">);</span>
+<span class="p">[</span><span class="n">elem2edge</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="n">elem2edgeSign</span><span class="p">]</span> <span class="p">=</span> <span class="n">dofedge</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">showmesh</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findnode</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+<span class="n">findelem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="s">&#39;vec&#39;</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">edge</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem2edge</span><span class="p">);</span>
+<span class="n">display</span><span class="p">(</span><span class="n">elem2edgeSign</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+elem =
+
+     1     2     3
+     1     3     4
+
+
+edge =
+
+           1           2
+           1           3
+           1           4
+           2           3
+           3           4
+
+
+elem2edge =
+
+           4           2           1
+           5           3           2
+
+
+elem2edgeSign =
+
+     1    -1     1
+     1    -1     1
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
++hUAAAAASUVORK5CYII=
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

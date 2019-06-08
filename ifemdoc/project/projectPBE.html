@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectPBE</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-Nonlinear-Poisson-Boltzmann-Equation">Project: Nonlinear Poisson Boltzmann Equation<a class="anchor-link" href="#Project:-Nonlinear-Poisson-Boltzmann-Equation">&#182;</a></h1><p>The purpose of this project is to implement Newton's method, two-grid and nonlinear multigrid method (FAS) for solving the nonlinear elliptic equation. The example is the nonlinear
+Poisson-Boltzmann equation for the potential $u$ corresponding to a given
+charge density reads</p>
+$$ -\Delta u + k^2 \sinh (u) = \rho (x) $$<p>for $x\in \Omega\subset \mathbb R^d$, and with Dirichlet boundary condition $u|_{\partial \Omega} = g.$</p>
+<p>For $k = 1$ and $\rho = 0$, an exact solution in 1-d is given by</p>
+$$ \bar u(s) = \ln \left ( \frac{1+\cos (s)}{1-\cos (s)}\right).$$<p></p>
+<p>We consider a 2-d problem on the unit square $\Omega = (0,1)^2$. Let
+$\boldsymbol a=(1.0,2.0)/\sqrt{5}$. We choose $k =1, \rho$, and $g$ such that
+the exact solution is</p>
+$$u(\boldsymbol x) = \bar u(0.1+\boldsymbol a\cdot\boldsymbol x).$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Linearied-Poisson-Boltzmann-Equation">Step 1: Linearied Poisson Boltzmann Equation<a class="anchor-link" href="#Step-1:-Linearied-Poisson-Boltzmann-Equation">&#182;</a></h2><ul>
+<li><p>Given a current approximation of u, derive the linearized Poisson-Boltzmann equation (LPBE) at u.</p>
+</li>
+<li><p>Assemble the matrix equation for the LPBE. Besides the matrix of Laplacian operator, you need to compute the mass matrix corresponding to the L2 inner product. You can use three vertices quadrature rule i.e.</p>
+<p>$$\int _{\tau} f(x) dx = \frac{1}{3}\sum _{i=1}^3f(x_i)|\tau|.$$</p>
+<p>Then the mass matrix becomes diagonal. This is known as mass lumping.</p>
+</li>
+<li><p>Use the direct solver \ to solve the matrix equation.</p>
+</li>
+<li><p>Use a multigrid solver (e.g. amg) to solve the matrix equation. You can use your own multigrid solver or call <code>amg</code> in ifem.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Newton's-Method">Step 2: Newton's Method<a class="anchor-link" href="#Step-2:-Newton's-Method">&#182;</a></h2><ul>
+<li><p>Implement the Newton's method. Control the relative error of the residual in the stopping criteria.</p>
+</li>
+<li><p>Change the tolerance or maximum iteration steps in the multigrid solver and collect a table of total iteration steps and cpu time for different choices of inner iteration steps.</p>
+</li>
+<li><p>Uniform refine the grid and list the iteration steps to reach <code>1e-6</code> for different h and compute the approximation error in $H_1(\Omega)$ norm.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Two-Grid-Method">Step 3: Two-Grid Method<a class="anchor-link" href="#Step-3:-Two-Grid-Method">&#182;</a></h2><ul>
+<li><p>Apply Newton's method in Step 2 to $H = 1/4$ to obtain a solution $u_H$</p>
+</li>
+<li><p>Prolongate $u_H$ to a fine space with $h = H^2$ by using the prolongation matrix or subroutine <a href="projectMG.html">Project: Multigrid Methods</a></p>
+</li>
+<li><p>Solve one fixed iteration or one Newton's iteration in the fine grid to obtain $u_h$</p>
+</li>
+<li><p>Change $H$ from 1/4 to 1/16 and show the error for $u_h$ in $H_1(\Omega)$ norm.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Nonlinear-Multigrid:-FAS">Step 4: Nonlinear Multigrid: FAS<a class="anchor-link" href="#Step-4:-Nonlinear-Multigrid:-FAS">&#182;</a></h2><ul>
+<li><p>Implement the nonlinear Gauss-Seidel smoother.</p>
+</li>
+<li><p>Test the two level version of FAS.</p>
+</li>
+<li><p>Change two level FAS to V-cycle FAS by recrusion.</p>
+</li>
+<li><p>Compare the convergence of FAS with Newton's method and Two-Grid method.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

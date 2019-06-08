@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectStokesMAC</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-MAC-Scheme-for-Stokes-Equations">Project: MAC Scheme for Stokes Equations<a class="anchor-link" href="#Project:-MAC-Scheme-for-Stokes-Equations">&#182;</a></h1><p>The purpose of this project is to implement the simple and popular MAC scheme for solving Stokes equations in two dimensions.</p>
+<p>Reference</p>
+<ul>
+<li><a href="http://math.uci.edu/~chenlong/226/MACcode.pdf">Progamming of MAC for Stokes equations</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Test-Examples">Test Examples<a class="anchor-link" href="#Test-Examples">&#182;</a></h2><ul>
+<li>Analytic solution. We use a simple model of colliding flow with
+analytic solutions to test the code. The domain is $[-1,1]^2$  Compute the data <code>f</code> and Dirichlet boundary condition <code>g_D</code> for the analytic solution:</li>
+</ul>
+$$u = 20xy^3; \quad v = 5x^4 - 5y^4; \quad p = 60x^2y - 20y^3 + {\rm constant}.$$<ul>
+<li>Driven cavity problem. The domain is [-1,1]^2. Stokes equation with zero Dirichlet boundary condition except on the top:</li>
+</ul>
+$$ \{ y=1; -1 &lt;= x &lt;= 1 | u = 1, v = 0 \}.$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Gauss-Seidel-smoothing-of-velocity">Step 1: Gauss-Seidel smoothing of velocity<a class="anchor-link" href="#Step-1:-Gauss-Seidel-smoothing-of-velocity">&#182;</a></h2><p>Given a pressure approximation, relax the momentum equation to update velocity. See <a href="projectMG.html">Project: Multigrid Methods</a> on the matrix free implemenation of G-S relaxation.</p>
+<p>Note that the boundary or near boundary dof should be updated diffeently. The stencil should be changed according to different boundary conditions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Step-2:-Distributive-Gauss-Seidel-Smoothing-(DGS)">Step 2: Distributive Gauss-Seidel Smoothing (DGS)<a class="anchor-link" href="#Step-2:-Distributive-Gauss-Seidel-Smoothing-(DGS)">&#182;</a></h1><ol>
+<li>Gauss-Seidel smoothing of velocity to update <code>u</code>;</li>
+<li>form the residual for the continuity equation <code>rp = g-Bu</code>;</li>
+<li>solve the Poisson equation for pressure <code>Ap*ep = rp</code> by G-S;</li>
+<li>distribute the correction to velocity by <code>u = u + B'*ep</code>;</li>
+<li>update the pressure by <code>p = p - Ap*ep</code>.</li>
+</ol>
+<p>Every step can be implemented in a matrix-free version; see  <a href="http://math.uci.edu/~chenlong/226/MACcode.pdf">Progamming of MAC for Stokes equations</a>.</p>
+<p>Use DGS as an iterative method to solve the Stokes equation. The iteration steps could be very large but will converges.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Step-3:-Two-level-method">Step 3: Two level method<a class="anchor-link" href="#Step-3:-Two-level-method">&#182;</a></h1><p>The two level method is</p>
+<ol>
+<li>presmoothing by DGS</li>
+<li>form residuals for momentum and continunity equations</li>
+<li>restrict the residual to the coarse grid</li>
+<li>iterate DGS in the coarse grid till converge</li>
+<li>prolongate the correction to the fine grid</li>
+<li>postsmoothing by DGS</li>
+</ol>
+<p>Note: the index map between coarse and fine grids are slightly different for <code>u,v,p</code>; see  <a href="http://math.uci.edu/~chenlong/226/MACcode.pdf">Progamming of MAC for Stokes equations</a>.</p>
+<p>Test your two level methods for different levels. It should convergence in less than 20 steps and indepedent of the number of levels.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Vcycle-multigrid-method">Step 4: Vcycle multigrid method<a class="anchor-link" href="#Step-4:-Vcycle-multigrid-method">&#182;</a></h2><p>Recrusively apply the two-level method to the coarse grid problem
+in the previous step to get a V-cycle method.</p>
+<ul>
+<li><p>Test the convergence of Vcycle method. Record the iteration steps needed to push the relative residual smaller than a tolerance.</p>
+</li>
+<li><p>Compute the error between the computed approximation to the exact solution and show the convergence rate in terms of mesh size <code>h</code>.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

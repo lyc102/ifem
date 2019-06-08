@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectcontent</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Projects">Projects<a class="anchor-link" href="#Projects">&#182;</a></h1><p>The best way to learn iFEM is to do the following projects designed for Math 226: Numerical PDE in UC Irvine.</p>
+<ul>
+<li><a href="projectFDM1D.html">Finite Difference Methods in 1-D</a></li>
+<li><a href="projectFDM.html">Finite Difference Methods</a></li>
+<li><a href="projectFEM.html">Linear Finite Element Method</a></li>
+<li><a href="projectFMM.html">Fast Multipole Methods</a></li>
+<li><a href="projectMG.html">Multigrid Methods</a></li>
+<li><a href="projectPBE.html">Nonlinear Poisson Boltzmann Equation</a></li>
+<li><a href="projectPBEafem.html">Adaptive FEM for PBE</a></li>
+<li><a href="projectHeat.html">Adaptive FEM for Heat Equation</a> </li>
+<li><a href="projectStokes.html">Finite Element Methods for Stokes equations</a></li>
+<li><a href="projectStokesMAC.html">MAC Scheme for Stokes equations</a></li>
+<li><a href="projectStokesSolver.html">Fast Solvers for Stokes equations</a></li>
+<li><a href="projectNavierStokes.html">Transient Navier-Stokes Equations</a></li>
+<li><a href="projectMaxwell.html">Edge element for Maxwell Equations</a></li>
+<li><a href="projectWave.html">Wave equations</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

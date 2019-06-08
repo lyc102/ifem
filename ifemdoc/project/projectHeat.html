@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectHeat</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the same directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Project:-AFEM-for-the-Heat-Equation">Project: AFEM for the Heat Equation<a class="anchor-link" href="#Project:-AFEM-for-the-Heat-Equation">&#182;</a></h2><p>The purpose of this project is to implement explict and implicit
+numerical methods for solving the parabolic equation. The example is the heat equation</p>
+$$ u_t -\Delta u  = f \quad \text{ with }u |_{\partial \Omega} = g, u(*,0) = u_0.$$<p>We consider a 2-d problem on the unit square $\Omega = (0,1)^2$ with the
+exact solution</p>
+$$u(x,t) = \beta (t)\exp(-[(x-t+0.5)^2+(y-t+0.5)^2]/0.04),$$<p></p>
+<p>with $$\beta (t) = 0.1(1-\exp(-10^2(t-0.5)^2)).$$</p>
+<p>Adaptive FEM is further applied to capture the singularity of the solution.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Forward-Euler,-Backward-Euler,-and-Crack-Nicolson-methods">Step 1: Forward Euler, Backward Euler, and Crack-Nicolson methods<a class="anchor-link" href="#Step-1:-Forward-Euler,-Backward-Euler,-and-Crack-Nicolson-methods">&#182;</a></h2><ul>
+<li><p>Given a mesh, construct the stiffness matrix <code>A</code> for the Laplace operator and the mass matrix <code>M</code> for the $L^2$-inner product.</p>
+</li>
+<li><p>Given a time step size <code>dt</code>, final time <code>T</code>, code a for loop over time to involve the solution by either forward, backward Euler or Crack-Nicolson methods.</p>
+</li>
+</ul>
+<blockquote><p>Please do not store the approximation at all time steps. Instead only the solution in the previous step <code>uold</code> and the current step <code>u</code> is needed.</p>
+</blockquote>
+<ul>
+<li>For implicit methods, use direct solver <code>A\b</code> or multigrid solvers to solve the linear system <code>Au=b</code>. For meshes generated in <code>ifem</code>, <code>mg(A,b,elem)</code> is faster than <code>amg(A,b)</code>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Check-the-Convergence">Step 2: Check the Convergence<a class="anchor-link" href="#Step-2:-Check-the-Convergence">&#182;</a></h2><ul>
+<li><p>Check the convergence rate in time and space. Use the exact solution to get the nodal interpolant <code>uI</code> and compute the H1 norm of the error using matrix <code>A</code> and the L2 norm using matrix <code>M</code>.</p>
+</li>
+<li><p>To check the convergence rate in time, fix a small mesh size <code>h</code> in space
+and let <code>dt</code> vary and vice verse for convergence in space.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Visulization">Step 3: Visulization<a class="anchor-link" href="#Step-3:-Visulization">&#182;</a></h2><ul>
+<li>Use <code>showsolution(node,elem,u)</code> to plot the solution and together with <code>pause(0.01)</code> to get an animation. Use <code>axis</code> to fix the axis scaling.</li>
+</ul>
+<blockquote><p>For small time step, do not plot the solution at every time step. Instead plot every 10 or 100 steps.</p>
+</blockquote>
+<ul>
+<li>You can save the plot into a movie. Read <code>doc getframe</code> for an example.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Adaptive-Finite-Element-Methods">Step 4: Adaptive Finite Element Methods<a class="anchor-link" href="#Step-4:-Adaptive-Finite-Element-Methods">&#182;</a></h2><ul>
+<li><p>Run 2D examples: <code>Lshape</code> in iFEM and read the code to learn the usage of AFEM; see also <a href="afemdoc.html">Adaptive Finite Element Methods</a></p>
+</li>
+<li><p>In one time step involution, repeat the refinement and coarsen several steps to get a better approximation of the solution. You can control the max iteration steps for AFEM or the maximal number of elements.</p>
+</li>
+<li><p>Use <code>eta = estimaterecovery(node,elem,u)</code> instead of residual type error estimators.</p>
+</li>
+<li><p>Use <code>nodeinterpolate</code> and <code>eleminterpolate</code> to interpolate function between different meshes.</p>
+</li>
+<li><p>Check the convergence rate for AFEM.</p>
+</li>
+<li><p>Make animation for meshes and solutions.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>

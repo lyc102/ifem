@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>projectStokesSolver</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Project:-Fast-Solvers-for-Stokes-Equations">Project: Fast Solvers for Stokes Equations<a class="anchor-link" href="#Project:-Fast-Solvers-for-Stokes-Equations">&#182;</a></h1><p>The purpose of this project is to implement fast solvers for solving
+finite element and finite difference discretization of Stokes equations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Part-I:-Block-Preconditioner">Part I: Block Preconditioner<a class="anchor-link" href="#Part-I:-Block-Preconditioner">&#182;</a></h2><p>Given a triangulation, use codes in <a href="projectStokes.html">Project: Finite Element Methods for Stokes Equation</a> to generate matrices for isoP2-P0 and P1CR-P0 for Stokes equations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Step-1:-Direct-solvers-in-preconditioner">Step 1: Direct solvers in preconditioner<a class="anchor-link" href="#Step-1:-Direct-solvers-in-preconditioner">&#182;</a></h3><p>Use $\begin{pmatrix} A^{-1} &amp; 0\\ 0 &amp; Mp^{-1}\end{pmatrix}$ as the preconditioner and call <code>minres</code>.</p>
+<p>Do not use <code>inv(A)</code> to form the inverse. Instead the preconditioner can be coded as a subroutine and use backslash to invert <code>A</code>.</p>
+<p>For isoP2-P0 and P1CR-P0, the mass matrix for pressure is a diagonal
+matrix. The inverse of Mp can be realized by a vector multiplication.</p>
+<p>Refine the triangulation several times and list the iteration steps of
+<code>minres</code> and cpu time. The steps should be uniform but the time may not be
+linearly scaled due to the direct solver used in the preconditioner. Use
+<code>showrate</code> to check the scaling of cpu time vs size of problems.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Step-2:-Replace-direct-solver-by-multigrid-solver">Step 2: Replace direct solver by multigrid solver<a class="anchor-link" href="#Step-2:-Replace-direct-solver-by-multigrid-solver">&#182;</a></h3><p>The direct solver of <code>A</code> can be replaced by multigrid solvers included in
+ifem. Try <code>help mg</code> or <code>help amg</code>.</p>
+<p>To use <code>mg</code>, the mesh structure <code>elem</code> should be provided. So you need to
+modify the matrices to build in the Dirichlet boundary condition. If you
+only take out submatrices associated to free dofs, you can use <code>amg</code>.</p>
+<p>Redo the test in step 1. You should get the same iteration steps and now
+the cpu time scales linearly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Step-3:-Replace-exact-multigrid-solver-by-V-cycles">Step 3: Replace exact multigrid solver by V-cycles<a class="anchor-link" href="#Step-3:-Replace-exact-multigrid-solver-by-V-cycles">&#182;</a></h3><p>Set <code>option.maxIt = 3</code> and redo the test. The iteration steps could
+increase but cpu time is saved instead. How about <code>option.maxIt = 1</code>?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Part-II:-Block-triangular-Preconditoner">Part II: Block-triangular Preconditoner<a class="anchor-link" href="#Part-II:-Block-triangular-Preconditoner">&#182;</a></h1><p>Use $\begin{pmatrix}A &amp; B'\\ 0 &amp; -Mp \end{pmatrix}^{-1}$ as the preconditioner and call <code>gmres</code>.</p>
+<p>Repeat three steps in Part I and compare the cpu time for these two preconditioners.</p>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>
