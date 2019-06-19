@@ -63,8 +63,9 @@ if NTin < NTf 		   % coarse grid to fine grid
     else
         newp(tree(idx,2)) = weight*newp(tree(idx,1));
         newp(tree(idx,3)) = weight*newp(tree(idx,1));
-    end        
-elseif NTin == NTf      % fine grid to coarse grid
+    end 
+else   % fine grid to coarse grid
+%elseif NTin == NTf      % fine grid to coarse grid
     newp = p;
     newp(tree(:,3)) = [];
 end
