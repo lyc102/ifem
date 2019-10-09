@@ -27,15 +27,16 @@ function [err,elemErr] = getL2errorRT0(node,elem,exactSigma,sigmah,d)
 %     elem = [1,2,8; 3,8,2; 8,3,5; 4,5,3; 7,8,6; 5,6,8];    % elements
 %     bdFlag = setboundary(node,elem,'Dirichlet');
 %     pde = mixBCdata;
-%     err = zeros(maxIt,1); N = zeros(maxIt,1);
-%     for i =1:maxIt
+%     err = zeros(maxIt,1); 
+%     h = zeros(maxIt,1);
+%     for k = 1:maxIt
 %         [node,elem,bdFlag] = uniformrefine(node,elem,bdFlag);
-%         [u,sigma,NULL] = PoissonRT0(node,elem,bdFlag,pde);
-%         err(i) = getL2errorRT0(node,elem,pde.Du,sigma);
-%         N(i) = size(u,1);
+%         [u,sigma] = PoissonRT0(node,elem,bdFlag,pde);
+%         err(k) = getL2errorRT0(node,elem,pde.Du,sigma);
+%         h(k) = 1./(sqrt(size(node,1))-1);
 %     end
-%     r1 = showrate(N,err,2);
-%     legend('||\sigma - \sigma_h||',['N^{' num2str(r1) '}'],...
+%     r1 = showrateh(h,err,2);
+%     legend('||\sigma - \sigma_h||',['h^{' num2str(r1) '}'],...
 %            'LOCATION','Best');
 % 
 % See also getHdiverrorRT0, getL2error3RT0.
@@ -44,7 +45,7 @@ function [err,elemErr] = getL2errorRT0(node,elem,exactSigma,sigmah,d)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
-if nargin >=5 && ~isempty(d)
+if exist('d','var') && ~isempty(d)
     if isreal(d)
         K = d;                  % d is an array
     else                        

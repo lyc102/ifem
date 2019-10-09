@@ -10,11 +10,14 @@ function M = getmassmatvec(elem2edge,area,Dlambda,elemType,K)
 % - "RT0": The lowest order Raviart-Thomas element
 % - "BDM1": The lowest order Brezzi-Douglas-Michel element
 % - "BDM1B": The BDM element enriched by the curl of cubic bubble function
-% - "ND0': The lowest order Nedelec element
+% - "ND0": The lowest order Nedelec element
+% - "RT1": Linear-Quadratic Rvairart-Thomas element 
 %
 % Note that RT0 and ND0 share the same mass matrix.
 %
-% Created by Ming Wang at July, 2012. Improved by Long Chen.
+% RT0, BMD1 are created by Ming Wang at July, 2012. Improved by Long Chen.
+%
+% Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 if ~exist('K','var'), K = []; end
 NE = double(max(elem2edge(:)));
@@ -70,7 +73,7 @@ if strcmp(elemType,'RT0') || strcmp(elemType,'ND0')
 end
 
 %% BDM1
-if strcmp(elemType,'BDM1') || strcmp(elemType,'BDM1B')
+if strcmp(elemType,'BDM1') || strcmp(elemType,'BDM1B') || strcmp(elemType,'RT1')
     M = sparse(2*NE,2*NE);
     for i = 1:3
         for j = i:3
@@ -129,14 +132,10 @@ if strcmp(elemType,'BDM1B')
         ii = double(elem2edge(:,i)); 
         jj = double((1:NT)');
         i1 = localEdge(i,1); i2 = localEdge(i,2); i3 = 6-i1-i2;
-        Mij = 9/10*area.*(...
-             dot(Dlambda(:,:,i2),Dlambda(:,:,i3),2)...
-            +dot(Dlambda(:,:,i2),Dlambda(:,:,i2),2)...
-            -dot(Dlambda(:,:,i1),Dlambda(:,:,i3),2)...
-            -dot(Dlambda(:,:,i1),Dlambda(:,:,i1),2));
-        if ~isempty(K)
-            Mij = Mij./K;
-        end        
+        Mij = 9/10*area.*(DiDj(:,i2,i3)...
+                         +DiDj(:,i2,i2)...
+                         -DiDj(:,i1,i3)...
+                         -DiDj(:,i1,i1));
         M = M + sparse([ii;jj+2*NE],[jj+2*NE;ii],[Mij;Mij],2*NE+NT,2*NE+NT);
     end
     clear ii jj i1 i2 i3 Mij;
@@ -145,29 +144,78 @@ if strcmp(elemType,'BDM1B')
         ii = double(elem2edge(:,i)); 
         jj = double((1:NT)');
         i1 = localEdge(i,1); i2 = localEdge(i,2); i3 = 6-i1-i2;
-        Mij = 9/10*area.*(...
-             dot(Dlambda(:,:,i2),Dlambda(:,:,i3),2)...
-            +dot(Dlambda(:,:,i1),Dlambda(:,:,i3),2)...
-            +dot(Dlambda(:,:,i2),Dlambda(:,:,i2),2)...
-            +dot(Dlambda(:,:,i1),Dlambda(:,:,i1),2)...
-            +dot(Dlambda(:,:,i1),Dlambda(:,:,i2),2));
-        if ~isempty(K)
-            Mij = Mij./K;
-        end        
+        Mij = 9/10*area.*(DiDj(:,i2,i3)...
+                        + DiDj(:,i1,i3)...
+                        + DiDj(:,i2,i2)...
+                        + DiDj(:,i1,i1)...
+                        + DiDj(:,i1,i1));
         M = M + sparse([ii+NE;jj+2*NE],[jj+2*NE;ii+NE],[Mij;Mij],2*NE+NT,2*NE+NT);
     end
     clear ii jj i1 i2 i3 Mij;
     % (bubble, bubble)
     ii = 1+2*NE:NT+2*NE;
-    Mij = 81/10*area.*(...
-          dot(Dlambda(:,:,1),Dlambda(:,:,1),2)...
-         +dot(Dlambda(:,:,1),Dlambda(:,:,2),2)...
-         +dot(Dlambda(:,:,1),Dlambda(:,:,3),2)...
-         +dot(Dlambda(:,:,2),Dlambda(:,:,2),2)...
-         +dot(Dlambda(:,:,2),Dlambda(:,:,3),2)...
-         +dot(Dlambda(:,:,3),Dlambda(:,:,3),2));
+    Mij = 81/10*area.*(DiDj(:,1,1)...
+                    + DiDj(:,1,2)...
+                    + DiDj(:,1,3)...
+                    + DiDj(:,2,2)...
+                    + DiDj(:,2,3)...
+                    + DiDj(:,3,3));
     if ~isempty(K)
         Mij = Mij./K;
     end        
     M = M + sparse(ii,ii,Mij,2*NE+NT,2*NE+NT);
+end
+
+%% RT1
+elem2dof = [elem2edge elem2edge+NE (1:NT)'+2*NE (1:NT)'+2*NE+NT];
+locBasesIdx = [1 2 0; 1 3 0; 2 3 0; ... % phi and psi
+               2 1 3; 3 1 2];           % chi
+if strcmp(elemType,'RT1')
+    newM = sparse(2*NE+2*NT,2*NE+2*NT);
+    newM(1:2*NE,1:2*NE) = M;
+    M = newM;
+    % (phi_i, chi_j)
+    for i = 1:3
+        for j = 1:2
+            ii = double(elem2dof(:,i));
+            jj = double(elem2dof(:,j+6));
+            i1 = locBasesIdx(i,1); i2 = locBasesIdx(i,2); %i3 = locBasesIdx(i,3);
+            j1 = locBasesIdx(j,1); j2 = locBasesIdx(j,2); j3 = locBasesIdx(j,3);
+            Mij = intlambda([j1,i1,j2],2)*DiDj(:,i2,j3) ...
+                 -intlambda([j1,i1,j3],2)*DiDj(:,i2,j2) ...
+                 -intlambda([j1,i2,j2],2)*DiDj(:,i1,j3) ...
+                 +intlambda([j1,i2,j3],2)*DiDj(:,i1,j2);                        
+            M = M + sparse([ii;jj],[jj;ii],[Mij;Mij],2*NE+2*NT,2*NE+2*NT);
+        end
+    end
+    clear ii jj i1 i2 i3 Mij;
+    % (psi_i, chi_j)
+    for i = 1:3
+        for j = 1:2
+            ii = double(elem2dof(:,i+3));
+            jj = double(elem2dof(:,j+6));
+            i1 = locBasesIdx(i,1); i2 = locBasesIdx(i,2); %i3 = locBasesIdx(i,3);
+            j1 = locBasesIdx(j,1); j2 = locBasesIdx(j,2); j3 = locBasesIdx(j,3);
+            Mij = intlambda([j1,i1,j2],2)*DiDj(:,i2,j3) ...
+                 -intlambda([j1,i1,j3],2)*DiDj(:,i2,j2) ...
+                 +intlambda([j1,i2,j2],2)*DiDj(:,i1,j3) ...
+                 -intlambda([j1,i2,j3],2)*DiDj(:,i1,j2);                        
+            M = M + sparse([ii;jj],[jj;ii],[Mij;Mij],2*NE+2*NT,2*NE+2*NT);
+        end
+    end
+    clear ii jj i1 i2 i3 Mij;
+    for i = 1:2
+        for j = 1:2
+            % (chi_j,chi_i)
+            ii = double(elem2dof(:,i+3));
+            jj = double(elem2dof(:,j+6));
+            i1 = locBasesIdx(i,1); i2 = locBasesIdx(i,2); i3 = locBasesIdx(i,3);
+            j1 = locBasesIdx(j,1); j2 = locBasesIdx(j,2); j3 = locBasesIdx(j,3);
+            Mij = intlambda([i1,j1,i2,j2],2)*DiDj(:,i3,j3) ...
+                 -intlambda([i1,j1,i2,j3],2)*DiDj(:,i3,j2) ...
+                 -intlambda([i1,j1,i3,j2],2)*DiDj(:,i2,j3) ...
+                 +intlambda([i1,j1,i3,j3],2)*DiDj(:,i2,j2);                        
+            M = M + sparse([ii;jj],[jj;ii],[Mij;Mij],2*NE+2*NT,2*NE+2*NT);
+        end
+    end
 end
