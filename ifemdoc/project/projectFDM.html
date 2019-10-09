@@ -78,9 +78,8 @@ solving the Poisson equation in a rectangular domain using matrix-free or tensor
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Step-1:-Grid-and-Grid-Function">Step 1: Grid and Grid Function<a class="anchor-link" href="#Step-1:-Grid-and-Grid-Function">&#182;</a></h2><p>Use <code>meshgrid</code> or <code>ndgrid</code> to generate a uniform grid of $(0,1)\times
-(0,2)$ for a given mesh size $h$.</p>
-<p>Evaluate a function <code>f(x,y)</code> on this uniform grid.</p>
+<h2 id="Step-1:-Uniform-Grids-and-Grid-Functions">Step 1: Uniform Grids and Grid Functions<a class="anchor-link" href="#Step-1:-Uniform-Grids-and-Grid-Functions">&#182;</a></h2><p>Use <code>meshgrid</code> or <code>ndgrid</code> to generate a uniform grid of the rectangle `[0,1]x [</p>
+<p>Evaluate a function <code>f(x,y)</code> on this uniform grid. Plot it using <code>mesh</code> or <code>surf</code>.</p>
 
 </div>
 </div>
@@ -100,7 +99,7 @@ solving the Poisson equation in a rectangular domain using matrix-free or tensor
 </ul>
 <p>Use them to verify the truncation error. That is, choosing the exact
 solution <code>u</code> and compute the max norm of <code>A*u - f</code>. Change <code>h</code> and show the
-order of the truncation error using the functino <code>showrateh</code>.</p>
+order of the truncation error.</p>
 
 </div>
 </div>
@@ -124,10 +123,10 @@ modify the right hand side.</p>
 <h2 id="Step-4:-Solve-the-Linear-Algebraic-Systems">Step 4: Solve the Linear Algebraic Systems<a class="anchor-link" href="#Step-4:-Solve-the-Linear-Algebraic-Systems">&#182;</a></h2><ul>
 <li><p>Direct methods: Use the big matrix to solve <code>u = A\f</code>.</p>
 </li>
-<li><p>Iterative methods: Implement Gauss-Seidel method as a function <code>B(u,f)</code> and iterate</p>
+<li><p>Iterative methods: Implement Gauss-Seidel method as a subroutine <code>GS(u,f)</code> and iterate</p>
 
 <pre><code>while err &gt; tol
-     u = B(u,f);
+     u = GS(u,f);
      err = norm(f-A*u)/norm(f);
 end</code></pre>
 </li>
@@ -141,16 +140,29 @@ end</code></pre>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Step-5:-Convergence">Step 5: Convergence<a class="anchor-link" href="#Step-5:-Convergence">&#182;</a></h2><ul>
-<li><p>Choose a smooth solution and calculate the right hand side f and boundary conditions for the unit square.</p>
+<li><p>Choose a smooth solution <code>u</code> and calculate the right hand side <code>f</code> and boundary conditions for the unit square.</p>
 </li>
-<li><p>Compute the error <code>uI - uh</code> in maximum norm, where uI is the nodal interpolation.</p>
+<li><p>Compute the error <code>uI - uh</code> in the maximum norm, where <code>uI</code> is the nodal interpolation of <code>u</code>.</p>
 </li>
-<li><p>Change mesh size h and show the order of convergence</p>
+<li><p>Change the mesh size <code>h</code> from <code>1/8,1/16,1/32,1/64</code> and show the order of the error.</p>
 </li>
 </ul>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
     </div>
   </div>
