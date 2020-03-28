@@ -9,10 +9,10 @@ Add the path to iFEM into the path library of MATLAB by either:
 1. Graphical interface. Click
 	File -> Set Path -> Add with Subfolders
    and chose the directory where the package iFEM is stored.
-   
+  
 2. Command window. Go to the directory of iFEM and run 
 `setpath`
- 
+
 
 ## Help
 
@@ -31,7 +31,7 @@ Add the path to iFEM into the path library of MATLAB by either:
 ## Feed Back
 
 If you like it, please send me an email lyc102@gmail.com. If you  feel it is helpful for your research, please acknowledge your use by citing:
- 
+
 L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical Report, University of California at Irvine, 2009.
 
 
@@ -39,7 +39,9 @@ L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical 
 
 The author would like to thank Professor Michael Holst in University of California at San Diego and Professor Ludmil Zikatanov in Pennsylvania State University for many insightful discussion, and also Professor Chensong Zhang in Chinese Academy of Sciences for the effort in the development of AFEM@matlab, an early version of iFEM.
 
-The author also thanks students or postdocs Shuhao Cao, Ming Wang, Huayi Wei, Lin Zhong, and Jie Zhou for their contribution to iFEM in one way or another. Detailed credits can be found in the M-lint of several m files.
+The author thanks students or postdocs Shuhao Cao, Ming Wang, Huayi Wei, Lin Zhong, and Jie Zhou for their contribution to iFEM in one way or another. Detailed credits can be found in the M-lint of several m files.
+
+The author is also grateful to the NSF for the partially support over the years. 
 
 
 Long Chen
@@ -49,9 +51,7 @@ Long Chen
 Professor                 
 
 Department of Mathematics
-
 University of California at Irvine
-
 http://math.uci.edu/~chenlong/
 
 --
