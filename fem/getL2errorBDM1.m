@@ -26,17 +26,18 @@ function [err,elemErr] = getL2errorBDM1(node,elem,exactSigma,sigmah,d)
 %     maxIt = 5;
 %     node = [1,0; 1,1; 0,1; -1,1; -1,0; -1,-1; 0,-1; 0,0]; % nodes
 %     elem = [1,2,8; 3,8,2; 8,3,5; 4,5,3; 7,8,6; 5,6,8];    % elements
-%     bdEdge = setboundary(node,elem,'Dirichlet');
+%     bdFlag = setboundary(node,elem,'Dirichlet');
 %     pde = mixBCdata;
-%     err = zeros(maxIt,1); N = zeros(maxIt,1);
-%     for i =1:maxIt
-%         [node,elem,bdEdge] = uniformrefine(node,elem,bdEdge);
-%         [u,sigma,NULL] = PoissonBDM1(node,elem,pde,bdEdge);
-%         err(i) = getL2errorBDM1(node,elem,pde.Du,sigma);
-%         N(i) = size(u,1);
+%     err = zeros(maxIt,1); 
+%     h = zeros(maxIt,1);
+%     for k = 1:maxIt
+%         [node,elem,bdFlag] = uniformrefine(node,elem,bdFlag);
+%         [u,sigma] = PoissonBDM1(node,elem,bdFlag,pde);
+%         err(k) = getL2errorBDM1(node,elem,pde.Du,sigma);
+%         h(k) = 1./(sqrt(size(node,1))-1);
 %     end
-%     r1 = showrate(N,err,2);
-%     legend('||\sigma - \sigma_h||',['N^{' num2str(r1) '}'],...
+%     r1 = showrateh(h,err,2);
+%     legend('|| \sigma - \sigma_h ||',['h^{' num2str(r1) '}'],...
 %            'LOCATION','Best');
 %
 % See also getHdiverrorBDM1, getL2errorRT0. 
@@ -44,7 +45,8 @@ function [err,elemErr] = getL2errorBDM1(node,elem,exactSigma,sigmah,d)
 % Created by Ming Wang at Jan 17, 2011, M-lint modified at May 15, 2011. 
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
-if nargin >=5 && ~isempty(d)
+
+if exist('d','var') && ~isempty(d)
     if isreal(d)
         K = d;                  % d is an array
     else                        
@@ -85,6 +87,7 @@ for p = 1:nQuad
     for k = 1:3 % for each basis
         i = locEdge(k,1); j = locEdge(k,2);
         % phi_k = lambda_iRot_j - lambda_jRot_i;
+        % psi_k = lambda_iRot_j + lambda_jRot_i;
         sigmahp = sigmahp + repmat(elem2edgeSign(:,k).*sigmah(elem2dof(:,k)),1,2).*...
                    (lambda(p,i)*Dlambda(:,:,j)*rotMat-lambda(p,j)*Dlambda(:,:,i)*rotMat)...
                           + repmat(sigmah(NE+elem2dof(:,k)),1,2).*...

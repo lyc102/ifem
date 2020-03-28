@@ -59,8 +59,11 @@ uI(NE+1:2*NE,1) = dot(edgeVec,0.5*(uQ(edge(:,1),:)-uQ(edge(:,2),:)),2);
 eik = node(face(:,3),:)-node(face(:,1),:);
 eij = node(face(:,2),:)-node(face(:,1),:);
 uquadpts = uQ(N+face2edge(:,1),:)+uQ(N+face2edge(:,2),:)+uQ(N+face2edge(:,3),:);
-lf = [4*dot(eik,uquadpts,2) 4*dot(eij,uquadpts,2)];
+lf = [4*dot(eik,uquadpts,2) ...
+      4*dot(eij,uquadpts,2)];
 face2edgeDofValue = [uI(face2edge(:,1:3)) uI(face2edge(:,1:3)+NE)];
-localMatrix = [4 8 4 -4  0 4; 8 4 -4 0 -4 4]';
+localMatrix = [4 8 4 -4  0 4; ...
+               8 4 -4 0 -4 4]';
 lf = lf - face2edgeDofValue*localMatrix;
-uI((2*NE+1):end) = [2*lf(:,1) - lf(:,2); 2*lf(:,2) - lf(:,1)]/3;
+uI((2*NE+1):end) = [2*lf(:,1) - lf(:,2); ...
+                    2*lf(:,2) - lf(:,1)]/3;

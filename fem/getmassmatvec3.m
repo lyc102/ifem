@@ -8,8 +8,14 @@ function M = getmassmatvec3(elem2dof,volume,Dlambda,elemType,K)
 % The elemType can be: 
 %
 % - "RT0": The lowest order Raviart-Thomas element
-% - "ND0': The lowest order Nedelec element
+% - "ND0": The lowest order Nedelec element
+% - "ND1": The full linear Nedelec element
+% - "ND2": The incomplete quadratic Nedelec element
 %
+% Note that for H(div) element, the coefficient is Mij/K while for H(curl)
+% element, it is Mij*K. 
+%
+% Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 if ~exist('K','var'), K = []; end
 NT = size(elem2dof,1);
@@ -52,6 +58,81 @@ if strcmp(elemType,'ND0')
     M = M + MU + MU';
 end
 
+%% ND1: The full linear Nedelec element
+if strcmp(elemType,'ND1') 
+    NE = double(max(elem2dof(:)));
+    DiDj = zeros(NT,4,4);
+    for i = 1:4
+        for j = i:4        
+            DiDj(:,i,j) = dot(Dlambda(:,:,i),Dlambda(:,:,j),2);
+            DiDj(:,j,i) = DiDj(:,i,j);
+        end
+    end
+    locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
+    ii = zeros(21*NT,1); jj = zeros(21*NT,1); 
+    sMphi = zeros(21*NT,1); sMpsi = zeros(21*NT,1);
+    index = 0;
+    % two block diagonal matrix for phi and psi
+    for i = 1:6
+        for j = i:6
+            % (phi_i,phi_j)
+            ii(index+1:index+NT) = double(elem2dof(:,i)); 
+            jj(index+1:index+NT) = double(elem2dof(:,j));
+            % mass matrix
+            % locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
+            i1 = locEdge(i,1); i2 = locEdge(i,2);
+            j1 = locEdge(j,1); j2 = locEdge(j,2);
+            Mij = 1/20*volume.*( (1+(i1==j1))*DiDj(:,i2,j2) ...
+                               - (1+(i1==j2))*DiDj(:,i2,j1) ...
+                               - (1+(i2==j1))*DiDj(:,i1,j2) ...
+                               + (1+(i2==j2))*DiDj(:,i1,j1));
+            if ~isempty(K)
+                Mij = Mij.*K;
+            end
+            sMphi(index+1:index+NT) = Mij;
+            % (psi_i,psi_j)
+            Mij = 1/20*volume.*( (1+(i1==j1))*DiDj(:,i2,j2) ...
+                               + (1+(i1==j2))*DiDj(:,i2,j1) ...
+                               + (1+(i2==j1))*DiDj(:,i1,j2) ...
+                               + (1+(i2==j2))*DiDj(:,i1,j1));
+            if ~isempty(K)
+                Mij = Mij.*K;
+            end
+            sMpsi(index+1:index+NT) = Mij;
+            index = index + NT;
+        end
+    end
+    diagIdx = (ii == jj);   upperIdx = ~diagIdx;
+    M = sparse([ii(diagIdx); ii(diagIdx)+NE], [jj(diagIdx); jj(diagIdx)+NE],...
+               [sMphi(diagIdx); sMpsi(diagIdx)],Ndof,Ndof);
+    MU = sparse([ii(upperIdx); ii(upperIdx)+NE], [jj(upperIdx); jj(upperIdx)+NE],...
+               [sMphi(upperIdx); sMpsi(upperIdx)],Ndof,Ndof);
+    M = M + MU + MU';
+    % off-diagonal matrix (psi, phi)
+    ii = zeros(36*NT,1); jj = zeros(36*NT,1); ss = zeros(36*NT,1);
+    index = 0;
+    for i = 1:6
+        for j = 1:6
+            % local to global index map and its sign
+            i1 = locEdge(i,1); i2 = locEdge(i,2);
+            j1 = locEdge(j,1); j2 = locEdge(j,2);
+            Mij = 1/20*volume.*( (1+(i1==j1))*DiDj(:,i2,j2) ...
+                       - (1+(i1==j2))*DiDj(:,i2,j1) ...
+                       + (1+(i2==j1))*DiDj(:,i1,j2) ...
+                       - (1+(i2==j2))*DiDj(:,i1,j1));
+            if ~isempty(K)
+                Mij = Mij.*K;
+            end
+            ii(index+1:index+NT) = double(elem2dof(:,i))+NE; 
+            jj(index+1:index+NT) = double(elem2dof(:,j));
+            ss(index+1:index+NT) = Mij;
+            index = index + NT;
+        end
+    end
+    ML = sparse(ii,jj,ss,Ndof,Ndof);
+    M  = M  + ML + ML';    
+end
+
 %% RT0: the lowest order face element
 if strcmp(elemType,'RT0')
     NF = double(max(elem2dof(:)));
@@ -85,7 +166,7 @@ if strcmp(elemType,'RT0')
                  +(1+(i3==j3))*dot(mycross(Dlambda(:,:,i1),Dlambda(:,:,i2),2), ...
                                    mycross(Dlambda(:,:,j1),Dlambda(:,:,j2),2),2)); 
             if ~isempty(K)
-                Mij = Mij.*K;
+                Mij = Mij./K;
             end
             if (j==i)
                 M = M + sparse(ii,jj,Mij,NF,NF);

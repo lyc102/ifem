@@ -8,5 +8,5 @@ git add ifemdoc/;
 git commit;
 git pull;
 git push;
-rsync -av —delete -e ssh --progress ~/Dropbox/Math/Programming/ifem/ifemdoc/ /Users/Shared/Dropbox/Sites/public_html/ifemdoc/
-rsync -av --delete -e ssh --progress /Users/Shared/Dropbox/Sites/public_html/ chenlong@home.ps.uci.edu:public_html/
+rsync -av —delete -e ssh --progress ~/Dropbox/Math/Programming/ifem/ifemdoc/ ~/Dropbox/Sites/public_html/ifemdoc/
+rsync -av --delete -e ssh --progress ~/Dropbox/Sites/public_html/ chenlong@home.ps.uci.edu:public_html/
