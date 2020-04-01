@@ -6,8 +6,8 @@ function [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option)
 %   Maxwell equation.
 %
 % curl(mu^(-1)curl u) - omega^2*epsilon u = J    in \Omega,  
-%                                   n × u = n × g_D  on \Gamma_D,
-%                     n × (mu^(-1)curl u) = n × g_N  on \Gamma_N.
+%                                   n ×\times u = n \times g_D  on \Gamma_D,
+%                     n \times (mu^(-1)curl u) = n \times g_N  on \Gamma_N.
 % 
 % based on the weak formulation
 %
@@ -94,7 +94,17 @@ if ~isempty(pde.mu) && isnumeric(pde.mu)
 else                            % mu is a function
     center = (node(elem(:,1),:) + node(elem(:,2),:) + ...
               node(elem(:,3),:) + node(elem(:,4),:))/4;
-    mu = pde.mu(center);              
+    if isscalar(pde.mu(center(:,1)))
+        mu = pde.mu(center);  
+    elseif ismatrix(pde.mu(center(:,1)))
+        mu = arrayfun(@(rowidx) pde.mu(center(rowidx,:)), ...
+            1:size(center,1), 'UniformOutput',0);
+        mu = cat(3,mu{:}); % concatenate the cells into array
+        mu = permute(mu,[3,1,2]); % switch the element idx to the 1st dim
+    else 
+        warning('Input: mu is of unknown type, set mu=1.')
+        mu = 1;
+    end
 end
 if ~isfield(pde,'epsilon'), pde.epsilon = 1; end
 if ~isempty(pde.epsilon) && isnumeric(pde.epsilon)
@@ -140,7 +150,13 @@ for i = 1:6
     for j = i:6
         % local to global index map
         % curl-curl matrix
-        Aij = dot(curlPhi(:,:,i),curlPhi(:,:,j),2).*volume./mu;
+        switch ndims(mu)
+            case 2 % scalar or element-wise constant
+                Aij = dot(curlPhi(:,:,i),curlPhi(:,:,j),2).*volume./mu;
+            case 3 % element-wise tensor
+                muinvcurlPhii = sum(bsxfun(@mldivide, mu, curlPhi(:,:,i)), 2);
+                Aij = dot(muinvcurlPhii,curlPhi(:,:,j),2).*volume;
+        end
         ii(index+1:index+NT) = double(elem2dof(:,i)); 
         jj(index+1:index+NT) = double(elem2dof(:,j));
         sA(index+1:index+NT) = Aij;
@@ -213,11 +229,17 @@ solver = option.solver;
 %% Assembeling corresponding matrices for HX preconditioner
 if ~strcmp(solver,'direct')
     AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |Re(epsilon)| I
-    BP = sparse(N,N);  % BP = - div(|Re(epsilon)|grad)
+    BP = sparse(N,N);  % BP = - div(|Re(epsilon)|grad)   
     for i = 1:4
         for j = i:4
-            temp = DiDj(:,i,j).*volume;
-            Aij = 1./mu.*temp;
+            switch ndims(mu)
+                case 2
+                    temp = DiDj(:,i,j).*volume;
+                    Aij = 1./mu.*temp;
+                case 3
+                    muinvDi = sum(bsxfun(@mldivide, mu, Dlambda(:,:,i)), 2);
+                    Aij = dot(muinvDi,Dlambda(:,:,j),2).*volume;
+            end
             Bij = abs(real(epsilon)).*temp;
             Mij = 1/20*abs(real(epsilon)).*volume;
             if (j==i)
@@ -232,7 +254,7 @@ if ~strcmp(solver,'direct')
         end
     end
 end
-clear Aij Bij Mij
+clear Aij Bij Mij DiDj
 
 %% Boundary conditions
 if ~isfield(pde,'g_D'), pde.g_D = []; end
