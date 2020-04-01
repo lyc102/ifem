@@ -97,10 +97,10 @@ else                            % mu is a function
     if isscalar(pde.mu(center(:,1)))
         mu = pde.mu(center);  
     elseif ismatrix(pde.mu(center(:,1)))
-        mu = arrayfun(@(rowidx) pde.mu(center(rowidx,:)), ...
+        temp = arrayfun(@(rowidx) pde.mu(center(rowidx,:))\eye(3), ...
             1:size(center,1), 'UniformOutput',0);
-        mu = cat(3,mu{:}); % concatenate the cells into array
-        mu = permute(mu,[3,1,2]); % switch the element idx to the 1st dim
+        muinv = cat(3,temp{:}); % concatenate the cells into array
+        muinv = permute(muinv,[3,1,2]); % switch the element idx to the 1st dim
     else 
         warning('Input: mu is of unknown type, set mu=1.')
         mu = 1;
@@ -154,7 +154,7 @@ for i = 1:6
             case 2 % scalar or element-wise constant
                 Aij = dot(curlPhi(:,:,i),curlPhi(:,:,j),2).*volume./mu;
             case 3 % element-wise tensor
-                muinvcurlPhii = sum(bsxfun(@mldivide, mu, curlPhi(:,:,i)), 2);
+                muinvcurlPhii = sum(bsxfun(@times, muinv, curlPhi(:,:,i)), 2);
                 Aij = dot(muinvcurlPhii,curlPhi(:,:,j),2).*volume;
         end
         ii(index+1:index+NT) = double(elem2dof(:,i)); 
@@ -237,7 +237,7 @@ if ~strcmp(solver,'direct')
                     temp = DiDj(:,i,j).*volume;
                     Aij = 1./mu.*temp;
                 case 3
-                    muinvDi = sum(bsxfun(@mldivide, mu, Dlambda(:,:,i)), 2);
+                    muinvDi = sum(bsxfun(@times, muinv, Dlambda(:,:,i)), 2);
                     Aij = dot(muinvDi,Dlambda(:,:,j),2).*volume;
             end
             Bij = abs(real(epsilon)).*temp;
