@@ -60,9 +60,10 @@ hold on
 if ~isempty(cutFace)
     h2 = showmesh(node,cutFace,'facecolor',icol,'edgecolor','k');
 end
+isOutput = false;
 if ~isempty(varargin)
-    
     outputOption = cellfun(@isequal,varargin,repmat({'output'},size(varargin)));
+    
     if any(outputOption)
         if varargin{find(outputOption)+1}
             isOutput = true;
