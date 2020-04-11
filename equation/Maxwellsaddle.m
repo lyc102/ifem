@@ -1,9 +1,8 @@
 function [u,edge,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
 %% MAXWELLSADDLE Maxwell equation in mixed form: lowest order edge element.
 %
-% u = Maxwellsaddle(node,elem,HB,bdFlag,pde) produces the lowest order edge
-%   element approximation of the electric field of the time harmonic
-%   Maxwell equation.
+% u = Maxwellsaddle(node,elem,bdFlag,pde) produces the lowest order edge
+%   element approximation of the electric field of the magnetostatics
 %
 %                     curl(mu^(-1)curl u)  = J    in \Omega,  
 %                                  div  u  = 0
@@ -12,12 +11,11 @@ function [u,edge,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
 % 
 % based on the weak formulation
 %
-% (mu^{-1}curl u, curl v) +(grad p ,v)= (J,v) - <n ï¿? g_N,v>_{\Gamma_N}.
+% (mu^{-1}curl u, curl v) +(grad p ,v)= (J,v) - <n x g_N,v>_{\Gamma_N}.
 % (u,grad q)                          = 0                    
 % Assume P\in H_0^1.
 % The data of the equation is enclosed in the pde structure:
 %   - pde.mu      : permeability, i.e., magnetic constant/tensor
-%   - pde.omega   : wave number
 %   - pde.J       : current density
 %   - pde.g_D     : Dirichlet boundary condition
 %   - pde.g_N     : Neumann boundary condition
@@ -29,10 +27,10 @@ function [u,edge,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
 % it by the direct solver (small size dof <= 2e3) or the HX preconditioned
 % Krylov iterative methods (large size dof > 2e3).
 % 
-% u = Maxwellsaddle(node,elem,HB,bdFlag,pde,option) specifies the solver options.
+% u = Maxwellsaddle(node,elem,bdFlag,pde,option) specifies the solver options.
 %   - option.solver == 'direct': the built in direct solver \ (mldivide)
 %   - option.solver == 'mg':     multigrid-type solvers mg is used.
-%   - option.solver == 'notsolve': the solution u = u_D. 
+%   - option.solver == 'none': the solution u = u_D. 
 % The default setting is to use the direct solver for small size problems
 % and multigrid solvers for large size problems. For more options on the
 % multigrid solver mg, type help mg.
@@ -112,15 +110,17 @@ epsilon = omega^2*epsilon;
 %% Element-wise basis
 % edge indices of 6 local bases: 
 % [1 2], [1 3], [1 4], [2 3], [2 4], [3 4]
-% phi = lambda_iDlambda_j - lambda_jDlambda_i;
-% curl phi = 2*Dlambda_i ï¿? Dlambda_j;
+% phi = lambda_i Dlambda_j - lambda_j Dlambda_i;
+% curl phi = 2*Dlambda_i \times Dlambda_j;
 [Dlambda,volume] = gradbasis3(node,elem);
+
 curlPhi(:,:,6) = 2*mycross(Dlambda(:,:,3),Dlambda(:,:,4),2);
 curlPhi(:,:,1) = 2*mycross(Dlambda(:,:,1),Dlambda(:,:,2),2);
 curlPhi(:,:,2) = 2*mycross(Dlambda(:,:,1),Dlambda(:,:,3),2);
 curlPhi(:,:,3) = 2*mycross(Dlambda(:,:,1),Dlambda(:,:,4),2);
 curlPhi(:,:,4) = 2*mycross(Dlambda(:,:,2),Dlambda(:,:,3),2);
 curlPhi(:,:,5) = 2*mycross(Dlambda(:,:,2),Dlambda(:,:,4),2);
+
 DiDj = zeros(NT,4,4);
 for i = 1:4
     for j = i:4        
@@ -174,7 +174,7 @@ end
 if ~isfield(option,'fquadorder')
     option.fquadorder = 2;   % default order is 3
 end
-if isfield(pde,'J') && ~isempty(pde.J)
+if isfield(pde,'J') && ~isempty(pde.J) && ~isnumeric(pde.J)
     [lambda,w] = quadpts3(option.fquadorder);
     nQuad = size(lambda,1);
     bt = zeros(NT,6);
@@ -196,6 +196,21 @@ if isfield(pde,'J') && ~isempty(pde.J)
     end
     bt = bt.*repmat(volume,1,6);
     f = accumarray(elem2dof(:),bt(:),[Ne 1]);
+elseif isfield(pde,'J') && ~isempty(pde.J) && isnumeric(pde.J)
+    switch size(pde.J,1)
+        case Ne % rhs already computed
+            f = pde.J;
+        case NT % piecwise constant
+            bt = zeros(NT,6);
+            for k = 1:6
+                i = locEdge(k,1); j = locEdge(k,2);
+                % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
+                phi_k = (Dlambda(:,:,j)-Dlambda(:,:,i))/4;
+                bt(:,k) = dot(phi_k,pde.J,2);
+            end
+            bt = bt.*repmat(volume,1,6);
+            f = accumarray(elem2dof(:),bt(:),[Ne 1]);
+    end
 end
 clear pxyz Jp bt rhs phi_k
 
