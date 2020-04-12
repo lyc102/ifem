@@ -6,8 +6,9 @@
 % is given by the line integral int_e u*t ds. Simpson rule is used to
 % evaluate this line integral.
 %
-% The input u could be a funtional handel or an array of length N (linear
-% element) or N+NE (quadratic element).
+% The input u could be a funtional handle of a vector field or an array of length
+%  - N (linear element): the grad of this function will be interpolated to ND_0
+%  - N+NE (quadratic element): the grad of this function will be interpolated to ND_0
 %
 % Example
 % 
@@ -40,28 +41,25 @@
 N = size(node,1);	d = size(node,2);  NE = size(edge,1);
 edgeVec = node(edge(:,2),:)-node(edge(:,1),:);
 if isnumeric(u)  % allow an array input
-    switch length(u)
-        case N      % linear element
-            uQ = u;
-            uQ(N+1:N+NE) = (u(edge(:,1)) + u(edge(:,2)))/2;
+    switch size(u,1)
+        case {N, N+NE}  % continuous linear element or quadratic's gradient
+            uI = u(edge(:,2)) - u(edge(:,1));
+            % edge bubble on e has no contribution to  int_e grad(u)*t ds
         case NE     % edge element
             uI = u;
-            return;
-        case N+NE   % quadratic element
-            uQ = u;
         case 1      % u is constant
-            uQ = u*ones(N+NE,1);
-    end
-    uI = dot(edgeVec,(uQ(edge(:,1),:)+uQ(edge(:,2),:)+4*uQ(N+1:N+NE,:))/6,2);
+            uQ = u*ones(N+NE,d);
+            uI = dot(edgeVec,(uQ(edge(:,1),:)+uQ(edge(:,2),:)+4*uQ(N+1:N+NE,:))/6,2);
+    end   
 else % u is a function
-    if ~exist('quadOrder','var'), quadOrder = 3; end    
+    if ~exist('quadOrder','var'), quadOrder = 3; end
     [lambda,weight] = quadpts1(quadOrder);
     nQuad = size(lambda,1);
     K = zeros(NE,d);
     for p = 1:nQuad
-		pxyz = lambda(p,1)*node(edge(:,1),:) ...
-			 + lambda(p,2)*node(edge(:,2),:);
-        K = K + weight(p)*u(pxyz);      
+        pxyz = lambda(p,1)*node(edge(:,1),:) ...
+            + lambda(p,2)*node(edge(:,2),:);
+        K = K + weight(p)*u(pxyz);
     end
-    uI = dot(edgeVec,K,2); 
+    uI = dot(edgeVec,K,2);
 end
