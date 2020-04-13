@@ -5,4 +5,5 @@
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
 addpath(genpath(pwd),'-begin');
+rmpath(genpath('./.git'));
 savepath;
