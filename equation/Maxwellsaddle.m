@@ -1,11 +1,11 @@
-function [u,edge,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
+function [u,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
 %% MAXWELLSADDLE Maxwell equation in mixed form: lowest order edge element.
 %
 % u = Maxwellsaddle(node,elem,bdFlag,pde) produces the lowest order edge
 %   element approximation of the electric field of the magnetostatics
 %
 %                     curl(mu^(-1)curl u)  = J    in \Omega,  
-%                                  div  u  = 0
+%                                  div  u  = 0    in \Omega,  
 %                                   n x u = n x g_D  on \Gamma_D,
 %                     n x (mu^(-1)curl u) = n x g_N  on \Gamma_N.
 % 
@@ -17,6 +17,7 @@ function [u,edge,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option,varargin)
 % The data of the equation is enclosed in the pde structure:
 %   - pde.mu      : permeability, i.e., magnetic constant/tensor
 %   - pde.J       : current density
+%   - pde.g       : divergence
 %   - pde.g_D     : Dirichlet boundary condition
 %   - pde.g_N     : Neumann boundary condition
 %
@@ -162,7 +163,7 @@ A = A + AU + AU';
 M = sparse(ii(diagIdx),jj(diagIdx),sM(diagIdx),Ne,Ne);
 MU = sparse(ii(upperIdx),jj(upperIdx),sM(upperIdx),Ne,Ne);
 M = M + MU + MU';
-grad =icdmat(double(edge),[-1,1]);
+grad = icdmat(double(edge),[-1,1]);
 % G    = grad'*M;
 G    = M*grad;
 
@@ -214,6 +215,28 @@ elseif isfield(pde,'J') && ~isempty(pde.J) && isnumeric(pde.J)
 end
 clear pxyz Jp bt rhs phi_k
 
+
+%% if u is not divergence free
+g0 = zeros(N,1);
+if isfield(pde,'g') && ~isempty(pde.g) && ~isnumeric(pde.g)
+    [lambda,w] = quadpts3(option.fquadorder);
+    nQuad = size(lambda,1);
+    gt = zeros(NT,4);
+    for p = 1:nQuad
+		% quadrature points in the x-y-z coordinate
+		pxyz = lambda(p,1)*node(elem(:,1),:) ...
+			 + lambda(p,2)*node(elem(:,2),:) ...
+			 + lambda(p,3)*node(elem(:,3),:) ...
+             + lambda(p,4)*node(elem(:,4),:);
+		gp = pde.g(pxyz);
+        for j = 1:4
+            gt(:,j) = gt(:,j) + w(p)*lambda(p,j)*gp;
+        end
+    end
+    gt = gt.*repmat(volume,1,4);
+    g0 = -accumarray(elem(:),gt(:),[N 1]);
+end
+
 %% Record assembling time
 assembleTime = cputime - t;
 if ~isfield(option,'printlevel'), option.printlevel = 1; end
@@ -223,8 +246,14 @@ end
 %% Boundary condtiions
 [AD,f,u,freeNode,freeEdge] = getbdMaxwellsaddle(f);
 p  = zeros(N,1);
-g0 = -G'*u;
-% reduce to free dofs
+g0 = g0 - G'*u;
+
+%% Output
+eqn = struct('A',A,'G',G,'f',f,'g',g0,'Lap',AD,...
+             'edge',edge,'freeEdge',freeEdge,'freeNode',freeNode);
+info.assembleTime = assembleTime;
+
+%% reduce to free dofs
 A  = A(freeEdge,freeEdge);
 G  = G(freeEdge,freeNode);
 grad = grad(freeEdge,freeNode);
@@ -267,17 +296,13 @@ switch method
         p(freeNode)  = p0;
 end
 
-%check the Langrange is correct or not.
+%% check the Langrange is correct or not.
 % normp  = norm(p);
 % if(normp>1.0/N)
 % disp('the Langrange multer is wrong')
 % end
 
-%% Output
-eqn = struct('A',A,'M',M,'f',f,'g',g0,'bigA',AD,'freeEdge',freeEdge);
-info.assembleTime = assembleTime;
-
-
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunctions getbdMaxwellsaddle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

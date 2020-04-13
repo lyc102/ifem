@@ -22,6 +22,7 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
+NT = size(elem,1);
 elem2ve = zeros(NT,3,6);
 for e = 1:6 % six edges
    elem2ve(:,:,e) = node(elem(:,locEdge(e,2)),:)-node(elem(:,locEdge(e,1)),:);
