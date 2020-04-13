@@ -66,12 +66,12 @@ vSign(N+Ncut+1:N+Ncut+Naux) = 0;
 % construct the Delaunay triangulation of interfaceNode
 % different versions of matlab using different delaunay triangulation
 matlabversion = version();
-if str2double(matlabversion(end-5:end-2)) > 2013
-    DT = delaunayTriangulation(interfaceNode);
-    tElem = DT.ConnectivityList;
-else
+if str2double(matlabversion(end-5:end-2)) <= 2013
     DT = DelaunayTri(interfaceNode); %#ok<*DDELTRI>
     tElem = DT.Triangulation;
+else
+    DT = delaunayTriangulation(interfaceNode);
+    tElem = DT.ConnectivityList;
 end
 tElem = fixorder(interfaceNode,tElem); % correct the orientation
 

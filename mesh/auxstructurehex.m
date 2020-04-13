@@ -38,12 +38,7 @@ function T = auxstructurehex(elem)
 NT = size(elem,1);
 totalFace = uint32([elem(:,[1 4 3 2]);elem(:,[1 2 6 5]);elem(:,[5 6 7 8]);elem(:,[8 7 3 4]);...
                elem(:,[4 1 5 8]); elem(:,[2 3 7 6])]);
-matlabversion = version;
-if str2double(matlabversion(end-5:end-2)) > 2012
-    [face, i2, j] = unique(sort(totalFace,2),'rows','legacy');
-else           
-    [face, i2, j] = unique(sort(totalFace,2),'rows');
-end
+[face, i2, j] = myunique(sort(totalFace,2));           
 i1(j(6*NT:-1:1)) = 6*NT:-1:1; i1 = i1';
 k1 = ceil(i1/NT); t1 = i1 - NT*(k1-1);
 k2 = ceil(i2/NT); t2 = i2 - NT*(k2-1);

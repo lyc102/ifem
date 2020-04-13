@@ -60,12 +60,7 @@ elseif nv == 4 % quadrilateral
 end
 ne = nv; % number of edges in one element
 Neall = length(allEdge);
-matlabversion = version;
-if str2double(matlabversion(end-5:end-2)) > 2012
-    [edge, i2, j] = unique(allEdge,'rows','legacy'); %#ok<ASGLU>
-else
-    [edge, i2, j] = unique(allEdge,'rows'); %#ok<ASGLU>
-end
+[edge, i2, j] = myunique(allEdge);
 NT = size(elem,1);
 i1(j(Neall:-1:1)) = Neall:-1:1; 
 i1 = i1';

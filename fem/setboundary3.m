@@ -48,12 +48,7 @@ elseif nv == 8 % cube
     nf = 6;
 end
 Nfall = length(allFace);
-matlabversion = version;
-if str2double(matlabversion(end-5:end-2)) > 2012
-    [face, i2, j] = unique(sort(allFace,2),'rows','legacy');
-else
-    [face, i2, j] = unique(sort(allFace,2),'rows');
-end
+[face, i2, j] = myunique(sort(allFace,2));
 NT = size(elem,1);
 i1(j(Nfall:-1:1)) = Nfall:-1:1; 
 i1 = i1';

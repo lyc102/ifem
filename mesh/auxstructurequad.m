@@ -40,12 +40,7 @@ totalEdge = zeros(NV*NT,2);
 totalEdge(:,1) = elem(:);
 totalEdge(:,2) = elem([NT+1:NV*NT,1:NT]');
 totalEdge(:) = sort(totalEdge,2);
-matlabversion = version;
-if str2double(matlabversion(end-5:end-2)) > 2012
-    [edge, i2, j] = unique(totalEdge,'rows','legacy');
-else
-    [edge, i2, j] = unique(totalEdge,'rows');
-end
+[edge, i2, j] = myunique(totalEdge);
 elem2edge = uint32(reshape(j,NT,NV));
 i1(j(NV*NT:-1:1)) = NV*NT:-1:1; 
 i1 = i1';

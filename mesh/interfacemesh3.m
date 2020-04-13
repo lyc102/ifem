@@ -145,12 +145,12 @@ isInterfaceNode(N+1:end) = true;    % and the cut points and the aux points
 interfaceNode = node(isInterfaceNode,:);
 % different versions of matlab using different delaunay triangulation
 matlabversion = version();
-if str2double(matlabversion(end-5:end-2)) > 2013
-    DT = delaunayTriangulation(interfaceNode);
-    tetElem = DT.ConnectivityList;
-else
+if str2double(matlabversion(end-5:end-2)) <= 2013
     DT = DelaunayTri(interfaceNode); %#ok<*DDELTRI>
     tetElem = DT.Triangulation;
+else
+    DT = delaunayTriangulation(interfaceNode);
+    tetElem = DT.ConnectivityList;
 end
 tetElem = fixorder3(interfaceNode, tetElem);
 localidx2globalidx = find(isInterfaceNode); % tetElem points to interfaceNode

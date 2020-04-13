@@ -18,12 +18,7 @@ for k = 1:step
         t = t(feval(fd,pmid,varargin{:})<-geps,:);         % Keep interior triangles
         t = fixorder(p,t);
         bars = [t(:,[1,2]);t(:,[1,3]);t(:,[2,3])];         % Interior bars duplicated
-        matlabversion = version;
-        if str2double(matlabversion(end-5:end-2)) > 2012
-            bars = unique(sort(bars,2),'rows','legacy');                % Bars as node pairs
-        else        
-            bars = unique(sort(bars,2),'rows');                % Bars as node pairs
-        end
+        bars = myunique(sort(bars,2));
 %         clf; showmesh(p,t); pause(0.1)
     end
 
