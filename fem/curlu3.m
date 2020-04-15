@@ -28,7 +28,7 @@ for e = 1:6 % six edges
    elem2ve(:,:,e) = node(elem(:,locEdge(e,2)),:)-node(elem(:,locEdge(e,1)),:);
 end
 
-[~,volume] = gradbasis3(node,elem);
+[Dlambda,volume,elemSign] = gradbasis3(node,elem); %#ok<ASGLU>
 [elem2edge,~,~] = dof3edge(elem);
 
 curlPhi(:,:,1) = elem2ve(:,:,6);
@@ -37,6 +37,6 @@ curlPhi(:,:,3) = elem2ve(:,:,4);
 curlPhi(:,:,4) = elem2ve(:,:,3);
 curlPhi(:,:,5) = -elem2ve(:,:,2);
 curlPhi(:,:,6) = elem2ve(:,:,1);
-curlPhi = curlPhi./repmat(volume,[1 3 6])/3;
+curlPhi = curlPhi./repmat(volume.*elemSign,[1 3 6])/3;
 
 curlu = dot(permute(repmat(u(elem2edge),[1,1,3]),[1,3,2]),curlPhi,3);

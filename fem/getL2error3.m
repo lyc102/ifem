@@ -128,11 +128,12 @@ for p = 1:nQuad
                   uh(elem2face(:,4))*phi(p,4);              
     end
     % quadrature points in the x-y coordinate
-    pxy = lambda(p,1)*node(elem(:,1),:) ...
+    pxyz = lambda(p,1)*node(elem(:,1),:) ...
         + lambda(p,2)*node(elem(:,2),:) ...
         + lambda(p,3)*node(elem(:,3),:) ...
         + lambda(p,4)*node(elem(:,4),:);
-    err = err + weight(p)*(uexact(pxy) - uhp).^2;
+    % when size(uhp,2) == 1, summing on 2-nd component has no impact
+    err = err + weight(p)*sum((uexact(pxyz) - uhp).^2,2);
 end
 %% Modification
 % volume of tetrahedrons
