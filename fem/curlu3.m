@@ -28,6 +28,7 @@ for e = 1:6 % six edges
    elem2ve(:,:,e) = node(elem(:,locEdge(e,2)),:)-node(elem(:,locEdge(e,1)),:);
 end
 
+elem = sortelem3(elem);
 [Dlambda,volume,elemSign] = gradbasis3(node,elem); %#ok<ASGLU>
 [elem2edge,~,~] = dof3edge(elem);
 

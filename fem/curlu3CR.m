@@ -18,6 +18,7 @@ function curlu = curlu3CR(elem2face,u,Dlambda)
 
 Dphi = -3*Dlambda;
 ux = u(:,1); uy = u(:,2); uz = u(:,3);
+NT = size(elem2face,1);
 curlu = zeros(NT,3);
 for i = 1:4 % 4 faces
     curlu = curlu ...
