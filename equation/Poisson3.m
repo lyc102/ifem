@@ -1,3 +1,4 @@
+
 function [soln,eqn,info] = Poisson3(node,elem,bdFlag,pde,option,varargin)
 %% POISSON3 Poisson equation: P1 linear element in 3-D.
 %
@@ -372,9 +373,9 @@ end
     % needed.
 
     % Pure Neumann boundary condition
-    if isPureNeumann
-        b = b - mean(b);   % compatilbe condition: sum(b) = 0
+    if isPureNeumann    
         b(1) = 0;          % 1 is fixedNode and set u(1) = 0
+        b = b - mean(b);   % compatilbe condition: sum(b) = 0
     end
     end % end of getbd3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
