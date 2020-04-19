@@ -1,5 +1,5 @@
-function [node,elem,HB,bdFlag,indexMap,tree]= ...
-         coarsen3(node,elem,markedElem,HB,bdFlag)
+function [node,elem,bdFlag,HB,indexMap,tree]= ...
+         coarsen3(node,elem,markedElem,bdFlag,HB)
 %% COARSEN3 coarse a 3-D triangulation.
 %
 % [node,elem,HB] = COARSEN3(node,elem,markedElem,HB) removes good-to-coraen

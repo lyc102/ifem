@@ -8,7 +8,7 @@ function movingcircle
 close all; clear variables;
 %---------------------- Parameters ----------------------------------------
 figure(1); set(gcf,'Units','normal'); set(gcf,'Position',[0,0,0.8,0.4]);
-t = 0; dt = 0.025; maxIt = 50;
+t = 0; dt = 0.025; maxIt = 120;
 %---------------------- Initial Grid --------------------------------------
 node = [-1 -1; 1 -1; 1 1; -1 1];
 elem = [2 3 1; 4 1 3];
@@ -32,18 +32,18 @@ for k = 1:maxIt
     %---------- refine elements cross the interface -----------------------
     [node,elem] = bisect(node,elem,refineElem);
     u = -sign(f(node,t));
-    subplot(1,2,1);  showmesh(node,elem); pause(0.025)
+    subplot(1,2,1);  showmesh(node,elem); pause(0.0125)
     subplot(1,2,2);  showsolution(node,elem,u); view(2);
     %---------- coarsen elements away from the interface ------------------
     [node,elem] = coarsen(node,elem,coarsenElem);
     u = -sign(f(node,t));
     %---------- plot mesh and function ------------------------------------
-    subplot(1,2,1);  showmesh(node,elem); pause(0.025)
+    subplot(1,2,1);  showmesh(node,elem); pause(0.0125)
     subplot(1,2,2);  showsolution(node,elem,u); view(2);
 end
 end %%  ------- End of MOVINGCIRCLE --------------------------------
 
 %% -------------------- Sub functions called by MOVINGCIRCLE ---------------
 function z = f(p,t)
-z = sum(p.^2,2) - (0.5-t)^2;
+z = sum(p.^2,2) - (0.85-t)^2;
 end

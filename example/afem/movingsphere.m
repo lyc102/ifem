@@ -7,18 +7,18 @@
 close all; clear variables;
 %% Parameters
 figure(1); set(gcf,'Units','normal'); set(gcf,'Position',[0,0,0.8,0.4]);
-t = 0; dt = 0.1; maxIt = 16;
+t = 0; dt = 0.05; maxIt = 10;
 
 %% Generate an initial mesh 
 [node,elem,HB] = cubemesh([-1,1,-1,1,-1,1],1);
-for k = 1:2
-    [node,elem,~,HB] = uniformbisect3(node,elem,[],HB);
-end
+[node,elem] = delmesh(node,elem,'x>0 & y<0');
+bdFlag = setboundary3(node,elem,'Dirichlet');
+[node,elem,~,HB] = uniformbisect3(node,elem,[],HB);
 
 %% Adaptive tracking of the moving interface
-for k = 1:maxIt
+for k = 0:maxIt
     % move interface every four iterations	
-    if mod(k,4) == 0
+    if mod(k,3) == 0
         t = t + dt; 
     end
 	% detect element cross interface or away from interface
@@ -27,25 +27,24 @@ for k = 1:maxIt
 	refineElem = find(eta < 4);
     coarsenElem = find(eta == 4);
     % refine elements cross the interface
-    [node,elem,~,HB] = bisect3(node,elem,refineElem,[],HB);
+    [node,elem,bdFlag,HB] = bisect3(node,elem,refineElem,bdFlag,HB);
     u = -sign(f(node,t));
     subplot(1,2,1); 
-    showboundary3(node,elem,'~(x<=0 & y<=0)');
-    pause(0.05)
+    showboundary3(node,elem,'~(x<=0 & y<=0)'); 
+    pause(0.0125)
     subplot(1,2,2);  
     showsolution3(node,elem,u,'~(x<=0 & y<=0)'); 
     colorbar;
     % coarsen elements away from the interface
-    [node,elem,HB] = coarsen3(node,elem,coarsenElem,HB);
+    [node,elem,bdFlag,HB] = coarsen3(node,elem,coarsenElem,bdFlag,HB);
     u = -sign(f(node,t));
     subplot(1,2,1); 
-    showboundary3(node,elem,'~(x<=0 & y<=0)');
-    pause(0.05)
+    showboundary3(node,elem,'~(x<=0 & y<=0)'); pause(0.0125)
     subplot(1,2,2);  
     showsolution3(node,elem,u,'~(x<=0 & y<=0)'); 
     colorbar;
 end
-%% -------------------- Sub functions called by MOVINGCIRCLE ---------------
+%% -------------------- Sub functions called by MOVINGSPHERE ---------------
 function s = f(p,t)
     s = sum(p.^2,2) - (0.75-t)^2;
 end

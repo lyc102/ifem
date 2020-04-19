@@ -37,10 +37,10 @@ option.plotflag = 0;
 mesh.bdFlag = setboundary3(node,elem,'Neumann');
 femPoisson3(mesh,pde,option);
 
-%% Pure Robin boundary condition.
-pde = sincosRobindata3;
-mesh.bdFlag = setboundary3(node,elem,'Robin');
-femPoisson3(mesh,pde,option);
+% %% Pure Robin boundary condition.
+% pde = sincosRobindata3;
+% mesh.bdFlag = setboundary3(node,elem,'Robin');
+% femPoisson3(mesh,pde,option);
 
 %% Conclusion
 %

@@ -134,6 +134,7 @@ solver = option.solver;
 % solve
 switch lower(solver)
     case 'direct'
+        t = cputime;
         bigu(freeDof) = AD(freeDof,freeDof)\F(freeDof);
         sigma = bigu(1:Nsigma);
         u = bigu(Nsigma+1:end);

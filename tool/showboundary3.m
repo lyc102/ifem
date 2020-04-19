@@ -92,7 +92,7 @@ if ~isempty(varargin)
 end
 % light;lighting phong;
 cameratoolbar;
-drawnow;
+% drawnow;
 
 if isOutput; printOutput; end
 
