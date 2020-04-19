@@ -52,6 +52,7 @@ if (nargin >= 3) && (any(expr))
 end
 [tempvar, bdFace] = findboundary3(elem);
 cutFace = setdiff(bdFace,allBdFace,'rows');
+
 %% Plot surface mesh
 % bcol=.9*ones(1,3); icol=.6*ones(1,3);
 bcol=[0.45 1 0.45]; icol=.75*bcol;
@@ -92,7 +93,7 @@ if ~isempty(varargin)
 end
 % light;lighting phong;
 cameratoolbar;
-% drawnow;
+drawnow;
 
 if isOutput; printOutput; end
 

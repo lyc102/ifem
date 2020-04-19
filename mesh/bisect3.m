@@ -146,8 +146,7 @@ while ~isempty(markedElem)
     [i,j] = find(t2v(:,cutEdge(checkEdge,1)).*t2v(:,cutEdge(checkEdge,2)));
     markedElem = unique(i);
     nonConforming(checkEdge) = false;
-    nonConforming(checkEdge(j)) = true;
-    
+    nonConforming(checkEdge(j)) = true;    
 end
 node = node(1:N,:); 
 elem = elem(1:NT,:); 

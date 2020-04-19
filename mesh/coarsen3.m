@@ -56,9 +56,9 @@ generation = zeros(N,1);
 generation(HB(:,1)) = HB(:,4);
 valence = accumarray(elem(:),ones(4*NT,1),[N 1]);
 valenceNew = accumarray(elem(:,4),ones(NT,1), [N 1]);
-markedVal = accumarray(elem(markedElem,4),ones(length(markedElem),1),[N 1]);
+valenceMarked = accumarray(elem(markedElem,4),ones(length(markedElem),1),[N 1]);
 isGoodNode = (valence == valenceNew) ... coarsen new added vertex
-           & (valenceNew == markedVal) ... all elements of new vertex are marked
+           & (valenceNew == valenceMarked) ... all elements of new vertex are marked
            & (generation>0); % not coarsen the initial grid.
 if ~any(isGoodNode)
     return

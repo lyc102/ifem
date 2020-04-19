@@ -1,4 +1,4 @@
-function [node,elem] = delmesh(node,elem,expr)
+function [node,elem,HB] = delmesh(node,elem,expr,HB)
 %% DELMESH delete part of the mesh 
 %
 % [node,elem] = DELMESH(node,elem,expr) delete elements whose center
@@ -29,6 +29,9 @@ elem(idx,:) = [];
 isValidNode = false(size(node,1),1);
 isValidNode(elem(:)) = true;
 node = node(isValidNode,:);
+if exist('HB','var')
+    HB = HB(isValidNode,:);
+end
 
 %% shift index of element
 Nnew = sum(isValidNode);
