@@ -327,7 +327,7 @@ end
     end
 
     % Neumann boundary condition
-    if ~isempty(Neumann) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && (pde.g_N == 0))
+    if ~isempty(Neumann) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && all(pde.g_N == 0))
         v12 = node(Neumann(:,2),:)-node(Neumann(:,1),:);
         v13 = node(Neumann(:,3),:)-node(Neumann(:,1),:);
         area = 0.5*sqrt(abs(sum(mycross(v12,v13,2).^2,2)));
@@ -373,9 +373,9 @@ end
     % needed.
 
     % Pure Neumann boundary condition
-    if isPureNeumann    
+    if isPureNeumann
+        b = b - mean(b);   % compatible condition: sum(b) = 0
         b(1) = 0;          % 1 is fixedNode and set u(1) = 0
-        b = b - mean(b);   % compatilbe condition: sum(b) = 0
     end
     end % end of getbd3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
