@@ -10,16 +10,17 @@ figure(1); set(gcf,'Units','normal'); set(gcf,'Position',[0,0,0.8,0.4]);
 t = 0; dt = 0.025; maxIt = 50;
 
 %% Generate an initial mesh 
-[node,elem,HB] = cubemesh([-1,1,-1,1,-1,1],1);
-[node,elem,HB] = delmesh(node,elem,'x<0 & y<0',HB);
+[node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
+[node,elem] = delmesh(node,elem,'x<0 & y<0');
 bdFlag = setboundary3(node,elem,'Neumann');
+[elem,bdFlag,HB] = label3(node,elem,'all',bdFlag);
 [node,elem,bdFlag,HB] = uniformbisect3(node,elem,bdFlag,HB);
 % [node,elem,bdFlag,HB] = uniformbisect3(node,elem,bdFlag,HB);
 
 %% Adaptive tracking of the moving interface
 for k = 0:maxIt
     % move interface every four iterations	
-    if mod(k,2) == 0 && k > 4
+    if mod(k,2) == 0 && k > 8
         t = t + dt; 
     end
 	% detect element cross interface or away from interface
