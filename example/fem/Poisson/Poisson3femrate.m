@@ -34,13 +34,14 @@ femPoisson3(mesh,pde,option);
 
 %% Pure Neumann boundary condition.
 option.plotflag = 0;
+pde = sincosdata3Neumann;
 mesh.bdFlag = setboundary3(node,elem,'Neumann');
 femPoisson3(mesh,pde,option);
 
-% %% Pure Robin boundary condition.
-% pde = sincosRobindata3;
-% mesh.bdFlag = setboundary3(node,elem,'Robin');
-% femPoisson3(mesh,pde,option);
+%% Pure Robin boundary condition.
+pde = sincosRobindata3;
+mesh.bdFlag = setboundary3(node,elem,'Robin');
+femPoisson3(mesh,pde,option);
 
 %% Conclusion
 %
@@ -50,5 +51,6 @@ femPoisson3(mesh,pde,option);
 %
 % MGCG converges uniformly in all cases.
 %
-% Note that for Robin boundary condition, the order of the error in the
-% maximum norm is not close to 2.
+% Note that for Neumann and Robin boundary condition, the order of the error in the
+% maximum norm is not close to 2. Neumann problem is around 1.5 and Robin
+% is near 1.3. 

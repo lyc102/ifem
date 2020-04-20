@@ -312,14 +312,9 @@ end
         [fixedNode,bdEdge,isBdNode] = findboundary(elem);
         freeNode = find(~isBdNode);
     end
-    isPureNeumann = false;
-    if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
-        % pde.g_N could be empty which is homogenous Neumann boundary condition
-        isPureNeumann = true;
-        fixedNode = 1;
-        freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
-    end
-    % Modify the matrix
+    
+    % Modify the matrix for different boundary conditions 
+    % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
     if ~isempty(fixedNode)
@@ -328,7 +323,18 @@ end
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
-    else
+    end
+    % Neumann boundary condition
+    isPureNeumann = false;
+    if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
+        isPureNeumann = true;
+        AD = A;
+        AD(1,1) = AD(1,1) + 1e-6;
+%         fixedNode = 1;
+%         freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
+    end
+    % Robin boundary condition
+    if isempty(fixedNode) && ~isempty(Robin)
         AD = A;
     end
     
@@ -384,7 +390,7 @@ end
         end
         b = b - A*u;
     end
-    if ~isPureNeumann % non-empty Dirichlet boundary condition
+    if ~isempty(fixedNode) % non-empty Dirichlet boundary condition
         b(fixedNode) = u(fixedNode);
     end
     % The case with non-empty Dirichlet nodes but g_D=0 or g_D=[] corresponds
@@ -393,8 +399,8 @@ end
 
     % Pure Neumann boundary condition
     if isPureNeumann
-        b = b - mean(b);   % compatilbe condition: sum(b) = 0
-        b(1) = 0;
+        b = b - mean(b); % compatiable condition (f,1) + <gN,1> = 0
+%         b(1) = 0;
     end
     end % end of getbd
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

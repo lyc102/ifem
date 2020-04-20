@@ -31,8 +31,8 @@ femPoisson(mesh,pde,option);
 
 %% Pure Neumann boundary condition.
 option.plotflag = 0;
-pde = sincosNeumanndata;
-% pde = sincosdata;
+% pde = sincosNeumanndata;
+pde = sincosdata;
 mesh.bdFlag = setboundary(node,elem,'Neumann');
 femPoisson(mesh,pde,option);
 
