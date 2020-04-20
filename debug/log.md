@@ -55,3 +55,44 @@ To solve the problem, we need to formulate a saddle point system to enforce the 
 
 **Conclusion** Accept the current treatment and be aware that for pure Neumann problem, the rate of the computed solution in maximum norm could be degenerated slightly especially in 3D. 
 
+
+
+## Robin boundary condition in 3D
+
+Again the maximum norm of the error is not optimal and the rate is only 1.3. Shuhao did some test and seems that the geometry of the domain will affect the maximum error. The following is revised from his email.
+
+----
+
+For first 2 tests, I used the same $\sin(x)\sin(y)\sin(z)$ as true solutions on $(0,\pi)^3$.
+
+- Test 1: Only $x==0$ face as Robin boundary, and I hard-coded the nodeso n z-axis as Robin nodes, not fixed DoFs; optimal rate of converge for $L_{\infty}$ norm. The error concentrates on where \Delta u is big.
+
+  <img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin1conv.png" style="zoom:40%;" />
+
+  <img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin1error.png" alt="Robin1error" style="zoom:40%;" />
+
+- Test 2: $x==0$ and $y==0$, as Robin boundary; suddenly the rate for $L_{\infty}$ becomes suboptimal, and the error concentrates on the edge where these two faces intersect.
+
+<img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin2conv.png" alt="Robin2conv" style="zoom:50%;" />
+
+<img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin2error.png" alt="Robin2error" style="zoom:40%;" />
+
+- Test 3: Now I suspected it is caused by geometry, so I used the distmesh in ifem to generate a ball-mesh problem. The L-inf becomes optimal again for pure Robin problem in $\Omega =  {x^2+y^2+z^2 = 4}$, and the error is evenly distributed (maybe just for a few tetrahedra with bad mesh quality).
+
+<img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin3conv.png" alt="Robin3conv" style="zoom:50%;" />![Robin3error](/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin3error.png)
+
+
+
+<img src="/Users/longchen1/Dropbox/Math/Programming/GitHub/ifem/debug/figures/Robin3error.png" alt="Robin3conv" style="zoom:40%;" />
+
+I think from the perspective of using Green function approach to prove $L_{\infty}$  estimate, locally $W_{2,\infty}$ is illy defined on cubes due to the exterior normal vectors is not continuous. In 2D, the problem is
+kinda minimal (you only have 4 points), so we still observe $h^2|\log(h)|$ rate of convergence.
+
+> In 2-D, the discrete Sobolev space embedding $\|v_h\|_{\infty}\lesssim (1+ |\log h|)\|\nabla v_h\|$ implies the quasi-optimal rate. 
+
+---
+
+Find a paper and will try later.
+
+- M. Juntunen, R. Stenberg, *Nitsche’s method for general boundary conditions*, Math. Comp. 78 (2009) 1353–1374.
+
