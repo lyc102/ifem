@@ -73,17 +73,17 @@ For first 2 tests, I used the same $\sin(x)\sin(y)\sin(z)$ as true solutions on 
 
 - Test 2: $x==0$ and $y==0$, as Robin boundary; suddenly the rate for $L_{\infty}$ becomes suboptimal, and the error concentrates on the edge where these two faces intersect.
 
-<img src="./figures/Robin2conv.png" alt="Robin2conv" style="zoom:50%;" />
+<img src="./figures/Robin2conv.png" alt="Robin2conv" style="zoom:45%;" />
 
 <img src="./figures/Robin2error.png" alt="Robin2error" style="zoom:40%;" />
 
 - Test 3: Now I suspected it is caused by geometry, so I used the distmesh in ifem to generate a ball-mesh problem. The L-inf becomes optimal again for pure Robin problem in $\Omega =  {x^2+y^2+z^2 = 4}$, and the error is evenly distributed (maybe just for a few tetrahedra with bad mesh quality).
 
-<img src="./figures/Robin3conv.png" alt="Robin3conv" style="zoom:50%;" />![Robin3error](./figures/Robin3error.png)
+<img src="./figures/Robin3conv.png" alt="Robin3conv" style="zoom:45%;" />![
 
 
 
-<img src="./figures/Robin3error.png" alt="Robin3conv" style="zoom:40%;" />
+<img src="./figures/Robin3error.png" alt="Robin3conv" style="zoom:50%;" />
 
 I think from the perspective of using Green function approach to prove $L_{\infty}$  estimate, locally $W_{2,\infty}$ is illy defined on cubes due to the exterior normal vectors is not continuous. In 2D, the problem is
 kinda minimal (you only have 4 points), so we still observe $h^2|\log(h)|$ rate of convergence.
