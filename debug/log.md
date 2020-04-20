@@ -96,3 +96,17 @@ Find a paper and will try later.
 
 - M. Juntunen, R. Stenberg, *Nitsche’s method for general boundary conditions*, Math. Comp. 78 (2009) 1353–1374.
 
+The boundary condition is 
+$$
+\frac{\partial u}{\partial n}=\frac{1}{\epsilon}\left(u_{0}-u\right)+g \quad \text { on } \Gamma
+$$
+As $\epsilon \to \infty$, we obtain Neumann boundary condition and $\epsilon \to 0$ to get Dirichlet boundary condition.   
+
+The convergence is 
+$$
+\left\|\nabla\left(u-u_{h}\right)\right\|_{L^{2}(\Omega)}+\epsilon^{-1 / 2}\left\|u-u_{h}\right\|_{L^{2}(\Gamma)} \leq C h^{s-1}\left(1+h_{\Gamma}^{1 / 2} \epsilon^{-1 / 2}\right)\|u\|_{H^{s}(\Omega)}
+$$
+The condition number is 
+$$
+\kappa=\mathcal{O}\left(h^{-2}+(\epsilon h)^{-1}\right)
+$$
