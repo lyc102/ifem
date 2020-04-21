@@ -14,13 +14,13 @@ function [bdFlag,face] = setboundary3(node,elem,varargin)
 %  Dirichlet boundary condition on x=1 and x=-1. Other edges are
 %  homongenous Neumann boundary condition.
 %
-%  bdFlag = setboundary3(node,elem,'Dirichlet','(x==1) | ...
-%  (x==-1)','Neumann','(y==1) | (y==-1)') set
+%  bdFlag = setboundary3(node,elem,'Dirichlet','(x==1) | (x==-1)',...
+%  'Neumann','(y==1) | (y==-1)') set
 %  Dirichlet boundary condition on x=1 or x=-1 and Neumann boundary
 %  condition on y=1 or y=-1.
 %
-%  bdFlag = setboundary3(node,elem,'Dirichlet','(x==1) | ...
-%  (x==-1)','Neumann','y==1', 'Robin',' y==-1') set
+%  bdFlag = setboundary3(node,elem,'Dirichlet','(x==1) | (x==-1)',...
+%  'Neumann','y==1', 'Robin',' y==-1') set
 %  Dirichlet boundary condition on x=1 or x=-1 and Neumann boundary
 %  condition on y=1, and Robin boundary condition on y=-1.
 %
