@@ -203,16 +203,16 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         fixedFace = find(s == 1);
         freeFace = find(s == 2);
     end 
-    
+    % Modify the matrix for different boundary conditions 
+     % pure Neumann boundary condition    
     isPureNeumann = false;    
     if isempty(fixedFace) && isempty(Robin)  % pure Neumann boundary condition
         % pde.g_N could be empty which is homogenous Neumann boundary condition
         isPureNeumann = true;
-        fixedFace = 1;
-        freeFace = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
+        AD = A;
+        AD(1,1) = AD(1,1) + 1e-6;        
     end
-    
-    % Modify the matrix
+    % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedFace,fixedFace)=I, AD(fixedFace,freeFace)=0, AD(freeFace,fixedFace)=0.
     if ~isempty(fixedFace)
@@ -221,9 +221,12 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
-    else
+    end
+    % Robin boundary condition
+    if isempty(fixedFace) && ~isempty(Robin)
         AD = A;
     end
+    
     %% Part 2: Find boundary faces and modify the right hand side b
     % Find boundary faces: Neumann
     Neumann = [];
@@ -286,7 +289,7 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
     % Pure Neumann boundary condition
     if isPureNeumann
         b = b - mean(b); % compatilbe condition: sum(b) = 0
-        b(1) = 0;
+%         b(1) = 0;
     end
     end % end of getbd3CR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
