@@ -64,6 +64,9 @@ for m = 1:step
     for k = 1:5  
         % find elements containing nodeSet
         movingNode = nodeSet{k};
+        if isempty(movingNode)
+            break;
+        end
         [i,j] = find(t2p(:,movingNode)); %#ok<*NASGU>
         idx = false(NT,1);
         idx(i) = true;

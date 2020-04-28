@@ -32,11 +32,10 @@ function [q,u,idx] = meshquality(node,elem,fh,varargin)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 q = simpqual(node,elem);
-if (nargin >= 3) && ~isempty(fh)
-    u = uniformity(node,elem,fh,varargin{:});
-else
-    u = uniformity(node,elem,@huniform,varargin{:});
+if nargin <= 2
+    fh = 1;
 end
+u = myuniformity(node,elem,fh);
 [mq,idx] = min(q);
 fprintf(' - Min quality %.4f',mq);
 fprintf(' - Mean quality %.4f',mean(q));
