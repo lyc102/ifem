@@ -46,23 +46,25 @@ NallEdge = sum(elemVertexNumber); % # of edge = # of vertices locally in 2D
 allEdgeCell = cell(NT,1); % cell array of the global indices of all edges
 IdxLocalEdge = cell(NT,1); % the local indexing of the edges
 IdxGlobalElem = cell(NT,1); % repmat of global indexing of the elements in cells
-idxNv = cell(maxNv,1);
+isNv = cell(maxNv,1);
 for Nv = minNv:maxNv
-    idxNv{Nv} = (elemVertexNumber == Nv);
-    elemNv = cell2mat(elem(idxNv{Nv}));
-    % number of elements sharing the same # of vertices
-    NelemNv = sum(idxNv{Nv}); 
-    locEdge = [1:Nv; circshift(1:Nv,-1)]';
-    allEdgeNv = zeros(NelemNv*Nv,2);
-    for i = 1:Nv
-        allEdgeNv(i:Nv:(NelemNv-1)*Nv+i,:) = elemNv(:,locEdge(i,:));
+    isNv{Nv} = (elemVertexNumber == Nv);
+    if any(isNv{Nv})
+        elemNv = cell2mat(elem(isNv{Nv}));
+        % number of elements sharing the same # of vertices
+        NelemNv = sum(isNv{Nv});
+        locEdge = [1:Nv; circshift(1:Nv,-1)]';
+        allEdgeNv = zeros(NelemNv*Nv,2);
+        for i = 1:Nv
+            allEdgeNv(i:Nv:(NelemNv-1)*Nv+i,:) = elemNv(:,locEdge(i,:));
+        end
+        allEdgeNv = permute(reshape(allEdgeNv',[2, Nv, NelemNv]),[2 1 3]);
+        allEdgeCell(isNv{Nv}) = squeeze(num2cell(allEdgeNv, [1,2]));
+        locIdxFacetNv = repmat(1:Nv, [NelemNv, 1]);
+        IdxLocalEdge(isNv{Nv}) = num2cell(locIdxFacetNv, 2);
+        locIdxElemNv = repmat(find(isNv{Nv}), [1, Nv]);
+        IdxGlobalElem(isNv{Nv}) = num2cell(locIdxElemNv,2);
     end
-    allEdgeNv = permute(reshape(allEdgeNv',[2, Nv, NelemNv]),[2 1 3]);
-    allEdgeCell(idxNv{Nv}) = squeeze(num2cell(allEdgeNv, [1,2]));
-    locIdxFacetNv = repmat(1:Nv, [NelemNv, 1]);
-    IdxLocalEdge(idxNv{Nv}) = num2cell(locIdxFacetNv, 2);
-    locIdxElemNv = repmat(find(idxNv{Nv}), [1, Nv]);
-    IdxGlobalElem(idxNv{Nv}) = num2cell(locIdxElemNv,2);
 end
 
 %%
