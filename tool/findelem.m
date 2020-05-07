@@ -2,11 +2,13 @@ function findelem(node,elem,range,varargin)
 %% FINDELEM highlights some elements
 %
 %    FINDELEM(node,elem,range) finds all elements whose indices are in the
-%    range array by displaying these elements in yellow.
+%    range array by displaying these elements in yellow. The size of the marker
+%    is proportional to the number of digits of the indices. The font will
+%    magnify as one resizes the figure.
 %
 %    FINDELEM(node,elem) finds all elements.
 %   
-%    FINDELEMnode,elem,range,'noindex') skip the display of indices.
+%    FINDELEM(node,elem,range,'noindex') skip the display of indices.
 %
 %    FINDELEM(node,elem,range,'param','value','param','value'...) allows
 %    additional patch param/value pairs to highlight the elements.
@@ -16,7 +18,7 @@ function findelem(node,elem,range,varargin)
 %     elem = [1,2,8; 3,8,2; 8,3,5; 4,5,3; 7,8,6; 5,6,8];
 %     subplot(1,2,1);
 %     showmesh(node,elem);
-%     findelem(node,elem,1,'index','FaceColor','r','MarkerSize',24);
+%     findelem(node,elem,1,'index','FaceColor','r');
 %     subplot(1,2,2);
 %     showmesh(node,elem);
 %     findelem(node,elem);
@@ -36,7 +38,12 @@ end
 if size(range,2)>size(range,1)
     range = range'; 
 end
-center=(node(elem(range,1),:)+node(elem(range,2),:)+node(elem(range,3),:))/3;
+nV = size(elem,2);
+if nV == 3
+    center=(node(elem(range,1),:)+node(elem(range,2),:)+node(elem(range,3),:))/3;
+elseif nV == 4
+    center=(node(elem(range,1),:)+node(elem(range,2),:)+node(elem(range,3),:)+node(elem(range,4),:))/4;
+end
 if length(range) < size(elem,1)
     x = reshape(node(elem(range,:),1),size(range,1), size(elem,2))';
     y = reshape(node(elem(range,:),2),size(range,1), size(elem,2))';
@@ -51,17 +58,33 @@ if length(range) < size(elem,1)
         end
     end
 end
+nDigit =ceil(log10(range));
+oSize = 170*nDigit;
+f = gcf;
+fHeight = f.Position(4);
 if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
     if size(node,2) == 2
-        plot(center(:,1),center(:,2),'o','LineWidth',1,'MarkerEdgeColor','k',...
-         'MarkerFaceColor','y','MarkerSize',18);    
-        text(center(:,1)-0.02,center(:,2),int2str(range),'FontSize',12,...
-        'FontWeight','bold','Color','k');
+        s = scatter(center(:,1),center(:,2),oSize,'o','LineWidth',1,'MarkerEdgeColor','k',...
+            'MarkerFaceColor','y');
+        fSz = 3e-2*fHeight; % font size is proportional to height
+        t = text(center(:,1)-0.02*nDigit,center(:,2),int2str(range),...
+            'Fontsize',fSz,'FontWeight','bold','Color','k');
+        set(f,'SizeChangedFcn',@resizeCallback);
+        set(f,'Visible','on');
     elseif size(node,2) == 3 % surface mesh
-        plot3(center(:,1),center(:,2),center(:,3),'o','LineWidth',1,'MarkerEdgeColor','k',...
-         'MarkerFaceColor','y','MarkerSize',18);    
-        text(center(:,1)-0.02,center(:,2),center(:,3),int2str(range),'FontSize',12,...
+        scatter3(center(:,1),center(:,2),center(:,3),oSize,'o','LineWidth',1,...
+            'MarkerEdgeColor','k','MarkerFaceColor','y');    
+        text(center(:,1)-0.02*nDigit,center(:,2),center(:,3),int2str(range),'FontSize',12,...
         'FontWeight','bold','Color','k');        
     end
 end
 hold off
+%%
+    function resizeCallback(f, ~)
+        fSz =3e-2*f.Position(4);
+        % change font size accordingly
+        set(t,'FontSize',fSz);
+        set(s,'SizeData',oSize*(f.Position(4)/fHeight)^2);
+    end
+
+end
