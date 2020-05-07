@@ -89,8 +89,8 @@ elem = [tElem; sElem(:,[2 3 1]); sElem(:,[4 1 3])];
 isExteriorElem = false(size(tElem,1),1);
 center = (node(tElem(:,1),:) + node(tElem(:,2),:) + node(tElem(:,3),:))/3;
 isExteriorElem(phi(center)>0) = true;
-[bdNode,bdEdge] = findboundary(tElem(isExteriorElem));
-isInterfaceEdge = ((vSign(bdEdge,1) == 0) & vSign(bdEdge,2) == 0);
+[~,bdEdge] = findboundary(tElem(isExteriorElem,:));
+isInterfaceEdge = ((vSign(bdEdge(:,1)) == 0) & vSign(bdEdge(:,2)) == 0);
 interface = bdEdge(isInterfaceEdge,:);
 interfaceNode = find(vSign == 0);
 
