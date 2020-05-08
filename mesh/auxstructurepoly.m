@@ -91,3 +91,4 @@ T.edge2elem = edge2elem;
 T.elem2edge = elem2edge;
 T.neighbor = neighbor;
 T.edge = uint32(edge);
+T.allEdge = uint32(allEdge);
