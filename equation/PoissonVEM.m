@@ -8,7 +8,7 @@ function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 % Each element could be different polygon shape.
 %
 % Input:
-%   node, elem: coordiante and connvectivity sort counter-clockwise;
+%   node, elem: coordiante and connvectivity;
 %   pde.f: functional handle right side or data
 %   pde.g_D: functional handle for Dirichelet condition
 %
@@ -57,6 +57,9 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
     % find polygons with Nv vertices
     idx = (elemVertexNumber == Nv); % index of elements with Nv vertices
     NT = sum(idx); % the number of elements having the same number of vertices
+    if NT == 0     % no element has Nv vertices
+        continue;
+    end
     % vertex index and coordinates: vertices are counter-clockwise
     vertex = cell2mat(elem(idx));
     x1 = reshape(node(vertex,1),NT,Nv);
@@ -73,7 +76,7 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
     % compute geometry quantity: edge, normal, area, center
     bdIntegral = x1.*y2 - y1.*x2;
     area = sum(bdIntegral,2)/2; % the area per element
-    h = repmat(sqrt(abs(area)),1,Nv); % h = sqrt(area) not the diameter
+    h = repmat(sign(area).*sqrt(abs(area)),1,Nv); % h = sqrt(area) not the diameter
     cx = sum((x1+x2).*bdIntegral,2)./(6*area); % the first part of the centroid
     cy = sum((y1+y2).*bdIntegral,2)./(6*area); % the second part of the centroid
     normVecx = y2 - y1; % normal vector is a rotation of edge vector
