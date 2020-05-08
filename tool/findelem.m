@@ -58,16 +58,16 @@ if length(range) < size(elem,1)
         end
     end
 end
-nDigit =ceil(log10(range));
-oSize = 170*nDigit;
+nDigit =ceil(log10(range+1));
+oSize = 150*nDigit;
 f = gcf;
 fHeight = f.Position(4);
 if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
     if size(node,2) == 2
         s = scatter(center(:,1),center(:,2),oSize,'o','LineWidth',1,'MarkerEdgeColor','k',...
             'MarkerFaceColor','y');
-        fSz = 3e-2*fHeight; % font size is proportional to height
-        t = text(center(:,1)-0.02*nDigit,center(:,2),int2str(range),...
+        fSz = log(f.Position(3)*f.Position(4)); % font size is proportional to height
+        t = text(center(:,1)-0.01*nDigit,center(:,2),int2str(range),...
             'Fontsize',fSz,'FontWeight','bold','Color','k');
         set(f,'SizeChangedFcn',@resizeCallback);
         set(f,'Visible','on');
@@ -81,10 +81,10 @@ end
 hold off
 %%
     function resizeCallback(f, ~)
-        fSz =3e-2*f.Position(4);
+        fSz = log(f.Position(3)*f.Position(4));
         % change font size accordingly
         set(t,'FontSize',fSz);
-        set(s,'SizeData',oSize*(f.Position(4)/fHeight)^2);
+        set(s,'SizeData',oSize*(f.Position(4)/fHeight));
     end
 
 end

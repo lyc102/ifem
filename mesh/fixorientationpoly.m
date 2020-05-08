@@ -1,5 +1,5 @@
-function elem = fixorientationpoly(node,elem)
-%% FIXORIENTATIONPOLY set all polygon clockwise
+function elem = fixorientationpoly(node,elem,varargin)
+%% FIXORIENTATIONPOLY set all polygon clockwise or counter-clockwise
 % 
 %   elem = fixorientationpoly(node,elem) reorder the elem to orient
 %   clockwise similar to the quad element set up. 
@@ -10,7 +10,12 @@ function elem = fixorientationpoly(node,elem)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-elem = cellfun(@(x) reorder(x), elem, 'UniformOutput',false);
+elem = cellfun(@(x) reorder(x), elem,'UniformOutput',false);
+if nargin > 2
+    if strcmp(varargin{1}, 'CounterClockwise')
+        elem = cellfun(@(x) fliplr(x), elem, 'UniformOutput',false);
+    end
+end
 
 %%
     function idx = reorder(idx)
