@@ -61,16 +61,25 @@ end
 nDigit =ceil(log10(range+1));
 oSize = 150*nDigit;
 f = gcf;
+set(f, 'Units', 'pixel');
 fHeight = f.Position(4);
 if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
     if size(node,2) == 2
         s = scatter(center(:,1),center(:,2),oSize,'o','LineWidth',1,'MarkerEdgeColor','k',...
             'MarkerFaceColor','y');
-        fSz = log(f.Position(3)*f.Position(4)); % font size is proportional to height
-        t = text(center(:,1)-0.01*nDigit,center(:,2),int2str(range),...
+        if max(f.Position(3:4)) <= 1
+            fSz = 10*f.Position(4); % font size is proportional to height
+        else
+            fSz = log(f.Position(3)*f.Position(4));
+        end
+        tShift = 0.02*(max(nDigit) + 1 - nDigit);
+        tShift(nDigit==1) = 0.5*tShift(nDigit==1);
+        t = text(center(:,1)-tShift,center(:,2),int2str(range),...
             'Fontsize',fSz,'FontWeight','bold','Color','k');
+        t.Position
         set(f,'SizeChangedFcn',@resizeCallback);
         set(f,'Visible','on');
+        drawnow;
     elseif size(node,2) == 3 % surface mesh
         scatter3(center(:,1),center(:,2),center(:,3),oSize,'o','LineWidth',1,...
             'MarkerEdgeColor','k','MarkerFaceColor','y');    
@@ -81,10 +90,16 @@ end
 hold off
 %%
     function resizeCallback(f, ~)
-        fSz = log(f.Position(3)*f.Position(4));
+        if max(f.Position(3:4)) <= 1 % relative
+            newFSz = 40*f.Position(4); % font size is proportional to height
+            newOSize = 5*oSize*(f.Position(4));
+        else % pixel
+            newFSz = log(f.Position(3)*f.Position(4));
+            newOSize = oSize*(f.Position(4)/fHeight);
+        end
         % change font size accordingly
-        set(t,'FontSize',fSz);
-        set(s,'SizeData',oSize*(f.Position(4)/fHeight));
+        set(t,'FontSize',newFSz);
+        set(s,'SizeData',newOSize);
     end
 
 end
