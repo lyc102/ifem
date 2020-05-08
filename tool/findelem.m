@@ -76,7 +76,7 @@ if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
         tShift(nDigit==1) = 0.5*tShift(nDigit==1);
         t = text(center(:,1)-tShift,center(:,2),int2str(range),...
             'Fontsize',fSz,'FontWeight','bold','Color','k');
-        t.Position
+        nElemShown = length(t);
         set(f,'SizeChangedFcn',@resizeCallback);
         set(f,'Visible','on');
         drawnow;
@@ -93,13 +93,18 @@ hold off
         if max(f.Position(3:4)) <= 1 % relative
             newFSz = 40*f.Position(4); % font size is proportional to height
             newOSize = 5*oSize*(f.Position(4));
+            newTshift = 2*tShift*f.Position(4);
         else % pixel
             newFSz = log(f.Position(3)*f.Position(4));
             newOSize = oSize*(f.Position(4)/fHeight);
+            newTshift = tShift/(f.Position(4)/fHeight);
         end
         % change font size accordingly
         set(t,'FontSize',newFSz);
         set(s,'SizeData',newOSize);
+        for i = 1:nElemShown
+            set(t(i), 'Position', [center(i,1)-newTshift(i), center(i,2), 0]);
+        end
     end
 
 end
