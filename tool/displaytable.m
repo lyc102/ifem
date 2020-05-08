@@ -7,6 +7,8 @@ function displaytable(colname,varargin)
 %   colname = {'#nodes'     '|u_I-u_h|_1'      '||p-p_h||'};
 %   displaytable(colname,err.N,[],err.uH1,'%0.5e',err.pL2,'%0.5e');
 %
+% Note that all data are column arrays.
+%
 % See also disptable
 %
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.

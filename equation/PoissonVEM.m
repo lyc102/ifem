@@ -1,13 +1,14 @@
-function [u,A,asst,solt] = PoissonVEM(node,elem,pde)
+function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 %% POISSONVEM solve Poisson equation using virtual element method
 %
-%     -\Delta u = f,
-%             u = g_D on the Dirichelet boundary edges
+%     -\Delta u = f,  in Omega
+%             u = g_D on the boundary of Omega
+%
 % in a domain described by node and elem, with boundary edges Dirichlet.
 % Each element could be different polygon shape.
 %
 % Input:
-%   node, elem: standard mesh data;
+%   node, elem: coordiante and connvectivity sort counter-clockwise;
 %   pde.f: functional handle right side or data
 %   pde.g_D: functional handle for Dirichelet condition
 %
@@ -33,8 +34,12 @@ function [u,A,asst,solt] = PoissonVEM(node,elem,pde)
 % Reference:
 %
 % Reference:  'The Hitchhiker's guide to the virtual element method'.
-% by L.Beirao da Veiga, F.Brezzi, L.D.marini, A.Russo.2013
-
+% by L.Beirao da Veiga, F.Brezzi, L.D.Marini, A.Russo.2013
+%
+%
+% Author: Min Wen and Long Chen
+%
+% Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
 %% Assemble the matrix equation
 N = size(node,1); % The number of nodes
@@ -50,9 +55,9 @@ edgeIdx = 1;
 tic;
 for Nv = min(elemVertexNumber):max(elemVertexNumber)
     % find polygons with Nv vertices
-    idx = find(elemVertexNumber == Nv); % index of elements with Nv vertices
-    NT = length(idx); % the number of elements having the same number of vertices
-    % vertex index and coordinates
+    idx = (elemVertexNumber == Nv); % index of elements with Nv vertices
+    NT = sum(idx); % the number of elements having the same number of vertices
+    % vertex index and coordinates: vertices are counter-clockwise
     vertex = cell2mat(elem(idx));
     x1 = reshape(node(vertex,1),NT,Nv);
     y1 = reshape(node(vertex,2),NT,Nv);
@@ -65,7 +70,7 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
     vertexShift = circshift(vertex,[0,-1]);
     edge(newEdgeIdx,2) = vertexShift(:);
     edgeIdx = nextIdx;
-    % Compute geometry quantity: edge, normal, area, center
+    % compute geometry quantity: edge, normal, area, center
     bdIntegral = x1.*y2 - y1.*x2;
     area = sum(bdIntegral,2)/2; % the area per element
     h = repmat(sqrt(abs(area)),1,Nv); % h = sqrt(area) not the diameter
@@ -101,22 +106,22 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
     b = b + accumarray(vertex(:),repmat(ft,Nv,1),[N,1]);
 end
 A = sparse(ii,jj,ss,N,N);
-asst = toc;
+assembleTime = toc;
+
 %% Find boundary edges and nodes
 totalEdge = sort(edge(:,1:2),2);
 [i,j,s] = find(sparse(totalEdge(:,2),totalEdge(:,1),1));
 bdEdge  = [j(s==1), i(s==1)]; % find the boundary edge
 isBdNode = false(N,1);
 isBdNode(bdEdge) = true;
-bdNode = find(isBdNode);    % get the boundary node
 
-%% Impose boundary conditions
+%% Impose Dirichlet boundary conditions
 u = zeros(N,1);
-u(bdNode) = pde.g_D(node(bdNode,:));
+u(isBdNode) = pde.g_D(node(isBdNode,:));
 b = b - A*u;
 
 %% Solve Au = b
-freeNode = find(~isBdNode); % get the interior node
+isFreeNode = ~isBdNode; % all interior nodes are free
 tic;
-u(freeNode) = A(freeNode,freeNode)\b(freeNode);
-solt = toc;
+u(isFreeNode) = A(isFreeNode,isFreeNode)\b(isFreeNode);
+solverTime = toc;

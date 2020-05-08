@@ -17,6 +17,8 @@ function h = showsolutionpoly(node,elem,u,varargin)
 %     
 %   See also showmesh, showboundary3, showmeshpoly.
 %
+% Added by Shuhao Cao.
+%
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 V = [node, u];

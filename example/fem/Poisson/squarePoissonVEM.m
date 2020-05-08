@@ -1,64 +1,62 @@
-clear all
-clc
-close all
-%% Load the information of mesh and function 
-dirName = 'data/';
-%load the function
- pde = vemcosdata;
+%% SQUAREPOISSONVEM Poisson equation in a square domain.
+%
+%   squarePoissonVEM computes linear VEM approximations of the Poisson
+%   equation in the unit square on a sequence of polygonal meshes generated
+%   by PolyMesher.
+% 
+% The optimal rate of convergence of the H1-norm (1st order) and L2-norm
+% (2nd order) is observed. The 2nd order convergent rate between two
+% discrete functions ||DuI-Duh|| is known as superconvergence.
+%
+% Created by Min Wen.
+%
+% Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
+
+
+%% Load the information of mesh and PDE information
+pde = vemcosdata;
 %pde = vemdata;
-%load the elements
-%nameV = [128,512,2048,8192,32768];
-nameV = [16,64,256,1024,4096,20014];
-%nameV = 131072;
-errorH1 = zeros(1,length(nameV)); %initialize the error
-errorMax = zeros(1,length(nameV)); %initialize the error
-solverTime = zeros(length(nameV),1); 
-assembleTime = zeros(length(nameV),1);
-N = zeros(1,length(nameV)); %initialize the error
+nameV = [64,256,1024,4096, 20014]';
+% nameV = [64,256,1024,4096]';
+maxIt = length(nameV);
+errorH1 = zeros(maxIt,1); %initialize the error
+errorMax = zeros(maxIt,1); %initialize the error
+solverTime = zeros(maxIt,1); 
+assembleTime = zeros(maxIt,1);
+N = zeros(length(nameV),1); %initialize the error
+
+%% Iterations
 for k = 1:length(nameV)
     % load mesh
-    aa = [dirName,'E',num2str(nameV(k)),'.mat'];
-    load(aa);
-    
-    %% The exact value and right hand side function for Possion equation
-    % get the approximate value u and corresponding error
-    tic;
-    [u,A,asst,solt] = PoissonVEM(Node,Element,pde);
+    load(['E',num2str(nameV(k)),'.mat']);
+    % solve
+    [u,A,asst,solt] = PoissonVEM(Node,Element,pde);    
+    % plot
+    if k <= 3 % only plot meshes of small size
+        subplot(1,2,1); showmeshpoly(Node,Element);
+        subplot(1,2,2); showsolutionpoly(Node,Element,u);
+        pause(1);
+    end
     assembleTime(k) = asst;
     solverTime(k) = solt;
-    errorH1(k) = sqrt((u-pde.u(Node))'*A*(u-pde.u(Node))); % get the error in H1 norm
-    errorMax(k) = max(abs(u-pde.u(Node)));
+    uI = pde.u(Node);
+    errorH1(k) = sqrt((u-uI)'*A*(u-uI)); % get the error in H1 norm
+    errorMax(k) = max(abs(u-uI));
     N(k) = length(u);
 end
-N = N';
-nameV = nameV';
-errorH1 = errorH1';
-errorMax = errorMax';
 
 %% Plot convergence rates
 figure;
-set(gcf,'Units','normal');
-set(gcf,'Position',[0.25,0.25,0.55,0.4]);
-showrate2(N(1:k),errorH1(1:k),3,'r-+','||u_I-u_h||_A',...
-    N(1:k),errorMax(1:k),3,'b-+','||u_I-u_h||_{\infty}');
+showrate2(N(1:k),errorH1(1:k),2,'r-+','||u_I-u_h||_A',...
+          N(1:k),errorMax(1:k),2,'b-+','||u_I-u_h||_{\infty}');
 
 
-%% Output
+%% Display error and time
 err = struct('N',N,'elem',nameV,'H1',errorH1(1:k),'uIuhMax',errorMax(1:k));
-time = struct('N',N,'solver',solverTime(1:k), ...
-              'assemble',assembleTime(1:k));
-% %% Display error and time
-option.dispflag =1;
- if option.dispflag
-     display('Table: Error')
-   colname = {'#Dof','# of elements','||DuI-Du_h||','||uI-u_h||_{max}'};     
-   %disptable(colname,err.N,[],err.h,'%0.2e',err.L2,'%0.5e',err.H1,'%0.5e',err.uIuhH1,'%0.5e');
-     disptable(colname,err.N,[],err.elem,[],err.H1,'%0.5e',err.uIuhMax,'%0.5e');
-     display('Table: CPU time')
-    colname = {'#Dof','Assemble','Solve'};
-    disptable(colname,time.N,[],time.assemble,[],time.solver,[]);
-%     display('Table: CPU time')
-%      colname = {'#Dof','Assemble','Solve','Error','Mesh'};
-%     disptable(colname,time.N,[],time.assemble,'%0.2e',time.solver,'%0.2e',...
-%         time.err,'%0.2e',time.mesh,'%0.2e');
- end
+time = struct('N',N,'solver',solverTime(1:k),'assemble',assembleTime(1:k));
+disp('Table: CPU time')
+colname = {'#Dof','Assemble','Solve'};
+displaytable(colname,time.N,[],time.assemble,'%0.2e',time.solver,'%0.2e');
+disp('Table: Error')
+colname = {'#Dof','# of elements','||DuI-Du_h||','||uI-u_h||_{max}'};     
+displaytable(colname,err.N,[],err.elem,[],err.H1,'%0.5e',err.uIuhMax,'%0.5e');
