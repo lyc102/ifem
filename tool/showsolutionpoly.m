@@ -36,18 +36,20 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
               'Edgecolor','k',...
               'Edgealpha',1/log(size(node,1)),...
               'FaceAlpha',0.65);
+   %%
+   if (nargin>3) && ~isempty(varargin) % set display property
+       if isnumeric(varargin{1})
+           view(varargin{1});
+           if nargin>4
+               set(h,varargin{2:end});
+           end
+       else
+           set(h,varargin{1:end});
+       end
+   end
 end
 view(3); axis tight; grid on;
 camproj('perspective');
 
 %%
-if (nargin>3) && ~isempty(varargin) % set display property
-    if isnumeric(varargin{1})
-        view(varargin{1});
-        if nargin>4
-            set(h,varargin{2:end});
-        end
-    else
-        set(h,varargin{1:end});        
-    end
-end
+
