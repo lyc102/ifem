@@ -41,10 +41,10 @@ function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
 %% Assemble the matrix equation
-N = size(node,1); % The number of nodes
-elemVertexNumber = cellfun('length',elem);% the number of vertices per element
-nnz = sum(elemVertexNumber.^2);
-ii = zeros(nnz,1); %initialization
+N = size(node,1); % number of nodes
+elemVertexNumber = cellfun('length',elem);% number of vertices per element
+nnz = sum(elemVertexNumber.^2); % a upper bound on non-zeros
+ii = zeros(nnz,1); % initialization
 jj = zeros(nnz,1);
 ss = zeros(nnz,1);
 b = zeros(N,1);
@@ -52,15 +52,15 @@ edge = zeros(sum(elemVertexNumber),2);
 index = 0;
 edgeIdx = 1;
 tic;
-fv = pde.f(node);
+fv = pde.f(node); % right hand side evaluated at vertices
 for nv = min(elemVertexNumber):max(elemVertexNumber)
-    % find polygons with Nv vertices
-    idx = (elemVertexNumber == nv); % index of elements with Nv vertices
-    NT = sum(idx); % the number of elements having the same number of vertices
-    if NT == 0     % no element has Nv vertices
+    % find polygons with nv vertices
+    idx = (elemVertexNumber == nv); % index of elements having nv vertices
+    NT = sum(idx); % number of elements having nv vertices
+    if NT == 0     % no element has nv vertices
         continue;
     end
-    % vertex index and coordinates: vertices are counter-clockwise
+    % vertex index and coordinates
     nvElem = cell2mat(elem(idx));
     x1 = reshape(node(nvElem,1),NT,nv);
     y1 = reshape(node(nvElem,2),NT,nv);
@@ -76,7 +76,7 @@ for nv = min(elemVertexNumber):max(elemVertexNumber)
     % compute geometry quantity: edge, normal, area, center
     bdIntegral = x1.*y2 - y1.*x2;
     area = sum(bdIntegral,2)/2; % the area per element
-    h = repmat(sign(area).*sqrt(abs(area)),1,nv); % h = sqrt(area) not the diameter
+    h = repmat(sign(area).*sqrt(abs(area)),1,nv); % h is not the diameter
     cx = sum(reshape(node(nvElem(:),1),NT,nv),2)/nv;
     cy = sum(reshape(node(nvElem(:),2),NT,nv),2)/nv;
     normVecx = y2 - y1; % normal vector is a rotation of edge vector
