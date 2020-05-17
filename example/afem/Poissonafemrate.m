@@ -27,7 +27,7 @@ format shorte
 
 err = afemPoisson(mesh,pde,option);
 
-figure;
+figure(1);
 showrate2(err.N,err.H1,10,'k-*','||Du-Du_h||',err.N,err.eta,10,'-+','eta');
 
 %% Kellogg problem
@@ -45,6 +45,26 @@ option.viewangle = [27,26];
 
 err = afemPoisson(mesh,pde,option);
 
-figure;
+figure(2);
 showrate2(err.N,err.H1,20,'k-*','||Du-Du_h||',err.N,err.eta,40,'-+','eta');
+% latexerrtable(err.N,[err.H1 err.eta])
+
+
+%% arctan wavefront problem
+[node,elem] = squaremesh([0 1 0 1], 0.25);
+bdFlag = setboundary(node,elem,'Dirichlet','(x==0) | (y==0)','Neumann','(x==1) | (y==1)');
+mesh = struct('node',node,'elem',elem,'bdFlag',bdFlag);
+pde = arctandata;
+option.L0 = 1;
+option.maxIt = 100;
+option.maxN = 1e4;
+option.theta = 0.4;
+option.plotflag = 1;
+option.rateshift = 20;
+option.viewangle = [27,26];
+
+err = afemPoisson(mesh,pde,option);
+
+figure(3);
+showrate2(err.N,err.H1,20,'k-*','||Du-Du_h||',err.N,err.eta,20,'-+','eta');
 % latexerrtable(err.N,[err.H1 err.eta])
