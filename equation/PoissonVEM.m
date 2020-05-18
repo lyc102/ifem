@@ -17,20 +17,21 @@ function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 %   A: stiffness matrix
 %
 % Example
+%
 %   suarePoissonVEM
 %
-% See also Poisson
+% See also Poisson, suarePoissonVEM
 %
 % The code is based on the following reference but optimized using
 % vectorization to avoid for loops.
+%
+% Author: Min Wen and Long Chen
 %
 % Reference: Programming of Linear Virtual Element Methods. Long Chen and
 % Min Wen. 2020. 
 %
 % Reference:  'The Hitchhiker's guide to the virtual element method'.
 % by L.Beirao da Veiga, F.Brezzi, L.D.Marini, A.Russo.2013
-%
-% Author: Min Wen and Long Chen
 %
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
