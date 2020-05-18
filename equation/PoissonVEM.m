@@ -17,21 +17,15 @@ function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 %   A: stiffness matrix
 %
 % Example
+%   suarePoissonVEM
 %
-%     node = [0,0; 0,0.5; 0,1; 0.5,0;1,0;0.5,0.5;0.5,1;1,0.5,1,1];
-%     elem = [1,4,6,2; 6,8,9,7;4,5,8,6;2,6,7,3];
-%     pde.f = inline('ones(size(p),1)','p');
-%     pde.exactu = inline('(-p(:,1).^2-p(:,2).^2)/4','p');
-%     [u,A] = PoissonVEM(node,elem,pde);
-%     uI = pde.exactu(node);
-%     error = sqrt((u-uI)'*A*(u-uI));
-%
-% See also Poisson, PoissonS
+% See also Poisson
 %
 % The code is based on the following reference but optimized using
 % vectorization to avoid for loops.
 %
-% Reference:
+% Reference: Programming of Linear Virtual Element Methods. Long Chen and
+% Min Wen. 2020. 
 %
 % Reference:  'The Hitchhiker's guide to the virtual element method'.
 % by L.Beirao da Veiga, F.Brezzi, L.D.Marini, A.Russo.2013

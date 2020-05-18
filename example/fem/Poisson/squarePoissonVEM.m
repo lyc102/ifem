@@ -58,5 +58,5 @@ disp('Table: CPU time')
 colname = {'#Dof','Assemble','Solve'};
 displaytable(colname,time.N,[],time.assemble,'%0.2e',time.solver,'%0.2e');
 disp('Table: Error')
-colname = {'#Dof','# of elements','||DuI-Du_h||','||uI-u_h||_{max}'};     
+colname = {'Dof','NT','||DuI-Du_h||','||uI-u_h||_{max}'};     
 displaytable(colname,err.N,[],err.elem,[],err.H1,'%0.5e',err.uIuhMax,'%0.5e');
