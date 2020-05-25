@@ -30,60 +30,52 @@ function T = auxstructurepoly(elem)
 %
 %  See auxstructure, auxstructure3, auxstructurequad.
 %
-% Copyright (C) Long Chen. See COPYRIGHT.txt for details.
+%  Notes on the vectorization used: https://scaomath.github.io/blog/matlab-cell-vectorization/
+%
+%  Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 if ~iscell(elem)
     warning('elem:incorrectType',...
        'Input being %s may yield incorrect result, please use cell array',class(elem))
-    elem = mat2cell(elem,2);
+    elem = num2cell(elem,2);
 end
 %%
-elemVertexNumber = cellfun('length',elem);
-maxNv = max(elemVertexNumber);
-minNv = min(elemVertexNumber);
+elemVertNum = cellfun('length',elem);
+maxNv = max(elemVertNum);
+minNv = min(elemVertNum);
 NT = size(elem,1);
-NallEdge = sum(elemVertexNumber); % # of edge = # of vertices locally in 2D
+NallEdge = sum(elemVertNum); % # of edge = # of vertices locally in 2D
 allEdgeCell = cell(NT,1); % cell array of the global indices of all edges
 IdxLocalEdge = cell(NT,1); % the local indexing of the edges
 IdxGlobalElem = cell(NT,1); % repmat of global indexing of the elements in cells
-for Nv = minNv:maxNv
-    isNv = (elemVertexNumber == Nv);
+for nV = minNv:maxNv
+    isNv = (elemVertNum == nV);
     if ~any(isNv); continue; end
     
     elemNv = cell2mat(elem(isNv));
     % number of elements sharing the same # of vertices
     NelemNv = sum(isNv);
     
-    %% old implementation that needs looping through local edges with explicit indexing
-    % locEdge = [1:Nv; circshift(1:Nv,-1)]';
-    % allEdgeNv = zeros(NelemNv*Nv,2);
-    % for i = 1:Nv
-    %    allEdgeNv(i:Nv:(NelemNv-1)*Nv+i,:) = elemNv(:,locEdge(i,:));
-    % end
-    % allEdgeNv = permute(reshape(allEdgeNv',[2, Nv, NelemNv]),[2 1 3]);
-    % allEdgeCell(isNv) = squeeze(num2cell(allEdgeNv, [1,2]));
-    
     %% new implementation modified from PoissonVEM routine
     elemNvShift = circshift(elemNv,[0,-1])';
     elemNv = elemNv';
-    allEdgeCell(isNv) = mat2cell([elemNv(:), elemNvShift(:)], Nv*ones(1,NelemNv));
+    allEdgeCell(isNv) = mat2cell([elemNv(:), elemNvShift(:)], nV*ones(1,NelemNv));
     
     %% recording local indexing for edge2elem
-    locIdxFacetNv = repmat(1:Nv, [NelemNv, 1]);
+    locIdxFacetNv = repmat(1:nV, [NelemNv, 1]);
     IdxLocalEdge(isNv) = num2cell(locIdxFacetNv, 2);
-    locIdxElemNv = repmat(find(isNv), [1, Nv]);
+    locIdxElemNv = repmat(find(isNv), [1, nV]);
     IdxGlobalElem(isNv) = num2cell(locIdxElemNv,2);
-
 end
 
 %%
 if isrow(allEdgeCell); allEdgeCell = allEdgeCell'; end
-allEdge = sort(cell2mat(allEdgeCell),2);
-IdxLocalEdge = cat(2, IdxLocalEdge{:})';
-IdxGlobalElem = cat(2, IdxGlobalElem{:})';
+allEdge = cell2mat(allEdgeCell);
+IdxLocalEdge = [IdxLocalEdge{:}]';
+IdxGlobalElem = [IdxGlobalElem{:}]';
 %%
-[edge, i2, j] = myunique(allEdge);
-elem2edge = mat2cell(uint32(j), elemVertexNumber);
+[edge, i2, j] = myunique(sort(allEdge,2));
+elem2edge = mat2cell(uint32(j), elemVertNum);
 i1(j(NallEdge:-1:1)) = NallEdge:-1:1;
 i1 = i1';
 t1 = IdxGlobalElem(i1); t2 = IdxGlobalElem(i2);
