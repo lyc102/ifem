@@ -1,11 +1,11 @@
-function [QDu,area,QDlambda,stbElem] = graduVEM(node,elem,u)
+function [QDu,area,center,QDlambda,stbElem] = graduVEM(node,elem,u)
 %% GRADUVEM the projected gradient of a linear virtual element function.
 %
 % QDu = GRADUVEM(node,elem,u) compute the L2 projection of the gradient of 
 % a virtual element function u on a polygonal mesh representing by (node,elem).
 % 
-% [QDu,area, QDlambda, stbElem] = GRADUVEM(node,elem,u) also outputs area, elementwise 
-% stabilization, and the L2 projection of Dlambda which is the gradient of P1 
+% [QDu,area,center,QDlambda,stbElem] = GRADUVEM(node,elem,u) also outputs areas, centroids, 
+% elementwise stabilization, and the L2 projection of Dlambda which is the gradient of P1 
 % conforming VEM basis. QDu{t}(i,1) is the x-component of the i-th vertex's basis in t-th element.
 % stbElem(t,:) is the \ell^2 norm of (I-P)u_h on each element.
 % 
@@ -23,6 +23,7 @@ if ~iscell(elem); elem = num2cell(elem,2); end
 NT = size(elem,1);
 QDu = zeros(NT,2);
 area = zeros(NT,1);
+center = zeros(NT,2);
 QDlambda = cell(NT,1);
 stbElem = zeros(NT,1); % || (I- P) u ||_{l^2,K}
 %%
@@ -43,6 +44,9 @@ for nV = minNv:maxNv
     y2 = circshift(y1,[0,-1]);
     bdIntegral = x1.*y2 - y1.*x2;
     areaNv = sum(bdIntegral,2)/2; 
+    xc = sum((x1+x2).*bdIntegral,2)./abs(areaNv)/6;
+    yc = sum((y1+y2).*bdIntegral,2)./abs(areaNv)/6;
+    center(isNv,:) = [xc, yc];
     normVecx = y2 - y1; % normal vector is a rotation of edge vectors
     normVecy = x1 - x2;
     Bx = (normVecx + circshift(normVecx,[0,1]))./(2*areaNv); % average of normal vectors
@@ -58,25 +62,27 @@ for nV = minNv:maxNv
     area(isNv,:) = abs(areaNv);
     QDu(isNv,:) = [QDudx, QDudy];
     
-    %%
-    h = sign(areaNv).*sqrt(abs(areaNv)); % h = sqrt(area) not the diameter
-    cx = mean(reshape(node(elemNv(:),1),[NelemNv,nV]),2);
-    cy = mean(reshape(node(elemNv(:),2),[NelemNv,nV]),2);
-    Dx = (x1 - cx)./h; Dy = (y1 - cy)./h; %  m = (x - cx)/h
-    IminusP = zeros(NelemNv,nV,nV);
-    for i = 1:nV
-        for j = 1:nV
-            IminusP(:,i,j) = - 1/nV - Dx(:,i).*Bx(:,j).*abs(h) - Dy(:,i).*By(:,j).*abs(h);
+    %% compute stablization
+    if nargout > 4
+        h = sign(areaNv).*sqrt(abs(areaNv)); % h = sqrt(area) not the diameter
+        cx = mean(reshape(node(elemNv(:),1),[NelemNv,nV]),2);
+        cy = mean(reshape(node(elemNv(:),2),[NelemNv,nV]),2);
+        Dx = (x1 - cx)./h; Dy = (y1 - cy)./h; %  m = (x - cx)/h
+        IminusP = zeros(NelemNv,nV,nV);
+        for i = 1:nV
+            for j = 1:nV
+                IminusP(:,i,j) = - 1/nV - Dx(:,i).*Bx(:,j).*abs(h) - Dy(:,i).*By(:,j).*abs(h);
+            end
+            IminusP(:,i,i) = ones(NelemNv,1) + IminusP(:,i,i);
         end
-        IminusP(:,i,i) = ones(NelemNv,1) + IminusP(:,i,i);
+        if NelemNv == 1
+            IminusP = squeeze(IminusP);
+            utIminusPu = uh2elemNv*IminusP*uh2elemNv';
+        else
+            IminusPu = sum(bsxfun(@times, IminusP, uh2elemNv), 2);
+            utIminusPu = sum(uh2elemNv.*squeeze(IminusPu),2);
+        end
+        
+        stbElem(isNv) = sqrt(abs(utIminusPu));
     end
-    if NelemNv == 1
-        IminusP = squeeze(IminusP);
-        utIminusPu = uh2elemNv*IminusP*uh2elemNv';
-    else
-        IminusPu = sum(bsxfun(@times, IminusP, uh2elemNv), 2);
-        utIminusPu = sum(uh2elemNv.*squeeze(IminusPu),2);
-    end
-    
-    stbElem(isNv) = sqrt(abs(utIminusPu));
 end

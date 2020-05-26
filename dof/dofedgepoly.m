@@ -1,4 +1,4 @@
-function [elem2edge,edge,elem2edgeSign,edgeSign] = dofedgepoly(elem)
+function [elem2edge,edge,elem2edgeSign,edge2elem,edgeSign] = dofedgepoly(elem)
 %% DOFEDGEPOLY dof structure for edges on a polygonal mesh.
 %
 % [elem2edge,edge,elem2edgeSign,edgeSign] = DOFEDGE(elem) constructs data
@@ -50,16 +50,18 @@ elemVertNum = cellfun('length',elem);
 elem2edgeSign = ones(sum(elemVertNum),1);
 idx = (totalEdge(:,1)>totalEdge(:,2));
 elem2edgeSign(idx) = -1;
-elem2edgeSign = mat2cell(elem2edgeSign,elemVertNum);
+elem2edgeSign = array2cell(elem2edgeSign,elemVertNum);
 
 %% Consistency of oritentation of edges
 % edgeSign equals 1 if the edge is consistent with the local edge of its
 % first neighboring element, equals -1 otherwise.
-if nargout >3
+if nargout > 4
     edgeSign = -ones(NE,1); 
     elemSub2ind = [elem{edge2elem(:,1)}]';
     % linear indexing for a cell array
     idxEdge = [0; cumsum(elemVertNum(edge2elem(1:end-1,1)))] + double(edge2elem(:,3));
     isConsistentEdge = (elemSub2ind(idxEdge) == edge(:,1)); 
     edgeSign(isConsistentEdge) = 1;
+end
+
 end

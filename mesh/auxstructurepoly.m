@@ -75,7 +75,7 @@ IdxLocalEdge = [IdxLocalEdge{:}]';
 IdxGlobalElem = [IdxGlobalElem{:}]';
 %%
 [edge, i2, j] = myunique(sort(allEdge,2));
-elem2edge = mat2cell(uint32(j), elemVertNum);
+elem2edge = array2cell(uint32(j), elemVertNum);
 i1(j(NallEdge:-1:1)) = NallEdge:-1:1;
 i1 = i1';
 t1 = IdxGlobalElem(i1); t2 = IdxGlobalElem(i2);
