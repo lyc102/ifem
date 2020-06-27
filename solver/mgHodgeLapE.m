@@ -1,13 +1,25 @@
 function [x,info,Ai,Bi,BBi,Res,Pro] = mgHodgeLapE(A,b,node,elem,bdFlag,option,varargin)
 %% MGHODGELAPE multigrid solver for the Schur complement of Hodge Laplacian
 %
+% [-Mv  G'] [p] = [f]
+% [ G   C ] [u] = [g]
+%
+% The Schur complement A = C + G*DMvinv*G' is SPD. Multilevel coarsening
+% is applied to the mesh and Galerkin projection used in the coarsen grids.
 %
 % Created by Jie Zhou on July 30, 2014.
 %
+% Reference: 
+% L Chen, Y Wu, L Zhong, J Zhou. MultiGrid Preconditioners for Mixed Finite
+% Element Methods of the Vector Laplacian. Journal of Scientific Computing
+% 77 (1), 101-128.
+%
+% See also mgMaxwellsaddle, mgMaxwell
+% 
 % Revised by Long Chen on Feb 19, 2014, Aug 14, 2016.
 
 t = cputime;
-Ndof = size(b,1);    % size of the system
+Ndof = size(b,1); % size of the system
 N = max(elem(:)); % number of nodes
 d = size(node,2); % dimension
 

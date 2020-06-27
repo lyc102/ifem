@@ -7,7 +7,7 @@ function [x,flag,itStep,err,time] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,is
 % edge element discretization of the Maxwell equation; See <a href="matlab:ifem coarsendoc">doc Maxwell</a>.
 %
 % Input 
-%   -  A:  curl(mu^(-1)curl) + epsilon I
+%   -  A: curl(mu^(-1)curl) + epsilon I
 %   -  b: right hand side
 %   - AP: - div(mu^{-1}grad) + |epsilon| I
 %   - BP: - div(|epsilon|grad)
@@ -20,10 +20,10 @@ function [x,flag,itStep,err,time] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,is
 % harmonic Maxwell equation), set option.solver = 'minres' or 'bicg' or
 % 'gmres' to try other Krylov method with HX preconditioner.
 %
-% See also mg, mg3, mgMaxwell1, mgMaxwell2
+% See also mg, mgMaxwellsaddle
 %
 % Reference: 
-% Ralf Hiptmair and Jinchao Xu, Nodal Auxiliary Space Preconditioning in
+% R. Hiptmair and J. Xu, Nodal Auxiliary Space Preconditioning in
 % H(curl) and H(div) Spaces. SIAM J. Numer. Anal., 45(6):2483-2509, 2007.
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.

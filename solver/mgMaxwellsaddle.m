@@ -1,19 +1,26 @@
 function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,option)
-%Solve the maxwell system with divgence free condition,
-%         [A  G] [u]  = f                (1.1)
-%         [G' O] [p]  = g               (1.2)
-% where  G = M_e*grad.
+%% mgMaxwellsaddle Solve the maxwell system with divgence free condition
+%
+%         [A  G] [u]  = [f]               (1.1)
+%         [G' O] [p]  = [g]               (1.2)
+%
+% where  G = M_e*grad with the mass matrix for the edge element Me.
+%
 % This system can be rewritten as 
-%         [A+G*DMinv*G'       G] [u]  = f +G*DMinv*g
-%         [G'                 O] [p]  = g
-% in fact that
+%         [A+G*DMinv*G'   G] [u]  = [f +G*DMinv*g]
+%         [G'             O] [p]  = [g]
+%
+% where DMinv is the inverse of the diagonal matrix of the mass. Then
+%
 %  [A+G*DMinv*G'  G] [I    grad]                = [Abar   O  ]
-%  [G'            O] [0  -Dminv*grad'*M_e*grad ]= [G'     A_p]
+%  [G'            O] [0  -Dminv*grad'*Me*grad ] = [G'     Ap]
 %
-%  We solve the (1.1)-(1.2) with the GMRES, the preconditioner is
+% Therefore we compute the inverse Abar by mgHodgeLapE and Ap by mg. 
 %
-%       [I  grad                ]  [Abar O   ]^{-1}
-%       [O  -Dminv*grad'*M_e*grad] [G'   A_p]
+% Reference: 
+% L Chen, Y Wu, L Zhong, J Zhou. MultiGrid Preconditioners for Mixed Finite
+% Element Methods of the Vector Laplacian. Journal of Scientific Computing
+% 77 (1), 101-128.
 %
 % Created by Long chen and Jie Zhou on Aug,2015.
 
