@@ -1,4 +1,4 @@
-function err = getHcurlerror3NE(node,elem,curlE,Eh,markedElem)
+function [err, errK] = getHcurlerror3NE(node,elem,curlE,Eh,markedElem)
 %% GETHCURLERROR3NE Hcurl norm of approximation error for the lowest order Nedelect element in 3-D.
 %
 % err = getHcurlerror3NE(node,elem,curlE,Eh,markedElem);
@@ -49,7 +49,7 @@ end
 %% compute Hcurl error element-wise
 [lambda,w] = quadpts3(2);
 nQuad = size(lambda,1);
-err = zeros(NT,1);
+errK = zeros(NT,1);
 for p = 1:nQuad
     % quadrature points in the x-y-z coordinate
     pxy = lambda(p,1)*node(elem(:,1),:) ...
@@ -63,13 +63,13 @@ for p = 1:nQuad
     end
 %     curlEp = curlE(pxy);
     % compute Ehp at quadrature points
-    err = err + w(p)*sum((curlEp - curlEhp).^2,2);
+    errK = errK + w(p)*sum((curlEp - curlEhp).^2,2);
 end
-err = err.*volume;
+errK = errK.*volume;
 % modify the error
-err(isnan(err)) = 0; % remove the singular part
+errK(isnan(errK)) = 0; % remove the singular part
 if (nargin == 5) && ~isempty(markedElem)
-    err = err(markedElem); % error on some marked region
+    errK = errK(markedElem); % error on some marked region
 end
-err = sqrt(sum(err));
+err = sqrt(sum(errK));
 %% TODO write more M-lint
