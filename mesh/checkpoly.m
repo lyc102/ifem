@@ -8,7 +8,8 @@ NT = size(elem,1);
 flag = false(NT,1);
 
 for i = 1:NT
-    [~, isOnElem] = inpolygon(node(:,1),node(:,2),node(elem{i},1),node(elem{i},2));
+    [isInElem, isOnElem] = inpolygon(node(:,1),node(:,2),node(elem{i},1),node(elem{i},2));
+    if ~all(isInElem==isOnElem); warning('The result may be wrong for %d-th elem.', i); end
     flag(i) =  ~isempty(setdiff(find(isOnElem), elem{i}));
 end
 flag = sum(flag);
