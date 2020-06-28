@@ -1378,8 +1378,8 @@ where $e$ and $e'$ are two edges containing the vertex $i$, the first $\mathbf n
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In order to compute the stabilization term, introduce matrix $\mathbf {D}_{n_E\times 3}$
 \begin{align*}
-\mathbf {D}:=</p>
-<h1 id="(-{\operatorname{dof}}i(m{j}))">( {\operatorname{dof}}<em>i(m</em>{j}))<a class="anchor-link" href="#(-{\operatorname{dof}}i(m{j}))">&#182;</a></h1>\begin{pmatrix}
+\mathbf {D}:= (dof_i(m_j)) = 
+\begin{pmatrix}
 1 &amp; (x_1 - x_E)/h_E &amp; (y_1 - y_E)/h_E\\
 1 &amp;(x_2 - x_E)/h_E &amp; (y_2 - y_E)/h_E \\
 1 &amp;(x_3 - x_E)/h_E &amp; (y_3 - y_E)/h_E \\
@@ -1387,7 +1387,7 @@ where $e$ and $e'$ are two edges containing the vertex $i$, the first $\mathbf n
 1 &amp;(x_5 - x_E)/h_E &amp; (y_5 - y_E)/h_E \\
 \cdots &amp; \cdots  &amp; \cdots \\
 1 &amp; (x_{n_E} - x_E)/h_E &amp; (y_{n_E} - y_E)/h_E 
-\end{pmatrix}<p>,
+\end{pmatrix},
 \end{align*}
 where $(x_i,y_i), i =1, \cdots, n_E$ is the coordinate of vertex $\mathbf  x_i$ of $E$.</p>
 <p>The matrix representation of the stabilization is
