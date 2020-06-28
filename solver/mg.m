@@ -93,7 +93,7 @@ function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 t = cputime;
 %% Size of systems
 Ndof = size(b,1);                  % number of dof
-Nb = size(b,2);                    % number of bs
+nb = size(b,2);                    % number of bs
 N = max(elem(:));                  % number of nodes
 NT = size(elem,1);                 % number of elements
 dim = size(elem,2)-1;
@@ -107,7 +107,10 @@ if ~exist('option','var')
     option = []; 
 end
 option = mgoptions(option,Ndof);    % parameters
-x0 = repmat(option.x0,1,Nb); 
+x0 = option.x0;
+if size(x0,2) == 1
+    x0 = repmat(x0,1,nb); 
+end
 N0 = option.N0; 
 tol = option.tol;
 maxIt = option.solvermaxit; 
@@ -118,6 +121,9 @@ preconditioner = option.preconditioner;
 coarsegridsolver = option.coarsegridsolver; 
 printlevel = option.printlevel; 
 setupflag = option.setupflag;
+if nargin > 8      % with the multilevel structure in the input
+    setupflag = 0;
+end
 
 %% Set up multilevel structure
 if setupflag == true
@@ -139,7 +145,7 @@ else % Find free dof and eliminate isolated dof
     isFixDof(deg == 0) = false;
 end
 if any(isFixDof) % a bigger matrix is given
-    xD = zeros(Ndof,Nb);
+    xD = zeros(Ndof,nb);
     Nfix = sum(isFixDof);
     ADinv = spdiags(1./diag(A(isFixDof,isFixDof)),0,Nfix,Nfix);
     xD(isFixDof,:) = ADinv*b(isFixDof,:);
@@ -357,7 +363,7 @@ if setupflag == false
    end
    level = length(Ai);
    isFixDof = ~isFreeDof;
-   xD = zeros(Ndof,1);
+   xD = zeros(Ndof,nb);
    if any(isFixDof)
         Nfix = sum(isFixDof);
         ADinv = spdiags(1./diag(A(isFixDof,isFixDof)),0,Nfix,Nfix);
