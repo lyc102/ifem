@@ -1,8 +1,8 @@
 function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,option)
 %% mgMaxwellsaddle Solve the maxwell system with divgence free condition
 %
-%         [A  G] [u]  = [f]               (1.1)
-%         [G' O] [p]  = [g]               (1.2)
+%         [A  G] [u]  = [f]               
+%         [G' O] [p]  = [g]               
 %
 % where  G = M_e*grad with the mass matrix for the edge element Me.
 %
@@ -15,7 +15,7 @@ function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,op
 %  [A+G*DMinv*G'  G] [I    grad]                = [Abar   O  ]
 %  [G'            O] [0  -Dminv*grad'*Me*grad ] = [G'     Ap]
 %
-% Therefore we compute the inverse Abar by mgHodgeLapE and Ap by mg. 
+% Then we compute the inverse Abar by mgHodgeLapE and Ap by mg. 
 %
 % Reference: 
 % L Chen, Y Wu, L Zhong, J Zhou. MultiGrid Preconditioners for Mixed Finite

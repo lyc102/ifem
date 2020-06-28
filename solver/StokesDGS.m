@@ -1,4 +1,4 @@
-function [u,p] = StokesIUzawa(u,p,f,g,A,B,auxMat,elem,smootherOpt)
+function [u,p] = StokesDGS(u,p,f,g,A,B,auxMat,elem,smootherOpt)
 %% STOKESIUzawa Inexact Uzawa smoother for the Stokes eqns.
 %
 %  In matrix form, we solve the Stokes equations

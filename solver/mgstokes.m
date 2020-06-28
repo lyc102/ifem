@@ -3,6 +3,15 @@ function [u,p,info] = mgstokes(A,B,f,g,u,p,elem,freeDof,option)
 %
 % Created by Ming Wang and Jie Zhou on Mar,3,2013 for P2 elements. Add
 % other elements by Jie and Long on Mar 24,2013.
+%
+% Reference: 
+%
+% M. Wang and L. Chen. Multigrid Methods for the Stokes equations using
+% Distributive Gauss-Seidel Relaxations based on the Least Squares
+% Commutator. Journal of Scientific Computing. 56(2): 409-431, 2013.
+%
+%
+% Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 t = cputime;
 

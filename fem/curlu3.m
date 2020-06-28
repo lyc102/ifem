@@ -19,6 +19,8 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 % 
 % See also gradu3, gradbasis3
 %
+% Added by Shuhao Cao, Apr 2020. 
+%
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 %% Sort elem to ascend ordering
@@ -34,7 +36,7 @@ for e = 1:6 % six edges
    elem2ve(:,:,e) = node(elem(:,locEdge(e,2)),:)-node(elem(:,locEdge(e,1)),:);
 end
 
-%% curl u is the scaled edge vector
+%% curlPhi is the scaled edge vector
 curlPhi(:,:,6) = elem2ve(:,:,1);
 curlPhi(:,:,1) = elem2ve(:,:,6);
 curlPhi(:,:,2) = -elem2ve(:,:,5);
@@ -43,4 +45,5 @@ curlPhi(:,:,4) = elem2ve(:,:,3);
 curlPhi(:,:,5) = -elem2ve(:,:,2);
 curlPhi = curlPhi./repmat(volume.*elemSign,[1 3 6])/3;
 
+%% curl u is the composition of u and curlPhi
 curlu = dot(permute(repmat(u(elem2edge),[1,1,3]),[1,3,2]),curlPhi,3);

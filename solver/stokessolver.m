@@ -1,15 +1,17 @@
 function [u,p,info] = stokessolver(A,B,f,g,u,p,elem,option) 
 %% STOKESSOLVER solvers for Stokes equations
 %
-% We compute the solution [u,p] of the saddle point problem:
+% We compute the solution [u,p] of the Stokes problem:
+%
 %     [A B'][u] = [f]
 %     [B 0 ][p] = [g]
+%
 % by various solvers:
 %   * 'direct'  the built in direct solver \ (mldivide)
 %   * 'uzawa'   inexact Uzawa's method  
 %   * 'mg'      multigrid based on LSC-DGS smoother
-%   * 'blkdiag' block diagonal preconditioned MINRES
-%   * 'blktri'  block triangular preconditioned GMRES
+%   * 'diagprestokes' block diagonal preconditioned MINRES
+%   * 'triprestokes'  block triangular preconditioned GMRES
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
@@ -38,4 +40,5 @@ switch option.solver
         [u,p,info] = mgstokes(A,B,f,g,u,p,elem,ufreeDof,option);         
     case 'asmg'     
         [u,p,info] = asmgstokes(A,B,f,g,u,p,node,elem,option.bdFlag,ufreeDof,option); 
+    case 'blkdiag'
 end

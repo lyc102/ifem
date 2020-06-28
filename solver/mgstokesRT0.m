@@ -4,13 +4,15 @@ function [u,p,info,Ai,Bi,invMt,Pro_u,Pro_p] = mgstokesRT0(A,B,f,g,u,p,node,elem,
 % Created by Ming Wang and Jie Zhou based on discussion with Long Chen.
 % Improvement by Long Chen: improve efficiency, include smoother and add
 % bisection case and BDM1B.
-
+%
+% See also: asmgstokes, mgstokes, mg, mgMaxwell
+%
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
 tic;
 
 % Assign default values to unspecified parameters
-if ~exist('option','var'), 
+if ~exist('option','var')
     option = []; 
 end
 inputoption = option; % record the input one

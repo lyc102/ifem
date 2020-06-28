@@ -1,19 +1,26 @@
 function [u,p,info] =  tripreMaxwellsaddle(A,G,f,g,node,elem,bdFlag,M,grad,option)
-%Solve the maxwell system with divgence free condition,
-%         [A  G] [u]  = f                (1.1)
-%         [G' O] [p]  = g0               (1.2)
-% where  G = M_e*grad.
+%% tripreMaxwellsaddle solve the Maxwell system with divgence free condition,
+%
+%         [A  G] [u]  = [f]               
+%         [G' O] [p]  = [g]               
+%
+% where  G = M_e*grad with the mass matrix for the edge element Me.
+%
 % This system can be rewritten as 
 %         [A+G*DMinv*G'       G] [u]  = f +G*DMinv*g0
 %         [G'                 O] [p]  = g0
-% in fact that
-%  [A+G*DMinv*G'  G] [I    grad]                = [Abar   O  ]
-%  [G'            O] [0  -Dminv*grad'*M_e*grad ]= [G'     A_p]
 %
-%  We solve the (1.1)-(1.2) with the GMRES, the preconditioner is
+% where DMinv is the inverse of the diagonal matrix of the mass. Then
+%
+%  [A+G*DMinv*G'  G] [I    grad]                = [Abar   O  ]
+%  [G'            O] [0  -Dminv*grad'*Me*grad ] = [G'     Ap]
+%
+%  We solve the system by GMRES with  the preconditioner
 %
 %       [I   grad                ]  [Abar O   ]^{-1}
 %       [O  -Dminv*grad'*M_e*grad]  [G'   A_p ]
+%
+% where we compute the inverse Abar by mgHodgeLapE and Ap by mg. 
 %
 % Created by Long chen and Jie Zhou on Aug,2015.
 
