@@ -21,23 +21,26 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
+%% Sort elem to ascend ordering
+elem = sort(elem,2);
+elem2edge = dof3edge(elem);
 NT = size(elem,1);
+[volume,elemSign] = simplexvolume(node,elem); %#ok<ASGLU>
+
+%% Edge vector
+locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
 elem2ve = zeros(NT,3,6);
 for e = 1:6 % six edges
    elem2ve(:,:,e) = node(elem(:,locEdge(e,2)),:)-node(elem(:,locEdge(e,1)),:);
 end
 
-elem = sortelem3(elem);
-[Dlambda,volume,elemSign] = gradbasis3(node,elem); %#ok<ASGLU>
-[elem2edge,~,~] = dof3edge(elem);
-
+%% curl u is the scaled edge vector
+curlPhi(:,:,6) = elem2ve(:,:,1);
 curlPhi(:,:,1) = elem2ve(:,:,6);
 curlPhi(:,:,2) = -elem2ve(:,:,5);
 curlPhi(:,:,3) = elem2ve(:,:,4);
 curlPhi(:,:,4) = elem2ve(:,:,3);
 curlPhi(:,:,5) = -elem2ve(:,:,2);
-curlPhi(:,:,6) = elem2ve(:,:,1);
 curlPhi = curlPhi./repmat(volume.*elemSign,[1 3 6])/3;
 
 curlu = dot(permute(repmat(u(elem2edge),[1,1,3]),[1,3,2]),curlPhi,3);
