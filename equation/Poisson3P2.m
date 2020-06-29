@@ -315,7 +315,7 @@ end
         if ~isfield(option,'gNquadorder')
             option.gNquadorder = 3; 
         end
-        [lambdagN,weightgN] = quadpts3(option.gNquadorder);
+        [lambdagN,weightgN] = quadpts(option.gNquadorder);
         phigN(:,6) = 4*lambdagN(:,1).*lambdagN(:,2);
         phigN(:,1) = lambdagN(:,1).*(2*lambdagN(:,1)-1);
         phigN(:,2) = lambdagN(:,2).*(2*lambdagN(:,2)-1);

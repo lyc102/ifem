@@ -13,7 +13,7 @@ function c = mycross(a,b,dim)
 if ~exist('dim','var'), dim = 2; end
 
 % Check dimensions
-if (size(a,dim)~=3) || (size(b,dim)~=3),
+if (size(a,dim)~=3) || (size(b,dim)~=3)
   error(message('MATLAB:cross:InvalidDimAorBForCrossProd'))
 end
 

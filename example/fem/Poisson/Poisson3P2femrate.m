@@ -27,6 +27,7 @@ option.plotflag = 1;
 
 %% Non-empty Dirichlet boundary condition.
 fprintf('Mixed boundary conditions. \n');    
+% pde = polydata3;
 pde = sincosdata3;
 mesh.bdFlag = setboundary3(node,elem,'Dirichlet','~(x==0)','Neumann','x==0');
 femPoisson3(mesh,pde,option);
