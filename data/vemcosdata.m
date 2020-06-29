@@ -10,7 +10,7 @@ function pde = vemcosdata
 %
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
-pde = struct('f',@f,'u',@u,'g_D',@u);
+pde = struct('f',@f,'u',@u,'g_D',@u,'Du',@Du);
 
     % load data (right hand side function)
     function rhs =  f(p)
@@ -22,14 +22,10 @@ pde = struct('f',@f,'u',@u,'g_D',@u);
     x = p(:,1); y = p(:,2);
     z =  cos(pi*x).*cos(pi*y)-1;
     end
-%     % Dirichlet boundary condition
-%     function u =  g_D(p)
-%     u =  u(p);
-%     end
-%     % Derivative of the exact solution
-%     function uprime =  Du(p)
-%     x = p(:,1); y = p(:,2);
-%     uprime(:,1) = -pi*sin(pi*x).*cos(pi*y);
-%     uprime(:,2) = -pi*cos(pi*x).*sin(pi*y);
-%     end
+    % Derivative of the exact solution
+    function uprime =  Du(p)
+    x = p(:,1); y = p(:,2);
+    uprime(:,1) = -pi*sin(pi*x).*cos(pi*y);
+    uprime(:,2) = -pi*cos(pi*x).*sin(pi*y);
+    end
 end

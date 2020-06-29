@@ -1,25 +1,71 @@
 function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 %% MG multigrid-type solvers
 %
-%   x = MG(A,b,elem) attempts to solve the system of linear equations A*x =
-%   b for x using geometric multigrid solvers. Inside mg, an coarsening algorithm
-%   is applied. See <a href="matlab:ifem coarsendoc">coarsen</a> for the coarsening algorithm on bisection grids. 
+% x = MG(A,b,elem) attempts to solve the system of linear equations A*x =
+% b for x using geometric multigrid solvers. Inside mg, an coarsening algorithm
+% is applied. See <a href="matlab:ifem coarsendoc">coarsen</a> for the coarsening algorithm on bisection grids. 
+% 
+% The method is designed for the system from several finite element
+% descritzations of elliptic equations on a grid whose topology
+% is given by the array elem. 
+% 
+% - 2D: P0, P1, P2, P3, CR, WG  
+% - 3D: P0, P1, P2, CR, WG
+% 
+% The algorithm is based on fast auxiliary space preconditioner (FASP).
+% We first transfer a given element to P1 element and then build V-cycle
+% for P1 element. The whole cycle is used as a preconditioner in CG to
+% solve the linear system. 
+% 
+% Reference: J. Xu, The auxiliary space method and optimal multigrid
+% preconditioning techniques for unstructured grids, Computing. 56 (1996)
+% 215?235. 
 %
-%   The method is designed for the system from several finite element
-%   descritzations of elliptic equations on a grid whose topology
-%   is given by the array elem. See <a href="matlab:ifem meshdoc">doc mesh</a> for the data structure. 
+% The type of the finite element can be build into the size of the problem.
+% 
+% - NT: number of elements         P0 element
+% - N : number of vertices         P1 element
+% - NE: number of edges            CR element in 2D
+% - NF: number of faces            CR element in 3D
+% - N + NE: sum of vertices and edges    P2 element
+% - N + 2*NE + NT:                       P3 element in 2D
+% 
+% For Dirichlet problems, usually the matrix equation can be restricted to
+% free dof and results a smaller matrix in which the link of the size of
+% the matrix and the type of elements is missing. In this case, use
+% option.freeDof to provide a logic array for free dofs and length of
+% option.freeDof can be used to determine the type. 
 %
-%   x = MG(A,b,elem) works for 2-D piecewise constant or linear finite
-%   element by default. For other elements, more mesh structure should be
-%   provided in varargin. For 3-D elements, HB information is needed, and
-%   should be listed as the first parameter in varargin. Here is a table of
-%   possible elements.
-%   - mg(A,b,elem)                  2-D linear P1 element
-%   - mg(A,b,elem,option,edge)          2-D quadratic P2 element
-%   - mg(A,b,elem,option,edge,'CR')     2-D non-conforming CR P1 element
+% So for Dirichlet problems, use
+% - mg(A,b,elem,option)      with option.freeDof is given 
+% - mg(AD,b,elem)       where AD is a larger matrix containing boundary dof
+%
+% For elements involving dof on edges and faces, additional mesh structure
+% such as |edge|, |face| can be provided. Otherwise, the subroutine will
+% generate them using |elem|.
+%
+% For 3-D *adaptive meshes*, HB information is needed, and should be
+% listed as the first parameter in varargin. 
+%
 %   - mg(A,b,elem,option,HB)            3-D linear P1 element
 %   - mg(A,b,elem,option,HB,edge)       3-D quadratic P2 element
-%   - mg(A,b,elem,option,HB,face,'CR')  3-D non-conforming CR P1 element
+%   - mg(A,b,elem,option,HB,face)       3-D non-conforming CR P1 element
+%
+% For 3-D meshes obtained by uniformrefine3 or uniformbisect3, no HB is
+% needed and simple mg(A,b,elem) is okay. 
+%
+% In some applications, multigrid solvers are used as a build-in block of
+% other larger systems. Then use 
+%
+% [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(A,f,elem,setupOption);
+%
+% with setupOption.solver = 'NO' to get hierarichal structure and then use
+%
+%   e = mg(A,r,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
+% 
+% This will save the setting time. See diapreStokes, tripremixPoisson. 
+%
+% When testing the solvers, more options can be provided.
 %
 %   x = MG(A,b,elem,options) specifies options in the following list.
 %   - option.x0: the initial guess. Default setting x0 = 0.
@@ -83,7 +129,7 @@ function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 %   format shorte
 %   fprintf('Difference between direct and mg solvers %0.2g \n',norm(u-x));
 %
-% See also mgMaxwell, dmg
+% See also mgMaxwell, mgstokes
 %
 % Documentation in Help browser <a href="matlab:ifem mgdoc">ifem mgdoc</a>
 %
@@ -92,7 +138,7 @@ function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 
 t = cputime;
 %% Size of systems
-Ndof = size(b,1);                  % number of dof
+Nborig = size(b,1);                  % number of dof
 nb = size(b,2);                    % number of bs
 N = max(elem(:));                  % number of nodes
 NT = size(elem,1);                 % number of elements
@@ -106,7 +152,7 @@ end
 if ~exist('option','var')
     option = []; 
 end
-option = mgoptions(option,Ndof);    % parameters
+option = mgoptions(option,Nborig);    % parameters
 x0 = option.x0;
 if size(x0,2) == 1
     x0 = repmat(x0,1,nb); 
@@ -128,39 +174,37 @@ end
 %% Set up multilevel structure
 if setupflag == true
 %% eliminate isolated dof
-isFixDof = [];
 if isfield(option,'freeDof') % freeDof is given
-   isFreeDof = false(N,1);   
+   Ndof = max(length(option.freeDof),Nborig);
+   isFreeDof = false(Ndof,1);   
    isFreeDof(option.freeDof) = true;
-   NA = size(A,1);
-   if NA > length(option.freeDof)
-       isFixDof = true(NA,1);
-       isFixDof(isFreeDof) = false;
-   end
-else % Find free dof and eliminate isolated dof
-    deg = sum(spones(A));  % degree 
-    isFreeDof = false(Ndof,1);
-    isFreeDof(deg>1) = true;
+   isFixDof = true(Ndof,1);
+   isFixDof(isFreeDof) = false;
+else % find free dofs and eliminate isolated dofs
+    Ndof = Nborig;
+    degreeA = sum(spones(A));  % degree 
+    isFreeDof = false(size(A,1),1);
+    isFreeDof(degreeA>1) = true;
     isFixDof = ~isFreeDof;
-    isFixDof(deg == 0) = false;
+    isFixDof(degreeA == 0) = false;
 end
-if any(isFixDof) % a bigger matrix is given
-    xD = zeros(Ndof,nb);
+if Nborig > sum(isFreeDof) % truncate the matrix
+    xD = zeros(Nborig,nb);
     Nfix = sum(isFixDof);
     ADinv = spdiags(1./diag(A(isFixDof,isFixDof)),0,Nfix,Nfix);
     xD(isFixDof,:) = ADinv*b(isFixDof,:);
     A = A(isFreeDof,isFreeDof);
 end
-if size(b,1) > sum(isFreeDof)
+if Nborig > sum(isFreeDof) % truncate the rhs
     b = b(isFreeDof,:);
 end
-if length(x0) > sum(isFreeDof)
+if size(x0,1) > sum(isFreeDof) % truncate the initial guess
     x0 = x0(isFreeDof,:);
     option.x0 = x0;
 end
-isFreeNode = isFreeDof(1:N); % default choice for P1
+isFreeNode = isFreeDof(1:N); % the first N element is for P1
 
-%% Additional Hierarchical Structure for Different Elements
+%% Additional mesh structure for different elements
 % list of elements: P0,P2,P3,CR,HB,WG
 if Ndof > N % other than P1 element
     NE = N + NT -1; % estimate of NE by Euler formula
@@ -563,7 +607,7 @@ switch solver
 end
 
 %% Modify x to include fix dof
-if any(isFixDof)
+if Nborig > size(x,1) % a larger system
     xD(isFreeDof,:) = x;
     x = xD;
 end
@@ -577,11 +621,11 @@ end
 time = cputime - t;
 if printlevel >= 2
     fprintf('#dof: %8.0u, level: %2.0u,   coarse grid %2.0u, #nnz: %8.0u\n',...
-              Ndof, level, size(Ai{1},1), nnz(Ai{1}))
+              size(b,1), level, size(Ai{1},1), nnz(Ai{1}))
 end
 if printlevel >= 1
     fprintf('#dof: %8.0u,  #nnz: %8.0u, smoothing: (%1.0u,%1.0u), iter: %2.0u,   err = %8.2e,   time = %4.2g s\n',...
-                 Ndof, nnz(A), mu, mu, itStep, max(err(end,:)), time)
+                 size(b,1), nnz(A), mu, mu, itStep, max(err(end,:)), time)
 end
 if (flag == 1) && (printlevel>0)
    fprintf('NOTE: the iterative method does not converge! \n');    

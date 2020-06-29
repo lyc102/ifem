@@ -216,7 +216,7 @@ end
     %
     % Special attentation should be given for the pure Neumann boundary
     % condition. To enforce the compatible condition, the vector b should have
-    % zero mean value. To avoid a singular matrix, the 1st node is chosen as
+    % mean value zero. To avoid a singular matrix, the 1st node is chosen as
     % fixedNode. 
     %
     % The order of assigning Neumann and Dirichlet boundary condition is
@@ -287,25 +287,21 @@ end
     freeNode = [];
     if ~isempty(bdFlag) % bdFlag specifies different bd conditions
         [fixedNode,bdFace,isBdNode] = findboundary3(elem,bdFlag);
-        freeNode = ~isBdNode;
+        freeNode = find(~isBdNode);
     end
     if isempty(bdFlag) && ~isempty(pde.g_D) && isempty(pde.g_N) && isempty(pde.g_R)
         % no bdFlag, only pde.g_D is given
         [fixedNode,bdFace,isBdNode] = findboundary3(elem);
-        freeNode = ~isBdNode;
+        freeNode = find(~isBdNode);
     end
-    
-    % Modify the matrix for different boundary conditions 
-    % Neumann boundary condition
     isPureNeumann = false;
     if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
+        % pde.g_N could be empty which is homogenous Neumann boundary condition
         isPureNeumann = true;
-%         AD = A;
-%         AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel
         fixedNode = 1;
         freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
     end
-    % Dirichlet boundary condition
+    % Modify the matrix
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
     if ~isempty(fixedNode)
@@ -314,11 +310,9 @@ end
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
-    end
-    % Robin boundary condition
-    if isempty(fixedNode) && ~isempty(Robin)
+    else
         AD = A;
-    end
+    end        
 
     %% Part 2: Find boundary faces and modify the load b
     % Find boundary faces: Neumann
@@ -330,8 +324,9 @@ end
         % no bdFlag, only pde.g_N or pde.g_R is given in the input
         [tempvar,Neumann] = findboundary3(elem); %#ok<ASGLU> %TODO: is this findboundary3?
     end
+
     % Neumann boundary condition
-    if ~isempty(Neumann) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && all(pde.g_N == 0))
+    if ~isempty(Neumann) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && (pde.g_N == 0))
         v12 = node(Neumann(:,2),:)-node(Neumann(:,1),:);
         v13 = node(Neumann(:,3),:)-node(Neumann(:,1),:);
         area = 0.5*sqrt(abs(sum(mycross(v12,v13,2).^2,2)));
@@ -378,8 +373,8 @@ end
 
     % Pure Neumann boundary condition
     if isPureNeumann
-        b = b - mean(b); % compatiable condition (f,1) + <gN,1> = 0
-        b(1) = 0;        % 1 is fixedNode and set u(1) = 0
+        b = b - mean(b);   % compatilbe condition: sum(b) = 0
+        b(1) = 0;          % 1 is fixedNode and set u(1) = 0
     end
     end % end of getbd3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -27,18 +27,21 @@ option.printlevel = 1;
 option.plotflag = 1;
 
 %% Non-empty Dirichlet boundary condition.
+fprintf('Mixed boundary conditions. \n');    
 pde = sincosdata3;
 mesh.bdFlag = setboundary3(node,elem,'Dirichlet','~(x==0)','Neumann','x==0');
 % bdFlag = setboundary3(node,elem,'Dirichlet');
 femPoisson3(mesh,pde,option);
 
 %% Pure Neumann boundary condition.
+fprintf('Pure Neumann boundary condition. \n');
 option.plotflag = 0;
 pde = sincosdata3Neumann;
 mesh.bdFlag = setboundary3(node,elem,'Neumann');
 femPoisson3(mesh,pde,option);
 
-%% Pure Robin boundary condition.
+%% Robin boundary condition.
+fprintf('Robin boundary condition. \n');
 pde = sincosRobindata3;
 mesh.bdFlag = setboundary3(node,elem,'Robin');
 femPoisson3(mesh,pde,option);

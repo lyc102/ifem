@@ -127,6 +127,8 @@ switch solver
             HB = [];
         end
         [u,info] = mg(AD,b,elem,option,face,HB);
+%         option.freeDof = freeFace;
+%         [u(freeFace),info] = mg(AD(freeFace,freeFace),b(freeFace),elem,option,face,HB);
     case 'amg'
         option.solver = 'CG';
         [u(freeFace),info] = amg(AD(freeFace,freeFace),b(freeFace),option);                 
@@ -188,29 +190,31 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
     end
     
     % Dirichlet boundary nodes: fixedFace
-    fixedFace = []; freeFace= [];
+    fixedFace = []; 
+    freeFace = [];
     if ~isempty(bdFlag) % find boundary faces
         idxD = (bdFlag(:)==1); % all Dirichlet faces in bdFlag
         isFixedFace = false(NF,1);
         isFixedFace(elem2face(idxD)) = true;
         fixedFace = find(isFixedFace);
-        freeFace = find(~isFixedFace);
+        freeFace = ~isFixedFace;
     end
-    
     if isempty(bdFlag) && ~isempty(pde.g_D) && isempty(pde.g_N) && isempty(pde.g_R)
         % no bdFlag, only pde.g_D is given in the input
         s = accumarray(elem2face(:), 1, [NF 1]);
         fixedFace = find(s == 1);
-        freeFace = find(s == 2);
+        freeFace = (s == 2);
     end 
     % Modify the matrix for different boundary conditions 
-     % pure Neumann boundary condition    
+    % pure Neumann boundary condition    
     isPureNeumann = false;    
     if isempty(fixedFace) && isempty(Robin)  % pure Neumann boundary condition
         % pde.g_N could be empty which is homogenous Neumann boundary condition
         isPureNeumann = true;
-        AD = A;
-        AD(1,1) = AD(1,1) + 1e-6;        
+%         AD = A;
+%         AD(1,1) = AD(1,1) + 1e-6;        
+        fixedFace = 1;
+        freeFace = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
     end
     % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
@@ -224,7 +228,7 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
     end
     % Robin boundary condition
     if isempty(fixedFace) && ~isempty(Robin)
-        AD = A;
+        AD = A;        
     end
     
     %% Part 2: Find boundary faces and modify the right hand side b
@@ -234,16 +238,14 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         idxN = (bdFlag(:) == 2);      % all Neumann faces in bdFlag
         isNeumann = elem2face(idxN | idxR); % index of Neumann faces
         Neumann = face(isNeumann,:);      % Neumann faces        
-    end
-    
+    end    
     if isempty(bdFlag) && (~isempty(pde.g_N) || ~isempty(pde.g_R))
         % no bdFlag is given, only pde.g_N or pde.g_R is given in the input
         s = accumarray(elem2face(:), 1, [NF 1]);
         isNeumann = (s==1);         % index of boundary faces
         Neumann = face(s == 1,:);   % boundary faces are Neumann faces
-    end
-    
-      % Neumann boundary condition
+    end    
+    % Neumann boundary condition
     if ~isempty(Neumann) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && (pde.g_N == 0))
         if ~isfield(option,'gNquadorder')
             option.gNquadorder = 3;   % default order exact for linear gN
@@ -265,7 +267,6 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         gf = gf.*area;
         b(isNeumann) = b(isNeumann) +gf;
     end
-        
     % The case with non-empty Neumann faces but g_N=0 or g_N=[] corresponds to
     % the zero flux boundary condition on Neumann faces and no modification of
     % A,u,b is needed.
@@ -289,7 +290,7 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
     % Pure Neumann boundary condition
     if isPureNeumann
         b = b - mean(b); % compatilbe condition: sum(b) = 0
-%         b(1) = 0;
+        b(1) = 0;
     end
     end % end of getbd3CR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

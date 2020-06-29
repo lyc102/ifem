@@ -33,6 +33,7 @@ femPoisson3(mesh,pde,option);
 
 %% Pure Neumann boundary condition.
 option.plotflag = 0;
+pde = sincosdata3Neumann;
 mesh.bdFlag = setboundary3(node,elem,'Neumann');
 femPoisson3(mesh,pde,option);
 

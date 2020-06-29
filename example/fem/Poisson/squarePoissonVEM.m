@@ -23,7 +23,7 @@ errorH1 = zeros(maxIt,1); %initialize the error
 errorMax = zeros(maxIt,1); %initialize the error
 solverTime = zeros(maxIt,1); 
 assembleTime = zeros(maxIt,1);
-N = zeros(length(nameV),1); %initialize the error
+h = zeros(length(nameV),1); %initialize the error
 
 %% Iterations
 for k = 1:length(nameV)
@@ -42,21 +42,21 @@ for k = 1:length(nameV)
     uI = pde.u(Node);
     errorH1(k) = sqrt((u-uI)'*A*(u-uI)); % get the error in H1 norm
     errorMax(k) = max(abs(u-uI));
-    N(k) = length(u);
+    h(k) = 1/sqrt(length(u));
 end
 
 %% Plot convergence rates
 figure;
-showrate2(N(1:k),errorH1(1:k),2,'r-+','||u_I-u_h||_A',...
-          N(1:k),errorMax(1:k),2,'b-+','||u_I-u_h||_{\infty}');
+showrateh2(h(1:k),errorH1(1:k),2,'r-+','||u_I-u_h||_A',...
+           h(1:k),errorMax(1:k),2,'b-+','||u_I-u_h||_{\infty}');
 
 
 %% Display error and time
-err = struct('N',N,'elem',nameV,'H1',errorH1(1:k),'uIuhMax',errorMax(1:k));
-time = struct('N',N,'solver',solverTime(1:k),'assemble',assembleTime(1:k));
+err = struct('h',h,'elem',nameV,'H1',errorH1(1:k),'uIuhMax',errorMax(1:k));
+time = struct('h',h,'solver',solverTime(1:k),'assemble',assembleTime(1:k));
 disp('Table: CPU time')
-colname = {'#Dof','Assemble','Solve'};
-displaytable(colname,time.N,[],time.assemble,'%0.2e',time.solver,'%0.2e');
+colname = {'h','Assemble','Solve'};
+displaytable(colname,time.h,'%0.3e',time.assemble,'%0.2e',time.solver,'%0.2e');
 disp('Table: Error')
-colname = {'Dof','NT','||DuI-Du_h||','||uI-u_h||_{max}'};     
-displaytable(colname,err.N,[],err.elem,[],err.H1,'%0.5e',err.uIuhMax,'%0.5e');
+colname = {'h','NT','||DuI-Du_h||','||uI-u_h||_{max}'};     
+displaytable(colname,err.h,'%0.3e',err.elem,[],err.H1,'%0.5e',err.uIuhMax,'%0.5e');
