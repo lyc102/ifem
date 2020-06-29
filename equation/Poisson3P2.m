@@ -245,8 +245,65 @@ end
     if ~isfield(pde,'g_R'), pde.g_R = []; end
     
     %% Part 1: Modify the matrix for Dirichlet and Robin condition
-    % To do: add Robin boundary condition
-    Robin = []; 
+    % Robin boundary condition
+    % Find Robin face dofs
+    RobinFace2dof = [];
+    if ~isempty(bdFlag) 
+        RobinFace2dof = [elem2dof(bdFlag(:,1) == 3,[2,3,4,10,9,8]); ...  
+                         elem2dof(bdFlag(:,2) == 3,[1,4,3,10,6,7]); ...
+                         elem2dof(bdFlag(:,3) == 3,[1,2,4,9,7,5]); ...
+                         elem2dof(bdFlag(:,4) == 3,[1,3,2,8,5,6])];
+    end
+    % Assemble the mass matrix for Robin boundary condition
+    if ~isempty(RobinFace2dof) && ~isempty(pde.g_R)
+        v12 = node(RobinFace2dof(:,2),:)-node(RobinFace2dof(:,1),:);
+        v13 = node(RobinFace2dof(:,3),:)-node(RobinFace2dof(:,1),:);
+        area = 0.5*sqrt(abs(sum(mycross(v12,v13,2).^2,2)));
+        if ~isfield(option,'gRquadorder')
+            option.gRquadorder = 4; 
+        end
+        [lambdagR,weightgR] = quadpts(option.gRquadorder);
+        bdphi(:,6) = 4*lambdagR(:,1).*lambdagR(:,2);
+        bdphi(:,1) = lambdagR(:,1).*(2*lambdagR(:,1)-1);
+        bdphi(:,2) = lambdagR(:,2).*(2*lambdagR(:,2)-1);
+        bdphi(:,3) = lambdagR(:,3).*(2*lambdagR(:,3)-1);
+        bdphi(:,4) = 4*lambdagR(:,2).*lambdagR(:,3);
+        bdphi(:,5) = 4*lambdagR(:,3).*lambdagR(:,1);
+        nQuadgR = size(lambdagR,1);
+        NR = size(RobinFace2dof,1);
+        ss = zeros(NR,6,6);
+        % int g_R phi_i phi_j
+        for pp = 1:nQuadgR
+            % quadrature points in the x-y coordinate
+            ppxyz = lambdagR(pp,1)*node(RobinFace2dof(:,1),:) ...
+                  + lambdagR(pp,2)*node(RobinFace2dof(:,2),:) ...
+                  + lambdagR(pp,3)*node(RobinFace2dof(:,3),:);
+            gRp = pde.g_R(ppxyz);
+            for iR = 1:6
+                for jR = iR:6
+                    ss(:,iR,jR) = ss(:,iR,jR) + ...
+                    weightgR(pp)*gRp*bdphi(pp,iR).*bdphi(pp,jR);
+                end
+            end
+        end
+        ss(:) = ss(:).*repmat(area,36,1);     
+        % assemble
+        index = 0;
+        for iR = 1:6
+            for jR = 1:6
+                iiR(index+1:index+NR) = double(RobinFace2dof(:,iR)); 
+                jjR(index+1:index+NR) = double(RobinFace2dof(:,jR)); 
+                if jR>=iR
+                    ssR(index+1:index+NR) = ss(:,iR,jR);
+                else
+                    ssR(index+1:index+NR) = ss(:,jR,iR);
+                end
+                index = index + NR;
+            end
+        end
+        A = A + sparse(iiR,jjR,ssR,Ndof,Ndof);        
+    end
+               
     % Find Dirichlet boundary dof: fixedDof
     fixedDof = []; 
     freeDof = [];
@@ -266,6 +323,7 @@ end
     end
     
     % Modify the matrix for different boundary conditions
+    AD = A;
     % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
@@ -275,23 +333,16 @@ end
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
-    else
-        AD = A;
     end
     % Neumann boundary condition    
     isPureNeumann = false;        
-    if isempty(fixedDof) && isempty(Robin)  % pure Neumann boundary condition
+    if isempty(fixedDof) && isempty(RobinFace2dof)  % pure Neumann boundary condition
         % pde.g_N could be empty which is homogenous Neumann boundary condition
         isPureNeumann = true;
-        AD = A;
         AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel        
 %         fixedDof = 1;
 %         freeDof = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
     end
-    % Robin boundary condition
-    if isempty(fixedDof) && ~isempty(Robin)
-        AD = A;
-    end    
 
     %% Part 2: Find boundary faces and modify the load b
     % Find boundary faces bdFace for Neumann boundary condition
@@ -301,11 +352,11 @@ end
         bdFlag = setboundary3(node,elem,'Neumann');        
     end
     if ~isempty(bdFlag)
-        % Find boundary edges and nodes
-        bdFace2dof = [elem2dof(bdFlag(:,1) == 2,[2,3,4,10,9,8]); ...  
-                      elem2dof(bdFlag(:,2) == 2,[1,4,3,10,6,7]); ...
-                      elem2dof(bdFlag(:,3) == 2,[1,2,4,9,7,5]); ...
-                      elem2dof(bdFlag(:,4) == 2,[1,3,2,8,5,6])];
+        % Find boundary faces for both Neumann and Robin conditons
+        bdFace2dof = [elem2dof(bdFlag(:,1) >= 2,[2,3,4,10,9,8]); ...  
+                      elem2dof(bdFlag(:,2) >= 2,[1,4,3,10,6,7]); ...
+                      elem2dof(bdFlag(:,3) >= 2,[1,2,4,9,7,5]); ...
+                      elem2dof(bdFlag(:,4) >= 2,[1,3,2,8,5,6])];
     end
     % Neumann boundary condition
     if ~isempty(bdFace2dof) && ~isempty(pde.g_N) && ~(isnumeric(pde.g_N) && (pde.g_N == 0))
@@ -351,7 +402,7 @@ end
         u(fixedDof(idx)) = pde.g_D(bdEdgeMid);
         b = b - A*u;
     end
-    if ~isPureNeumann % non-empty Dirichlet boundary condition
+    if ~isPureNeumann && ~isempty(fixedDof) % non-empty Dirichlet boundary condition
         b(fixedDof) = u(fixedDof);
     end
     % The case with non-empty Dirichlet nodes but g_D=0 or g_D=[] corresponds

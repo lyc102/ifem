@@ -39,16 +39,16 @@ option.plotflag = 0;
 mesh.bdFlag = setboundary3(node,elem,'Neumann');
 femPoisson3(mesh,pde,option);
 
-% %% Robin boundary condition.
-% fprintf('Robin boundary condition. \n');
-% pde = sincosRobindata3;
-% mesh.bdFlag = setboundary3(node,elem,'Robin');
-% femPoisson3(mesh,pde,option);
+%% Robin boundary condition.
+fprintf('Robin boundary condition. \n');
+pde = sincosRobindata3;
+mesh.bdFlag = setboundary3(node,elem,'Robin');
+femPoisson3(mesh,pde,option);
 
 %% Conclusion
 %
 % The optimal rate of convergence of the H1-norm (2nd order) and L2-norm
-% (3rd order) is observed. The 3rd order convergent rate between two
-% discrete functions ||DuI-Duh|| is known as superconvergence.
+% (3rd order) is observed. Superconvergence between discrete functions
+% ||DuI-Duh|| is only 2.5 order.
 %
 % MGCG converges uniformly in all cases.

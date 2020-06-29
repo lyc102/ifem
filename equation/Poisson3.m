@@ -237,12 +237,14 @@ end
 
     %% Part 1: Modify the matrix for Dirichlet and Robin condition
     % Robin boundary condition
+    % Find Robin face dofs        
     Robin = [];
     isRobin = (bdFlag(:) == 3);
     if any(isRobin)
         allFace = [elem(:,[2 4 3]);elem(:,[1 3 4]);elem(:,[1 4 2]);elem(:,[1 2 3])];
         Robin = allFace(isRobin,:);
     end
+    % Assemble the mass matrix for Robin boundary condition    
     if ~isempty(Robin) && ~isempty(pde.g_R) && ~(isnumeric(pde.g_R) && (pde.g_R == 0))
         v12 = node(Robin(:,2),:)-node(Robin(:,1),:);
         v13 = node(Robin(:,3),:)-node(Robin(:,1),:);
@@ -269,6 +271,7 @@ end
             end
         end
         ss(:) = ss(:).*repmat(area,9,1);       
+        % assemble
         index = 0;
         for iR = 1:3
             for jR = 1:3
@@ -299,6 +302,7 @@ end
     end
     
     % Modify the matrix for different boundary conditions 
+    AD = A;    
     % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
@@ -313,14 +317,9 @@ end
     isPureNeumann = false;
     if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
         isPureNeumann = true;
-        AD = A;
         AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel
 %         fixedNode = 1;
 %         freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
-    end
-    % Robin boundary condition
-    if isempty(fixedNode) && ~isempty(Robin)
-        AD = A;
     end
 
     %% Part 2: Find boundary faces and modify the load b
@@ -372,7 +371,7 @@ end
         end
         b = b - A*u;
     end
-    if ~isPureNeumann % non-empty Dirichlet boundary condition
+    if ~isPureNeumann && ~isempty(fixedNode) % non-empty Dirichlet boundary condition
         b(fixedNode) = u(fixedNode);
     end
     % The case with non-empty Dirichlet nodes but g_D=0 or g_D=[] corresponds
