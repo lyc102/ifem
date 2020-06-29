@@ -250,7 +250,7 @@ end
         v13 = node(Robin(:,3),:)-node(Robin(:,1),:);
         area = 0.5*sqrt(abs(sum(mycross(v12,v13,2).^2,2)));
         if ~isfield(option,'gRquadorder')
-            option.gRquadorder = 2;   % default order exact for linear gR
+            option.gRquadorder = 3;   
         end
         [lambdagR,weightgR] = quadpts(option.gRquadorder);
         nQuadgR = size(lambdagR,1);
@@ -338,7 +338,7 @@ end
         v13 = node(Neumann(:,3),:)-node(Neumann(:,1),:);
         area = 0.5*sqrt(abs(sum(mycross(v12,v13,2).^2,2)));
         if ~isfield(option,'gNquadorder')
-            option.gNquadorder = 2;   % default order exact for linear gN
+            option.gNquadorder = 2;   
         end
         [lambdagN,weightgN] = quadpts(option.gNquadorder);
         phigN = lambdagN;                 % linear bases

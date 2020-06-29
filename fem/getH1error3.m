@@ -18,7 +18,9 @@ function err = getH1error3(node,elem,Du,uh,K,quadOrder)
 % [node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
 % for k = 1:4
 %     exactu = inline('sin(pi*p(:,1)).*sin(pi*p(:,2)).*p(:,3).^2','p');
-%     Du = inline('[pi*cos(pi*p(:,1)).*sin(pi*p(:,2)).*p(:,3).^2, pi*sin(pi*p(:,1)).*cos(pi*p(:,2)).*p(:,3).^2, 2*sin(pi*p(:,1)).*sin(pi*p(:,2)).*p(:,3)]','p');
+%     Du = @(p) [pi*cos(pi*p(:,1)).*sin(pi*p(:,2)).*p(:,3).^2, ...
+%                   pi*sin(pi*p(:,1)).*cos(pi*p(:,2)).*p(:,3).^2, ...
+%                   2*sin(pi*p(:,1)).*sin(pi*p(:,2)).*p(:,3)];
 %     uI = exactu(node);
 %     N(k) = size(node,1);
 %     err(k) = getH1error3(node,elem,Du,uI);
@@ -31,15 +33,22 @@ function err = getH1error3(node,elem,Du,uh,K,quadOrder)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 Nu = size(uh,1);    N = size(node,1);   NT = size(elem,1); 
-% rough estimate using Euler formula N-NE+NF-NT = c, NF ~ 2NT, NE ~ N+NT-c
-NE = N+NT;         NF = 2*NT;          NP2 = N + NE;  
-if Nu > 2*NT % CR element or WG element
-   elem2face = dof3face(elem);
-   NF = max(elem2face(:));
-end
-if (Nu~=NF) || ((Nu > 2*N+NT-5) && (Nu < 2*NT))    % Nu ~ N + NE: P2 element
-    elem2dof = dof3P2(elem);
-    NP2 = max(elem2dof(:));
+% rough estimate using Euler formula 
+% N-NE+NF-NT = c, NF = 4NT/2 + Nbf, NE = N + NT -c + Nbf
+Nbf = round(NT^(2/3))-3; % estimate bd faces
+NF = 2*NT + Nbf; 
+NE = N + NT + Nbf - 1; 
+NP2 = N + NE;  
+if Nu > N % more than P1 element
+   if Nu > 2*NT % element containing faces
+       elem2face = dof3face(elem);
+       NF = max(elem2face(:));
+   end
+   if  (Nu ~= NF) &&  (Nu ~= NF+NT) && (Nu ~= N+NT) && (Nu ~= NT)
+       % try P2 element
+        elem2dof = dof3P2(elem);
+        NP2 = max(elem2dof(:));
+   end
 end
 
 %% Default quadrature orders for different elements
