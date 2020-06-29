@@ -1,6 +1,19 @@
 function [soln,eqn,info] = Poisson3CR(node,elem,bdFlag,pde,option,varargin)
 %% POISSON3CR Poisson equation: Crouzeix-Raviart element in 3-D.
 %
+% u = POISSON3CR(node,elem,bdFlag,pde,option) produces the Crouzeix and Raviart
+%   linear nonconforming  finite element approximation of the Poisson
+%   equation in 3-D
+% 
+%       -div(d*grad(u))=f  in \Omega, with 
+%       Dirichlet boundary condition u=g_D on \Gamma_D, 
+%       Neumann boundary condition   d*grad(u)*n=g_N on \Gamma_N,
+%       Robin boundary condition     g_R*u + d*grad(u)*n=g_N on \Gamma _R
+%
+% [soln,eqn,info] = POISSON3CR(node,elem,pde,bdFlag,option)
+%
+% The usage is the same as <a href="matlab:help Poisson">Poisson3</a>. CR element on a tetrahedron is
+% summarized in <a href="matlab:ifem Poisson3CRfemrate">Poisson3CRfemrate</a> for detail.
 %
 % Example
 %
@@ -108,6 +121,9 @@ if isempty(option) || ~isfield(option,'solver')    % no option.solver
         option.solver = 'mg';
     end
 end
+if isPureNeumann
+    option.solver = 'mg';
+end
 solver = option.solver;
 % solve
 switch solver
@@ -206,16 +222,6 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         freeFace = (s == 2);
     end 
     % Modify the matrix for different boundary conditions 
-    % pure Neumann boundary condition    
-    isPureNeumann = false;    
-    if isempty(fixedFace) && isempty(Robin)  % pure Neumann boundary condition
-        % pde.g_N could be empty which is homogenous Neumann boundary condition
-        isPureNeumann = true;
-%         AD = A;
-%         AD(1,1) = AD(1,1) + 1e-6;        
-        fixedFace = 1;
-        freeFace = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
-    end
     % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedFace,fixedFace)=I, AD(fixedFace,freeFace)=0, AD(freeFace,fixedFace)=0.
@@ -225,6 +231,16 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
+    end
+    % pure Neumann boundary condition    
+    isPureNeumann = false;    
+    if isempty(fixedFace) && isempty(Robin)  % pure Neumann boundary condition
+        % pde.g_N could be empty which is homogenous Neumann boundary condition
+        isPureNeumann = true;
+        AD = A;
+        AD(1,1) = AD(1,1) + 1e-6;        
+%         fixedFace = 1;
+%         freeFace = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
     end
     % Robin boundary condition
     if isempty(fixedFace) && ~isempty(Robin)
@@ -290,7 +306,7 @@ function [AD,b,u,freeFace,isPureNeumann] = getbd3CR(b)
     % Pure Neumann boundary condition
     if isPureNeumann
         b = b - mean(b); % compatilbe condition: sum(b) = 0
-        b(1) = 0;
+%         b(1) = 0;
     end
     end % end of getbd3CR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

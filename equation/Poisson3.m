@@ -146,6 +146,9 @@ if isempty(option) || ~isfield(option,'solver')    % no option.solver
         option.solver = 'mg';
     end
 end
+if isPureNeumann
+    option.solver = 'mg';
+end
 solver = option.solver;
 % solve
 switch solver
@@ -296,15 +299,6 @@ end
     end
     
     % Modify the matrix for different boundary conditions 
-    % Neumann boundary condition
-    isPureNeumann = false;
-    if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
-        isPureNeumann = true;
-%         AD = A;
-%         AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel
-        fixedNode = 1;
-        freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
-    end
     % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
     % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
@@ -314,6 +308,15 @@ end
         Tbd = spdiags(bdidx,0,Ndof,Ndof);
         T = spdiags(1-bdidx,0,Ndof,Ndof);
         AD = T*A*T + Tbd;
+    end
+    % Neumann boundary condition
+    isPureNeumann = false;
+    if isempty(fixedNode) && isempty(Robin) % pure Neumann boundary condition
+        isPureNeumann = true;
+        AD = A;
+        AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel
+%         fixedNode = 1;
+%         freeNode = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
     end
     % Robin boundary condition
     if isempty(fixedNode) && ~isempty(Robin)
@@ -341,7 +344,7 @@ end
         [lambdagN,weightgN] = quadpts(option.gNquadorder);
         phigN = lambdagN;                 % linear bases
         nQuadgN = size(lambdagN,1);
-        ge = zeros(size(Neumann,1),3);
+        gf = zeros(size(Neumann,1),3);
         for pp = 1:nQuadgN
             % quadrature points in the x-y coordinate
             ppxyz = lambdagN(pp,1)*node(Neumann(:,1),:) ...
@@ -349,11 +352,11 @@ end
                   + lambdagN(pp,3)*node(Neumann(:,3),:);
             gNp = pde.g_N(ppxyz);
             for iN = 1:3
-                ge(:,iN) = ge(:,iN) + weightgN(pp)*phigN(pp,iN)*gNp;
+                gf(:,iN) = gf(:,iN) + weightgN(pp)*phigN(pp,iN)*gNp;
             end
         end
-        ge = ge.*repmat(area,1,3);
-        b = b + accumarray(Neumann(:),ge(:),[Ndof,1]); 
+        gf = gf.*repmat(area,1,3);
+        b = b + accumarray(Neumann(:),gf(:),[Ndof,1]); 
     end
     % The case with non-empty Neumann edges but g_N=0 or g_N=[] corresponds to
     % the zero flux boundary condition on Neumann edges and no modification of
@@ -379,7 +382,7 @@ end
     % Pure Neumann boundary condition
     if isPureNeumann
         b = b - mean(b); % compatiable condition (f,1) + <gN,1> = 0
-        b(1) = 0;        % 1 is fixedNode and set u(1) = 0
+%         b(1) = 0;        % 1 is fixedNode and set u(1) = 0
     end
     end % end of getbd3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -13,6 +13,7 @@ function showresult3(node,elem,u,expr,varargin)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
+
 if ~exist('expr','var'), expr = []; end
 set(gcf,'Units','normal'); 
 set(gcf,'Position',[0.25,0.25,0.6,0.4]);
@@ -26,8 +27,6 @@ else
 end
 % show solution
 subplot(1,2,2);
-if size(u,1) == size(node,1)
-    showsolution3(node,elem,u,expr,varargin{:});
-    colorbar;
-end
+showsolution3(node,elem,u,expr,varargin{:});
+colorbar;
 pause(0.05)

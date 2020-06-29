@@ -37,6 +37,14 @@ But this requires the exact solution satisfies the condition $u(x(1))=0$ which t
 
 In 3-D, the problem is worse. Rate 1.5 for Neuman and 1.3 for Robin for the error $\|u_I - u_h\|_{\infty}$ . 
 
+That's reasonable. Solution to Neumann problem is not unique. We don't know the constant and thus compare the maximum norm is not well defined.
+
+The question we should ask is:
+
+is the solution we computed ONE solution of the system Au = f ?
+
+It satisfies equations other than the first one. 
+
 So in the new formulation, I perturbe the matrix by `A(1,1) = A(1,1) + 1e-6`. Then the matrix is non-singular. But the same problem still exists. Even change to a consistent data. 
 
 One reason I suspect is the ill-conditioning of the sub-matrix. In 3-D, it is $h^{-3}$ while in 2D is $h^{-2}(1+|\log h|)$.
@@ -53,7 +61,7 @@ Here is a simple perturbed analysis. We are solving $ (A + \epsilon) u_{\epsilon
 
 To solve the problem, we need to formulate a saddle point system to enforce the constaint $\int_{\Omega}u =0$ into the system which is not straight forward. 
 
-**Conclusion** Accept the current treatment and be aware that for pure Neumann problem, the rate of the computed solution in maximum norm could be degenerated slightly especially in 3D. 
+**Conclusion** Accept the current treatment and be aware that for pure Neumann problem, the rate of the computed solution in maximum norm could be degenerated slightly especially in 3D.  
 
 
 

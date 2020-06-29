@@ -33,13 +33,13 @@ function err = getH1error3(node,elem,Du,uh,K,quadOrder)
 Nu = size(uh,1);    N = size(node,1);   NT = size(elem,1); 
 % rough estimate using Euler formula N-NE+NF-NT = c, NF ~ 2NT, NE ~ N+NT-c
 NE = N+NT;         NF = 2*NT;          NP2 = N + NE;  
-if (Nu > 2*N+NT-5) && (Nu < 2*NT)    % Nu ~ N + NE: P2 element
-    elem2dof = dof3P2(elem);
-    NP2 = max(elem2dof(:));
-end
 if Nu > 2*NT % CR element or WG element
    elem2face = dof3face(elem);
    NF = max(elem2face(:));
+end
+if (Nu~=NF) || ((Nu > 2*N+NT-5) && (Nu < 2*NT))    % Nu ~ N + NE: P2 element
+    elem2dof = dof3P2(elem);
+    NP2 = max(elem2dof(:));
 end
 
 %% Default quadrature orders for different elements

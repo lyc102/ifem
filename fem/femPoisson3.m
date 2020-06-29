@@ -111,7 +111,16 @@ for k = 1:maxIt
         end    
     end                
     if option.plotflag && N(k) < 2e3 % show mesh and solution for small size
-       figure(1);  showresult3(node,elem,uh);    
+        switch elemType
+        case 'P1'     % piecewise linear function P1 element
+            figure(1);  showresult3(node,elem,uh);    
+        case 'CR'     % piecewise linear function CR element
+            continue;
+        case 'P2'     % piecewise quadratic function
+            figure(1);  showresult3(node,elem,uh(1:size(node,1)));    
+        case 'WG'     % weak Galerkin element
+            continue;
+        end
     end
     if N(k) > maxN
         break;

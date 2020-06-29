@@ -202,6 +202,9 @@ if isempty(option) || ~isfield(option,'solver')  || isfield(option,'mgoption')  
         option.solver = 'mg';
     end
 end
+if isPureNeumann
+    option.solver = 'mg';
+end
 solver = option.solver;
 % solve
 switch solver
@@ -305,12 +308,12 @@ end
     fixedNode = []; freeNode = [];
     if ~isempty(bdFlag) % find boundary edges and boundary nodes
         [fixedNode,bdEdge,isBdNode] = findboundary(elem,bdFlag);
-        freeNode = find(~isBdNode);
+        freeNode = ~isBdNode;
     end
     if isempty(bdFlag) && ~isempty(pde.g_D) && isempty(pde.g_N) && isempty(pde.g_R)
         % no bdFlag, only pde.g_D is given
         [fixedNode,bdEdge,isBdNode] = findboundary(elem);
-        freeNode = find(~isBdNode);
+        freeNode = ~isBdNode;
     end
     
     % Modify the matrix for different boundary conditions 

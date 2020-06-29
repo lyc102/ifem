@@ -16,7 +16,7 @@ function [soln,eqn,info] = Poisson3P2(node,elem,bdFlag,pde,option,varargin)
 %
 %   Example
 %
-%     cubePoisson;
+%     cubePoissonP2;
 %
 %     Poisson3P2femrate;
 %
@@ -166,6 +166,9 @@ if isempty(option) || ~isfield(option,'solver')    % no option.solver
         option.solver = 'mg';
     end
 end
+if isPureNeumann
+    option.solver = 'mg';
+end
 solver = option.solver;
 % solve
 switch solver
@@ -259,18 +262,13 @@ end
         isFixedDof(elem2dof(bdFlag(:,3) == 1,[1,2,4,5,7,9])) = true;
         isFixedDof(elem2dof(bdFlag(:,4) == 1,[1,2,3,5,6,8])) = true;
         fixedDof = find(isFixedDof);
-        freeDof = find(~isFixedDof);    
+        freeDof = ~isFixedDof;    
     end
-    isPureNeumann = false;        
-    if isempty(fixedDof) && isempty(Robin)  % pure Neumann boundary condition
-        % pde.g_N could be empty which is homogenous Neumann boundary condition
-        isPureNeumann = true;
-        fixedDof = 1;
-        freeDof = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
-    end
-    % Modify the matrix
+    
+    % Modify the matrix for different boundary conditions
+    % Dirichlet boundary condition
     % Build Dirichlet boundary condition into the matrix AD by enforcing
-    % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeDof)=0, AD(freeDof,fixedNode)=0.
+    % AD(fixedNode,fixedNode)=I, AD(fixedNode,freeNode)=0, AD(freeNode,fixedNode)=0.
     if ~isempty(fixedDof)
         bdidx = zeros(Ndof,1); 
         bdidx(fixedDof) = 1;
@@ -280,6 +278,20 @@ end
     else
         AD = A;
     end
+    % Neumann boundary condition    
+    isPureNeumann = false;        
+    if isempty(fixedDof) && isempty(Robin)  % pure Neumann boundary condition
+        % pde.g_N could be empty which is homogenous Neumann boundary condition
+        isPureNeumann = true;
+        AD = A;
+        AD(1,1) = AD(1,1) + 1e-6; % eliminate the kernel        
+%         fixedDof = 1;
+%         freeDof = 2:Ndof;    % eliminate the kernel by enforcing u(1) = 0;
+    end
+    % Robin boundary condition
+    if isempty(fixedDof) && ~isempty(Robin)
+        AD = A;
+    end    
 
     %% Part 2: Find boundary faces and modify the load b
     % Find boundary faces bdFace for Neumann boundary condition
@@ -349,7 +361,7 @@ end
     % Pure Neumann boundary condition
     if isPureNeumann
         b = b - mean(b);   % compatilbe condition: sum(b) = 0
-        b(1) = 0;          % 1 is fixedDof and set u(1) = 0
+%         b(1) = 0;          % 1 is fixedDof and set u(1) = 0
     end
     end % end of getbd3P2
 end % end of function Poisson3P2
