@@ -244,22 +244,22 @@ if option.printlevel >= 1
     fprintf('Time to assemble matrix equation %4.2g s\n',assembleTime);
 end
 %% Boundary condtiions
-[AD,f,u,freeNode,freeEdge] = getbdMaxwellsaddle(f);
+[AD,f,u,isfreeNode,isFreeEdge] = getbdMaxwellsaddle(f);
 p  = zeros(N,1);
 g0 = g0 - G'*u;
 
 %% Output
 eqn = struct('A',A,'G',G,'f',f,'g',g0,'Lap',AD,...
-             'edge',edge,'freeEdge',freeEdge,'freeNode',freeNode);
+             'edge',edge,'freeEdge',isFreeEdge,'freeNode',isfreeNode);
 info.assembleTime = assembleTime;
 
 %% reduce to free dofs
-A  = A(freeEdge,freeEdge);
-G  = G(freeEdge,freeNode);
-grad = grad(freeEdge,freeNode);
-M = M(freeEdge,freeEdge);
-f = f(freeEdge);
-g0 = g0(freeNode);
+A  = A(isFreeEdge,isFreeEdge);
+G  = G(isFreeEdge,isfreeNode);
+grad = grad(isFreeEdge,isfreeNode);
+M = M(isFreeEdge,isFreeEdge);
+f = f(isFreeEdge);
+g0 = g0(isfreeNode);
 
 %% Solve the linear system
 if isfield(option,'solver')
@@ -269,31 +269,32 @@ else
 end
 
 % multigrid options 
-option.mg.isFreeEdge = freeEdge; % needed in mg solver
-option.mg.isFreeNode = freeNode; 
+option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
+option.mg.isFreeNode = isfreeNode; 
 switch method
     case 'DIRECT'
         t = cputime;
-        Ni = size(freeNode,1); Nei = size(freeEdge,1);
+        Ni = size(G,2); 
+        Nei = size(G,1);
         bigA   = [A  G; ...
                   G' sparse(Ni,Ni)];
         temp   = bigA\[f; g0];
-        u(freeEdge) = temp(1:Nei);
-        p(freeNode) = temp(Nei+1:Nei+Ni);
+        u(isFreeEdge) = temp(1:Nei);
+        p(isfreeNode) = temp(Nei+1:Nei+Ni);
         residual = norm([f;g0] - bigA*temp);
         info = struct('solverTime',cputime - t,'itStep',0,'err',residual,'flag',2,'stopErr',residual);
     case 'MG'
         [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg);
-        u(freeEdge)  = u0;
-        p(freeNode)  = p0;        
+        u(isFreeEdge)  = u0;
+        p(isfreeNode)  = p0;        
     case 'TRI' % GMRES with a triangular preconditioner 
         [u0,p0,info] = tripreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg);
-        u(freeEdge)  = u0;
-        p(freeNode)  = p0;
+        u(isFreeEdge)  = u0;
+        p(isfreeNode)  = p0;
     case 'DIAG' % MINRES with a diagonal preconditioner
         [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,option.mg);
-        u(freeEdge)  = u0;
-        p(freeNode)  = p0;
+        u(isFreeEdge)  = u0;
+        p(isfreeNode)  = p0;
 end
 
 %% check the Langrange is correct or not.
@@ -306,7 +307,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunctions getbdMaxwellsaddle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    function [AD,f,u,freeNode,freeEdge,isPureNeumann] = getbdMaxwellsaddle(f)
+    function [AD,f,u,isFreeNode,isFreeEdge,isPureNeumann] = getbdMaxwellsaddle(f)
 
     %% Boundary conditions
     if ~isfield(pde,'g_D'), pde.g_D = []; end
@@ -399,8 +400,8 @@ end
         f(isBdEdge) = u(isBdEdge);
     end
     % find free node, free edge and free dof
-    freeEdge = find(~isBdEdge);
-    freeNode = find(~isBdNode);
+    isFreeEdge = ~isBdEdge;
+    isFreeNode = ~isBdNode;
     %% Remark
     % The order of assign Neumann and Dirichlet boundary condition is
     % important to get the right setting of the intersection of Dirichlet and
