@@ -1,4 +1,4 @@
-function [u,p,info] =  diagpreStokes(A,B,C,f,g,elem,option)
+function [u,p,info] =  diagpreStokes(A,B,C,f,g,elem,option,varargin)
 %% diagpreStokes: solve the following saddle point system 
 %
 % [u,relres,itStep] =  diagpreStokes(A,B,C,f,g,node,elem,bdFlag,option)
@@ -30,7 +30,12 @@ bigb = [f; g];
 setupOption.solver = 'NO';
 % setupOption.freeDof = option.freeDof(1:Nu1);
 A1 = A(1:Nu1,1:Nu1);  % get one Poisson
-[~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(A1,f(1:Nu1),elem,setupOption);
+HB = varargin{end};
+if isempty(HB)
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(A1,f(1:Nu1),elem,setupOption);
+else
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(A1,f(1:Nu1),elem,setupOption,HB);
+end
 
 %% Set up diagonal precondition for Schur complement
 DAinv = spdiags(1.0./diag(A),0,Nu,Nu); 

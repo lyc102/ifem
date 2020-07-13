@@ -31,9 +31,9 @@ function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 % - N + 2*NE + NT:                       P3 element in 2D
 % 
 % For Dirichlet problems, usually the matrix equation can be restricted to
-% free dof and results a smaller matrix in which the link of the size of
+% free dofs and results a smaller matrix in which the link of the size of
 % the matrix and the type of elements is missing. In this case, use
-% option.freeDof to provide a logic array for free dofs and length of
+% option.freeDof to provide a logic array for free dofs and the length of
 % option.freeDof can be used to determine the type. 
 %
 % So for Dirichlet problems, use
@@ -138,7 +138,8 @@ function [x,info,Ai,Bi,BTi,Res,Pro,isFreeDof] = mg(A,b,elem,option,varargin)
 
 t = cputime;
 %% Size of systems
-Nborig = size(b,1);                  % number of dof
+Nborig = size(b,1);                % number of dof
+Ndof = Nborig;
 nb = size(b,2);                    % number of bs
 N = max(elem(:));                  % number of nodes
 NT = size(elem,1);                 % number of elements
@@ -175,7 +176,11 @@ end
 if setupflag == true
 %% eliminate isolated dof
 if isfield(option,'freeDof') % freeDof is given
-   Ndof = max(length(option.freeDof),Nborig);
+   if islogical(option.freeDof)
+      Ndof = max(length(option.freeDof),Nborig);
+   else
+      error('Provide logic array for option.freeDof');
+   end
    isFreeDof = false(Ndof,1);   
    isFreeDof(option.freeDof) = true;
    isFixDof = true(Ndof,1);
@@ -318,7 +323,7 @@ if Ndof <= N    % linear element
             solver = 'DIRECT';
         else
             [x,info] = amg(A,b,option);
-            if any(isFixDof)
+            if any(isFixDof) && Nborig > size(x,1) % a larger system
                 xD(isFreeDof,:) = x;
                 x = xD;
             end
@@ -334,7 +339,7 @@ if strcmp(solver,'DIRECT')
     x = A\b;                       % use direct solver                          
     flag = 2; itStep = 0; err = norm(b-A*x)/norm(b); time = cputime - t;
     %% Modify x to include fix dof
-    if any(isFixDof)
+    if any(isFixDof) && Nborig > size(x,1)
         xD(isFreeDof,:) = x;
         x = xD;
     end

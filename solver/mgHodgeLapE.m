@@ -55,7 +55,7 @@ if setupflag == true
         if d == 2
             [elemi{j-1},newHB,bdFlagi{j-1}] = uniformcoarsenred(elemi{j},bdFlagi{j});
         elseif d == 3
-            [elemi{j-1},newHB,~,bdFlagi{j-1}] = uniformcoarsen3red(elemi{j},[],bdFlagi{j});
+            [elemi{j-1},~,newHB,bdFlagi{j-1}] = uniformcoarsen3red(elemi{j},[],bdFlagi{j});
         end
         if ~isempty(newHB)            
             NL(j) = NL(j+1) - size(newHB,1); % update NL(k)
@@ -137,6 +137,10 @@ if setupflag == false
 end
 
 %% Multigrid cycles
+if level == 1 % it is possible no multilevel structure is aviable
+    [x,info] = amg(A,b,option);  % then use amg
+    return;
+end
 x = x0;
 k = 1;
 r = b-A*x;
@@ -150,7 +154,7 @@ end
 % solvers
 switch solver
    case 'CG'
-        if printlevel >= 1
+        if printlevel >= 2
           fprintf('Conjugate Gradient Method\n')
         end
         while (max(err(k,:)) > tol) && (k <= maxIt)    

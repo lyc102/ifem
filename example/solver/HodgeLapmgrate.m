@@ -27,6 +27,7 @@ option.mg.smoothingratio = 1.5; % ratio of variable smoothing
 option.mg.Vit = 1;      % number of cycles for Schur complement   
 
 %% Square
+disp('Square Domain')
 option.L0 = 3;  % refine to a finer mesh
 [node,elem] = squaremesh([0,1,0,1],1/4);
 bdFlag = setboundary(node,elem,'Dirichlet');
@@ -45,6 +46,7 @@ option.solver = 'appf';
 mfemHodgeLap(mesh,pde,option);
 
 %% Lshape domain
+disp('Lshape Domain')
 option.L0 = 2;  % refine to a finer mesh
 pde = fveconedata;
 [node,elem] = squaremesh([-1,1,-1,1],0.25);
@@ -66,6 +68,7 @@ mfemHodgeLap(mesh,pde,option);
 
 
 %% Crack domain
+disp('Crack Domain')
 pde = fveconedata;
 node = [1,0; 0,1; -1,0; 0,-1; 0,0; 1,0];        % nodes
 elem = [5,1,2; 5,2,3; 5,3,4; 5,4,6];            % elements

@@ -57,6 +57,7 @@ p0 = option.x0(Nf+1:end);
 option.x0 = u0;
 option.solver = 'CG';
 [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
+% [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
 
 Apmgoption.x0 = p0;
 Apmgoption.printlevel = 1;

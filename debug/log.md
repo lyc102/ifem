@@ -37,15 +37,15 @@ But this requires the exact solution satisfies the condition $u(x(1))=0$ which t
 
 In 3-D, the problem is worse. Rate 1.5 for Neuman and 1.3 for Robin for the error $\|u_I - u_h\|_{\infty}$ . 
 
-That's reasonable. Solution to Neumann problem is not unique. We don't know the constant and thus compare the maximum norm is not well defined.
+That's reasonable. Solution to Neumann problem is not unique. We don't know the constant and thus measured the maximum norm is not a well defined problem.
 
 The question we should ask is:
 
-is the solution we computed ONE solution of the system Au = f ?
+**is the solution we computed ONE solution of the system Au = f ?**
 
-It satisfies equations other than the first one. 
+So in the new formulation, I perturbe the matrix by `A(1,1) = A(1,1) + 1e-6`. Then the matrix is non-singular and use `mg` to solve the linear system. 
 
-So in the new formulation, I perturbe the matrix by `A(1,1) = A(1,1) + 1e-6`. Then the matrix is non-singular. But the same problem still exists. Even change to a consistent data. 
+The accuracy is still the same. No optimal order measured in the maximum norm.
 
 One reason I suspect is the ill-conditioning of the sub-matrix. In 3-D, it is $h^{-3}$ while in 2D is $h^{-2}(1+|\log h|)$.
 
@@ -53,7 +53,7 @@ One reason I suspect is the ill-conditioning of the sub-matrix. In 3-D, it is $h
 
 - P.B. Bochev, R.B. Lehoucq, On the Finite Element Solution of the Pure Neumann Problem, SIAM Rev. 47 (2005) 50–66.
 
-My MG solver works pretty well but the ill-condition brings an issue to the perturbated problem.
+My MG solver works pretty well but probably the ill-condition brings an issue to the perturbated problem.
 
 The problem is still the same. We didn't find a solution to $Au = b$ but a perturbated one. The perturbation is small in average (L2 type norm) but can be a problem for maximum problem. 
 
@@ -61,7 +61,7 @@ Here is a simple perturbed analysis. We are solving $ (A + \epsilon) u_{\epsilon
 
 To solve the problem, we need to formulate a saddle point system to enforce the constaint $\int_{\Omega}u =0$ into the system which is not straight forward. 
 
-**Conclusion** Accept the current treatment and be aware that for pure Neumann problem, the rate of the computed solution in maximum norm could be degenerated slightly especially in 3D.  
+**Conclusion** Accept the current treatment and be aware that for pure Neumann problem, the rate of the computed solution in the maximum norm could be degenerated slightly especially in 3D.  
 
 
 
@@ -73,7 +73,7 @@ Again the maximum norm of the error is not optimal and the rate is only 1.3. Shu
 
 For first 2 tests, I used the same $\sin(x)\sin(y)\sin(z)$ as true solutions on $(0,\pi)^3$.
 
-- Test 1: Only $x==0$ face as Robin boundary, and I hard-coded the nodeso n z-axis as Robin nodes, not fixed DoFs; optimal rate of converge for $L_{\infty}$ norm. The error concentrates on where \Delta u is big.
+- Test 1: Only $x==0$ face as Robin boundary, and I hard-coded the nodeso n z-axis as Robin nodes, not fixed DoFs; optimal rate of converge for $L_{\infty}$ norm. The error concentrates on where $\Delta u$ is big.
 
   <img src="./figures/Robin1conv.png" style="zoom:40%;" />
 
@@ -120,3 +120,7 @@ The condition number is
 $$
 \kappa=\mathcal{O}\left(h^{-2}+(\epsilon h)^{-1}\right)
 $$
+
+## FreeNode, FreeEdge, FreeDof
+
+Change them to logical arrays. It might cause error when `lenght(freeNode)` is used. 
