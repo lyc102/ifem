@@ -27,6 +27,12 @@ d = size(node,2); % dimension
 if ~exist('option','var') 
     option = []; 
 end
+if ~isfield(option,'smoothingstep')  % smoothing steps
+    option.smoothingstep = 3;
+end
+if ~isfield(option,'smoothingratio')  % ratio of variable smoothing
+    option.smoothingratio = 1.5;
+end
 option = mgoptions(option,Ndof);    % parameters
 x0 = option.x0; 
 N0 = option.N0; 

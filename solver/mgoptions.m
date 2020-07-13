@@ -39,7 +39,7 @@ end
 if ~isfield(option,'smoothingstep')  % smoothing steps
     option.smoothingstep = 1;
 end
-if ~isfield(option,'smoothingratio')  % smoothing steps
+if ~isfield(option,'smoothingratio')  % ratio of variable smoothing
     option.smoothingratio = 1;
 end
 if ~isfield(option,'smoothingparameter')  % smoothing parameter

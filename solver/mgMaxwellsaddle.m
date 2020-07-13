@@ -32,6 +32,12 @@ t = cputime;
 %% Parameters
 if ~exist('option','var'), option = []; end
 Ndof = Nf + Ng; 
+if ~isfield(option,'smoothingstep')  % smoothing steps
+    option.smoothingstep = 3;
+end
+if ~isfield(option,'smoothingratio') % ratio of variable smoothing
+    option.smoothingratio = 1.5;
+end
 option = mgoptions(option,Ndof);    % parameters
 d = size(node,2);
 
