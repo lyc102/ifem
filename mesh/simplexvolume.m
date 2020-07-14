@@ -1,8 +1,12 @@
 function [v,elemSign] = simplexvolume(node,elem)
 %% SIMPLEXVOLUME Simplex volume
 %
-%   v = SIMPLEXVOLUME(node,elem) computes signed measure of simplicies in the
-%   triangulation given by node and elem. 
+%   v = SIMPLEXVOLUME(node,elem) computes measure of simplicies in the
+%   triangulation given by node and elem. The output v is always positive. 
+%
+%   [v,elemSign]  = SIMPLEXVOLUME(node,elem) also outputs the sign of the
+%   signed volume. elemSign will be used to correct the sign for
+%   orientation dependent objects.
 %
 %   Copyright (C) 2004-2006 Per-Olof Persson. See COPYRIGHT.TXT for details.
 %   Modified by Long Chen Feb 05, 2010.

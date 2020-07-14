@@ -7,10 +7,11 @@ function err = getL2error3(node,elem,uexact,uh,quadOrder,varargin)
 %
 %  The input parameter uexact is a function handle and uh is a column array
 %  which could be:
-%    - P0 element i.e. discontinuous and piecewise constant
-%    - P1 element i.e. continuous and piecewise linear
-%    - P2 element i.e. continuous and piecewise quadratic
-%    - P1+P0 element which could happen in the fluid application
+%    - P0 element: discontinuous and piecewise constant element
+%    - P1 element: continuous linear element
+%    - P2 element: continuous quadratic element
+%    - P1+P0 element in Stokes equations
+%    - CR element: nonconforming linear element
 %
 %  err = computeL2error3(node,elem,@uexact,uh,quadOrder) computes error
 %  using the quadrature rule with order quadOrder (up to 5). The default
@@ -136,9 +137,9 @@ for p = 1:nQuad
     end
     % quadrature points in the x-y coordinate
     pxyz = lambda(p,1)*node(elem(:,1),:) ...
-        + lambda(p,2)*node(elem(:,2),:) ...
-        + lambda(p,3)*node(elem(:,3),:) ...
-        + lambda(p,4)*node(elem(:,4),:);
+         + lambda(p,2)*node(elem(:,2),:) ...
+         + lambda(p,3)*node(elem(:,3),:) ...
+         + lambda(p,4)*node(elem(:,4),:);
     % when size(uhp,2) == 1, summing on 2-nd component has no impact
     err = err + weight(p)*sum((uexact(pxyz) - uhp).^2,2);
 end

@@ -124,3 +124,6 @@ $$
 ## FreeNode, FreeEdge, FreeDof
 
 Change them to logical arrays. It might cause error when `lenght(freeNode)` is used. 
+
+
+

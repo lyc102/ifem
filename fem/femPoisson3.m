@@ -110,7 +110,7 @@ for k = 1:maxIt
             N(k) = N(k) - size(elem,1); % reduced system
         end    
     end                
-    if option.plotflag && N(k) < 2e3 % show mesh and solution for small size
+    if option.plotflag && N(k) < 2e4 % show mesh and solution for small size
         switch elemType
         case 'P1'     % piecewise linear function P1 element
             figure(1);  showresult3(node,elem,uh);    
@@ -143,9 +143,11 @@ if option.rateflag
     subplot(1,2,1)
     showrateh2(h(1:k),errH1(1:k),1,'-*','||Du-Du_h||',...
                h(1:k),errL2(1:k),1,'k-+','||u-u_h||');
+    title(['Convergence Rate of 3D ', elemType, '-element']);
     subplot(1,2,2)
     showrateh2(h(1:k),erruIuh(1:k),1,'m-+','||Du_I-Du_h||',...
                h(1:k),errMax(1:k),1,'r-*','||u_I-u_h||_{\infty}');
+    title(['Convergence Rate of 3D ', elemType, '-element']);
 end
 
 %% Output

@@ -27,7 +27,7 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 elem = sort(elem,2);
 elem2edge = dof3edge(elem);
 NT = size(elem,1);
-[volume,elemSign] = simplexvolume(node,elem); %#ok<ASGLU>
+[volume,elemSign] = simplexvolume(node,elem); 
 
 %% Edge vector
 locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
@@ -44,6 +44,8 @@ curlPhi(:,:,3) = elem2ve(:,:,4);
 curlPhi(:,:,4) = elem2ve(:,:,3);
 curlPhi(:,:,5) = -elem2ve(:,:,2);
 curlPhi = curlPhi./repmat(volume.*elemSign,[1 3 6])/3;
+% the above ordering is given for positive orientation and should be
+% corrected by multiplying the elemSign
 
 %% curl u is the composition of u and curlPhi
 curlu = dot(permute(repmat(u(elem2edge),[1,1,3]),[1,3,2]),curlPhi,3);

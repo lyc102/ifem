@@ -15,6 +15,8 @@
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
+clear variables
+
 %% Setting
 [node,elem] = squaremesh([0,1,0,1],0.25); 
 mesh = struct('node',node,'elem',elem);

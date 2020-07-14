@@ -1,4 +1,4 @@
-function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,option)
+function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,option,varargin)
 %% mgMaxwellsaddle Solve the maxwell system with divgence free condition
 %
 %         [A  G] [u]  = [f]               
@@ -62,14 +62,19 @@ u0 = option.x0(1:Nf);
 p0 = option.x0(Nf+1:end);
 option.x0 = u0;
 option.solver = 'CG';
+if nargin>=6
+    HB = varargin{1};
+else
+    HB = [];
+end        
 [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
 % [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
 
-Apmgoption.x0 = p0;
-Apmgoption.printlevel = 1;
-Apmgoption.freeDof = option.isFreeNode;
+Apoption.x0 = p0;
+Apoption.printlevel = 1;
+Apoption.freeDof = option.isFreeNode;
 rg = g-G'*u;
-[p,info2] = mg(Ap,rg,elem,Apmgoption);
+[p,info2] = mg(Ap,rg,elem,Apoption,HB);
 % [p,info2] = amg(Ap,rg,Apmgoption);
 
 u = u + grad*p;

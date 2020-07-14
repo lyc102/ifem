@@ -143,7 +143,11 @@ if setupflag == false
 end
 
 %% Multigrid cycles
-if level == 1 % it is possible no multilevel structure is aviable
+if level == 1 
+    % it is possible no multilevel structure is aviable since only edge
+    % transfer for uniform coarsen for red refinement is implemented
+    % then use AMG
+    option.preconditioner = 'W';
     [x,info] = amg(A,b,option);  % then use amg
     return;
 end

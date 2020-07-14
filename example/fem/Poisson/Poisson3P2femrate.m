@@ -17,9 +17,8 @@
 clear variables
 
 %% Setting
-[node,elem] = cubemesh([0,1,0,1,0,1],0.5); 
+[node,elem] = cubemesh([0,1,0,1,0,1],1/3); 
 mesh = struct('node',node,'elem',elem);
-% option.L0 = 1;
 option.maxIt = 4;
 option.elemType = 'P2';
 option.printlevel = 1;

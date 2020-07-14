@@ -265,8 +265,13 @@ g0 = g0(isfreeNode);
 if isfield(option,'solver')
     method = upper(option.solver);
 else
-    method = 'TRI';
+    method = 'MG';
 end
+if nargin>=6
+    HB = varargin{1};
+else
+    HB = [];
+end        
 
 % multigrid options 
 option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
@@ -284,15 +289,15 @@ switch method
         residual = norm([f;g0] - bigA*temp);
         info = struct('solverTime',cputime - t,'itStep',0,'err',residual,'flag',2,'stopErr',residual);
     case 'MG'
-        [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg);
+        [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg,HB);
         u(isFreeEdge)  = u0;
         p(isfreeNode)  = p0;        
     case 'TRI' % GMRES with a triangular preconditioner 
-        [u0,p0,info] = tripreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg);
+        [u0,p0,info] = tripreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg,HB);
         u(isFreeEdge)  = u0;
         p(isfreeNode)  = p0;
     case 'DIAG' % MINRES with a diagonal preconditioner
-        [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,option.mg);
+        [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,option.mg,HB);
         u(isFreeEdge)  = u0;
         p(isfreeNode)  = p0;
 end
