@@ -10,7 +10,7 @@ err = zeros(3,1); N = zeros(3,1);
 option = [];
 for i = 1:3
     [sigma,u] = HodgeLaplacian3F(node,elem,pde,bdFlag,option);
-    err(i) = getL2error3NE(node,elem,pde.exactsigma,sigma);
+    err(i) = getL2error3ND(node,elem,pde.exactsigma,sigma);
     N(i) = size(u,1);
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
 end

@@ -1,7 +1,7 @@
-function err = getL2error3NE2(node,elem,exactE,Eh,markedElem)
-%% GETL2ERROR3NE2 L2 norm of the quadratic (1st type) Nedelec edge element.
+function err = getL2error3ND2(node,elem,exactE,Eh,markedElem)
+%% GETL2ERROR3ND2 L2 norm of the quadratic (1st type) Nedelec edge element.
 % 
-%  error = getL23errorNE2(node,elem,exactE,Eh,markedElem);
+%  error = getL23errorND2(node,elem,exactE,Eh,markedElem);
 %
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 

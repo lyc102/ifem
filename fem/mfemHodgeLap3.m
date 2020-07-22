@@ -78,7 +78,7 @@ for k = 1:maxIt
     if isfield(pde,'u')
         switch elemType
             case 'ND0'  % lowest order Nedelec element
-                erruL2(k) = getL2error3NE(node,elem,pde.u,u);
+                erruL2(k) = getL2error3ND(node,elem,pde.u,u);
                 uI = edgeinterpolate(u,node,eqn.edge);
             case 'RT0'  % RT0 mixed FEM 
                 erruL2(k) = getL2error3RT0(node,elem,pde.u,u);

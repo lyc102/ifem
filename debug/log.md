@@ -127,3 +127,33 @@ Change them to logical arrays. It might cause error when `lenght(freeNode)` is u
 
 
 
+## To-Do
+
+- Design HX preconditioner for solving HodgeLap. The current one is only for edge element on uniform refine mesh since the transfer operator is only implemented. Then modify HX precondition to solve this restriction. 
+- Stokes equations in 3D.
+- Maxwellsaddle with more edge elements. 
+- 
+
+## mg
+
+The input matrix could be 
+
+- AD + option.freeDof
+- AD
+- A(freeDof, freeDof) + option.freeDof
+
+The AD is the whole matrix where the Dirichlet boundary condition is build-in by modifying the corresponding sub-matrix to an identity. So the size of AD can be used to determine several types of elements. 
+
+If only A(freeDof, freeDof) is given, we cann't know the actual size of the original matrix. That information can be build into option.freeDof, which is a logical array. The size of option.freeDof will be used to determine several types of elements.
+
+
+
+## Multilevel Usage
+
+`femPoisson, femStokes` are high level command. 
+
+`Poisson`, `StokesP2P1`, `Maxwell` etc are subroutines for different finite element and different equations. 
+
+`squarePoisson, cubeMaxwell, squareStokes` etc are middle level test functions.
+
+So we need another level: `int2d`, `int3d`, `int1d` etc to compute the variational form for different elements. Then it can be used to do more equations. 

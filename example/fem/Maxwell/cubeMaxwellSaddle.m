@@ -39,8 +39,8 @@ for k = 1:maxIt
     fprintf('\n # of DoFs = %d \n',length(u));
     % compute error
     uI = edgeinterpolate(pde.exactu,node,eqn.edge);
-    energyErr(k) = getHcurlerror3NE(node,elem,pde.curlu,u);
-    L2Err(k) = getL2error3NE(node,elem,pde.exactu,u);
+    energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,u);
+    L2Err(k) = getL2error3ND(node,elem,pde.exactu,u);
     uIuhErr(k) = sqrt((u-uI)'*(eqn.A)*(u-uI));        
     fprintf('||curl(u-u_h)|| is %g \n',energyErr(k))
     N(k) = length(u);

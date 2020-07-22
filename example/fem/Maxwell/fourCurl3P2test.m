@@ -50,10 +50,10 @@ for k = 1:maxIt
     % compute error
     uI = edgeinterpolate2(pde.exactu,node,eqn.edge,eqn.face,eqn.face2edge);
     wI = edgeinterpolate2(pde.curlcurlu,node,eqn.edge,eqn.face,eqn.face2edge);
-    errwL2(k) = getL2error3NE2(node,elem,pde.curlcurlu,w);
-    erruL2(k) = getL2error3NE2(node,elem,pde.exactu,u);   
-    errwwhHcurl(k) = getHcurlerror3NE2(node,elem,pde.curlcurlcurlu,w);
-    erruuhHcurl(k) = getHcurlerror3NE2(node,elem,pde.curlu,u); 
+    errwL2(k) = getL2error3ND2(node,elem,pde.curlcurlu,w);
+    erruL2(k) = getL2error3ND2(node,elem,pde.exactu,u);   
+    errwwhHcurl(k) = getHcurlerror3ND2(node,elem,pde.curlcurlcurlu,w);
+    erruuhHcurl(k) = getHcurlerror3ND2(node,elem,pde.curlu,u); 
     errwIwhL2(k) = sqrt((w-wI)'*eqn.M*(w-wI));
     erruIuhL2(k) = sqrt((u-uI)'*eqn.M*(u-uI)); 
     errwIwhHcurl(k) = sqrt((w-wI)'*eqn.A*(w-wI));

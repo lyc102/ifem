@@ -27,8 +27,8 @@ for k = 1:maxIt
     % solve the equation
     [u,T,eqn] = Maxwell2(node,elem,bdFlag,pde); 
     % compute error
-    energyErr(k) = getHcurlerror3NE2(node,elem,pde.curlu,real(u));
-    L2Err(k) = getL2error3NE2(node,elem,pde.exactu,real(u));
+    energyErr(k) = getHcurlerror3ND2(node,elem,pde.curlu,real(u));
+    L2Err(k) = getL2error3ND2(node,elem,pde.exactu,real(u));
     uI = edgeinterpolate2(pde.exactu,node,T.edge,T.face,T.face2edge);
     uIuhErr(k) = sqrt((u-uI)'*eqn.A*(u-uI));
 %     L2Err(k) = sqrt(abs((u-uI)'*eqn.M*(u-uI)));

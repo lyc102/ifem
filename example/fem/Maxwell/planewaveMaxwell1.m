@@ -45,8 +45,8 @@ for k = 1:maxIt
     energyErr(k) = sqrt(abs(real(u-uI)'*eqn.A*real(u-uI)) + L2Err(k)^2);
     L2ErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.M*imag(u-uI)));
     energyErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.A*imag(u-uI)) + L2ErrImag(k)^2);
-%     energyErr(k) = getHcurlerror3NE(node,elem,pde.curlu,u);
-%     L2Err(k) = getL2error3NE(node,elem,pde.exactu,u);
+%     energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,u);
+%     L2Err(k) = getL2error3ND(node,elem,pde.exactu,u);
     N(k) = length(u);
     h(k) = 1./(size(node,1)^(1/3)-1);       
 end

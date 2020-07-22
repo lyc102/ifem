@@ -1,9 +1,9 @@
-function err = getHcurlerror3NE1(node,elem,curlE,Eh,markedElem)
-%% GETHCURLERROR3NE1 Hcurl norm of approximation error for the linear Nedelect element in 3-D.
+function err = getHcurlerror3ND1(node,elem,curlE,Eh,markedElem)
+%% GETHCURLERROR3ND1 Hcurl norm of approximation error for the linear Nedelect element in 3-D.
 %
-% err = getHcurlerror3NE1(node,elem,curlE,Eh,markedElem);
+% err = GETHCURLERROR3ND1(node,elem,curlE,Eh,markedElem);
 %
-% NOTE: it is identical to getHcurlerror3NE since the added basis has no
+% NOTE: it is identical to getHcurlerror3ND since the added basis has no
 % contribution to the curl part. 
 %
 % Example
@@ -18,19 +18,19 @@ function err = getHcurlerror3NE1(node,elem,curlE,Eh,markedElem)
 %         [elem2dof,edge] = dof3edge(elem);
 %         pde = Maxwelldata2;
 %         uI = edgeinterpolate1(pde.exactu,node,edge);
-%         HcurlErr(k) = getHcurlerror3NE1(node,elem,pde.curlu,uI);
+%         HcurlErr(k) = getHcurlerror3ND1(node,elem,pde.curlu,uI);
 %         N(k) = length(uI);
 %     end
 %     r = showrate(N,HcurlErr,1,'b-+');
 %     legend('||u-u_I||_{curl}',['N^{' num2str(r) '}'],'LOCATION','Best');
 %
-% See also getHcurlerror3NE1, getHcurlerror3NE2, getL2error3NE
+% See also getHcurlerror3ND1, getHcurlerror3ND2, getL2error3ND
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 if nargin <=4
-    err = getHcurlerror3NE(node,elem,curlE,Eh);
+    err = getHcurlerror3ND(node,elem,curlE,Eh);
 else
-    err = getHcurlerror3NE(node,elem,curlE,Eh,markedElem);
+    err = getHcurlerror3ND(node,elem,curlE,Eh,markedElem);
 end
 %% TODO write more M-lint

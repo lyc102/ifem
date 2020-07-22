@@ -28,12 +28,12 @@ for k = 1:maxIt
     if(abs(pde.epsilon)>1.0e-8)
         [u,edge,eqn] = Maxwell(node,elem,bdFlag,pde); 
     else
-        [u,edge,eqn] = Maxwellsaddle(node,elem,HB,pde,bdFlag,option); 
+        [u,edge,eqn] = Maxwellsaddle(node,elem,bdFlag,pde,option); 
     end
     % compute error
     tic;
-    energyErr(k) = getHcurlerror3NE(node,elem,pde.curlu,real(u));
-    L2Err(k) = getL2error3NE(node,elem,pde.exactu,real(u));
+    energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,real(u));
+    L2Err(k) = getL2error3ND(node,elem,pde.exactu,real(u));
     uI = edgeinterpolate(pde.exactu,node,edge);
     uIuhErr(k) = sqrt((real(u)-uI)'*(eqn.A)*(real(u)-uI));        
     time = toc;

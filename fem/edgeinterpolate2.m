@@ -22,8 +22,8 @@ function uI = edgeinterpolate2(exactu,node,edge,face,face2edge)
 %       [elem2dof,T] = dof3NE2(elem);
 %       pde = Maxwelldata2;
 %       uI = edgeinterpolate2(pde.exactu,node,T.edge,T.face,T.face2edge);
-%       HcurlErr(k) = getHcurlerror3NE2(node,elem,pde.curlu,uI);
-%       L2Err(k) = getL2error3NE2(node,elem,pde.exactu,uI);
+%       HcurlErr(k) = getHcurlerror3ND2(node,elem,pde.curlu,uI);
+%       L2Err(k) = getL2error3ND2(node,elem,pde.exactu,uI);
 %       N(k) = length(uI);
 %   end
 %   figure(1)
