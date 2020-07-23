@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>Maxwell3ND2femrate</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Quadratic-Edge-Element-for-Maxwell-Equations-in-3D">Quadratic Edge Element for Maxwell Equations in 3D<a class="anchor-link" href="#Quadratic-Edge-Element-for-Maxwell-Equations-in-3D">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This example is to show the quadratic edge element approximation of the electric field of the time harmonic
+  Maxwell equation.
+\begin{align}
+\nabla \times (\mu^{-1}\nabla \times  u) - \omega^2 \varepsilon \, u &amp;= J  \quad  \text{ in } \quad \Omega,  \\
+                                  n \times u &amp;= n \times g_D  \quad  \text{ on } \quad \Gamma_D,\\
+                    n \times (\mu^{-1}\nabla \times  u) &amp;= n \times g_N  \quad  \text{ on } \quad \Gamma_N.
+\end{align}</p>
+<p>based on the weak formulation</p>
+$$(\mu^{-1}\nabla \times  u, \nabla \times  v) - (\omega^2\varepsilon u,v) = (J,v) - \langle n \times g_N,v \rangle_{\Gamma_N}.$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Reference</strong></p>
+<ul>
+<li><a href="http://www.math.uci.edu/~chenlong/226/FEMMaxwell.pdf">Finite Element Methods for Maxwell Equations</a></li>
+<li><a href="http://www.math.uci.edu/~chenlong/226/codeMaxwell.pdf">Programming of Finite Element Methods for Maxwell Equations</a></li>
+</ul>
+<p><strong>Subroutines</strong>:</p>
+
+<pre><code>- Maxwell2
+- cubeMaxwell2
+- femMaxwell3
+- Maxwell2femrate
+
+</code></pre>
+<p>The method is implemented in <code>Maxwell2</code> subroutine and tested in <code>cubeMaxwell2</code>. Together with other elements (ND0,ND1,ND2), <code>femMaxwell3</code> provides a concise interface to solve Maxwell equation. The ND1 element is tested in <code>Maxwell2femrate</code>. This doc is based on <code>Maxwell2femrate</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-Structure">Data Structure<a class="anchor-link" href="#Data-Structure">&#182;</a></h2><p>Locally we construct <code>locBasesIdx</code> to record the local index used in the bases. Globally we use ascend ordering for each element and thus the orientation of the edge is consistent. No need of <code>elem2edgeSign</code>. Read <a href="../mesh/sc3doc.html">Simplicial complex in three dimensions</a> for more discussion of indexing, ordering and orientation.</p>
+<p>In addition to the edge structure, we need face and the corresponding pointers.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">]</span> <span class="p">=</span> <span class="n">cubemesh</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">[</span><span class="n">elem2edge</span><span class="p">,</span><span class="n">edge</span><span class="p">]</span> <span class="p">=</span> <span class="n">dof3edge</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+<span class="p">[</span><span class="n">elem2face</span><span class="p">,</span><span class="n">face</span><span class="p">]</span> <span class="p">=</span> <span class="n">dof3face</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Furthermore we need pointer from face to edge. <code>face</code> is given by <code>auxtructure3</code> and is sorted according to global indices.
+<code>face2edge</code> is used to compute <code>uI</code>. So it is consistent with the local index system in <code>edgeinterpolate2</code>, i.e., if face is <code>(i,j,k)</code> with <code>i&lt;j&lt;k</code>, then the
+three edges are <code>[i j], [i k], [j k]</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">face2edge</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">face</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">3</span><span class="p">,</span><span class="s">&#39;int32&#39;</span><span class="p">);</span>
+<span class="n">face2edge</span><span class="p">(</span><span class="n">elem2face</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),:)</span> <span class="p">=</span> <span class="n">elem2edge</span><span class="p">(:,[</span><span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">]);</span>
+<span class="n">face2edge</span><span class="p">(</span><span class="n">elem2face</span><span class="p">(:,</span><span class="mi">2</span><span class="p">),:)</span> <span class="p">=</span> <span class="n">elem2edge</span><span class="p">(:,[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">6</span><span class="p">]);</span>
+<span class="n">face2edge</span><span class="p">(</span><span class="n">elem2face</span><span class="p">(:,</span><span class="mi">3</span><span class="p">),:)</span> <span class="p">=</span> <span class="n">elem2edge</span><span class="p">(:,[</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">]);</span>
+<span class="n">face2edge</span><span class="p">(</span><span class="n">elem2face</span><span class="p">(:,</span><span class="mi">4</span><span class="p">),:)</span> <span class="p">=</span> <span class="n">elem2edge</span><span class="p">(:,[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">]);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">locEdge</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">];</span>
+<span class="n">locFace</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">];</span>
+<span class="n">locBasesIdx</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="c">... % phi</span>
+               <span class="mi">1</span> <span class="mi">2</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">0</span><span class="p">;</span> <span class="c">... % psi</span>
+               <span class="mi">3</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">;</span> <span class="c">...</span>
+               <span class="mi">4</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">];</span> <span class="c">% chi</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Locally we construct <code>locBasesIdx</code> to record the local index used in the bases. For example, for basis $\chi_i =\lambda_{i_1}\phi _{i_2i_3}$ for <code>i=4</code>, we can get <code>i1,i2,i3</code> by:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="nb">i</span> <span class="p">=</span> <span class="mi">4</span><span class="o">+</span><span class="mi">12</span><span class="p">;</span>
+<span class="n">i1</span> <span class="p">=</span> <span class="n">locBasesIdx</span><span class="p">(</span><span class="nb">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="n">i2</span> <span class="p">=</span> <span class="n">locBasesIdx</span><span class="p">(</span><span class="nb">i</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="n">i3</span> <span class="p">=</span> <span class="n">locBasesIdx</span><span class="p">(</span><span class="nb">i</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Local-Bases">Local Bases<a class="anchor-link" href="#Local-Bases">&#182;</a></h2><p>Suppose <code>[i,j]</code> is the kth edge and <code>i&lt;j</code>. The basis is given by</p>
+$$ \phi _k = \lambda_i\nabla \lambda_j - \lambda_j \nabla \lambda_i,\qquad
+   \nabla \times \phi_k = 2\nabla \lambda_i \times \nabla \lambda_j.$$<p>Inside one tetrahedron, the 6 bases functions along with their curl
+corresponding to 6 local edges <code>[1 2; 1 3; 1 4; 2 3; 2 4; 3 4]</code> are</p>
+$$ \phi_1 = \lambda_1\nabla\lambda_2 - \lambda_2\nabla\lambda_1,\qquad
+   \nabla \times \phi_1 = 2\nabla\lambda_1\times \nabla\lambda_2,$$$$ \phi_2 = \lambda_1\nabla\lambda_3 - \lambda_3\nabla\lambda_1,\qquad
+   \nabla \times \phi_2 = 2\nabla\lambda_1\times \nabla\lambda_3,$$$$ \phi_3 = \lambda_1\nabla\lambda_4 - \lambda_4\nabla\lambda_1,\qquad
+   \nabla \times \phi_3 = 2\nabla\lambda_1\times \nabla\lambda_4,$$$$ \phi_4 = \lambda_2\nabla\lambda_3 - \lambda_3\nabla\lambda_2,\qquad
+   \nabla \times \phi_4 = 2\nabla\lambda_2\times \nabla\lambda_3,$$$$ \phi_5 = \lambda_2\nabla\lambda_4 - \lambda_4\nabla\lambda_2,\qquad
+   \nabla \times \phi_5 = 2\nabla\lambda_2\times \nabla\lambda_4,$$$$ \phi_6 = \lambda_3\nabla\lambda_4 - \lambda_4\nabla\lambda_3,\qquad
+   \nabla \times \phi_6 = 2\nabla\lambda_3\times \nabla\lambda_4.$$<p>The additional 6 bases for the second family are:</p>
+$$ \psi_k = \lambda_i\nabla \lambda_j + \lambda_j \nabla \lambda_i,\qquad
+   \nabla \times \psi_k = 0.$$$$ \psi_1 = \lambda_1\nabla\lambda_2 + \lambda_2\nabla\lambda_1,$$$$ \psi_2 = \lambda_1\nabla\lambda_3 + \lambda_3\nabla\lambda_1,$$$$ \psi_3 = \lambda_1\nabla\lambda_4 + \lambda_4\nabla\lambda_1,$$$$ \psi_4 = \lambda_2\nabla\lambda_3 + \lambda_3\nabla\lambda_2,$$$$ \psi_5 = \lambda_2\nabla\lambda_4 + \lambda_4\nabla\lambda_2,$$$$ \psi_6 = \lambda_3\nabla\lambda_4 + \lambda_4\nabla\lambda_3.$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Suppose <code>i,j,k</code> are the vertices of the <code>l</code>-th face and <code>i&lt;j&lt;k</code>. The two
+basis associated to this face are</p>
+$$ \chi_l^1 = \lambda_j\phi _{ik} = \lambda_j(\lambda_i\nabla\lambda_k -
+\lambda_k\nabla\lambda_i),\quad
+   \chi_l^2 = \lambda_k\phi _{ij} = \lambda_k(\lambda_i\nabla\lambda_j -
+\lambda_j\nabla\lambda_i).$$<p>Inside one tetrahedron, the 8 bases functions assocaited to the four
+local faces <code>[2 3 4; 1 3 4; 1 2 4; 1 2 3]</code> are:</p>
+$$ \chi_1^1 = \lambda_3\phi _{24} = \lambda_3(\lambda_2\nabla\lambda_4 -
+\lambda_4\nabla\lambda_2),\quad
+   \chi_1^2 = \lambda_4\phi _{23} = \lambda_4(\lambda_2\nabla\lambda_3 -
+\lambda_3\nabla\lambda_2).$$$$ \chi_2^1 = \lambda_3\phi _{14} = \lambda_3(\lambda_1\nabla\lambda_4 -
+\lambda_4\nabla\lambda_1),\quad
+   \chi_2^2 = \lambda_4\phi _{13} = \lambda_4(\lambda_1\nabla\lambda_3 -
+\lambda_3\nabla\lambda_1).$$$$ \chi_3^1 = \lambda_2\phi _{14} = \lambda_2(\lambda_1\nabla\lambda_4 -
+\lambda_4\nabla\lambda_1),\quad
+   \chi_3^2 = \lambda_4\phi _{12} = \lambda_4(\lambda_1\nabla\lambda_2 -
+\lambda_2\nabla\lambda_1).$$$$ \chi_4^1 = \lambda_2\phi _{13} = \lambda_2(\lambda_1\nabla\lambda_3 -
+\lambda_3\nabla\lambda_1),\quad
+   \chi_4^2 = \lambda_3\phi _{12} = \lambda_3(\lambda_1\nabla\lambda_2 -
+\lambda_2\nabla\lambda_1).$$<p><strong>Reference</strong>: See page 12, Table 9.2. Arnold, Douglas N. and Falk, Richard S. and Winther, Ragnar.
+Geometric decompositions and local bases for spaces of finite element
+differential forms. <em>Comput. Methods Appl. Mech. Engrg.</em> 198():1660--1672,
+2009.</p>
+<p>Locally, we order the local bases in the following way:</p>
+$$\{\chi_1^1,~\,\chi_1^2,~\,\chi_2^1,~\,\chi_2^2,~\,\chi_3^1,~\,\chi_3^2,
+   ~\,\chi_4^1,~\,\chi_4^2.\}$$<p>and rewrite the local bases as:</p>
+<p>13- 20: $$\{\chi_1,~\,\chi_2,~\,\chi_3,~\,\chi_4,~\,\chi_5,~\,\chi_6,~\,
+  \chi_7,~\,\chi_8.\}$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Degree-of-freedoms">Degree of freedoms<a class="anchor-link" href="#Degree-of-freedoms">&#182;</a></h2><p>Suppose <code>[i,j]</code> is the kth edge and <code>i&lt;j</code>. The corresponding degree of freedom is</p>
+$$l_k (v) = \int_{e_k} v\cdot t \, {\rm d}s \approx \frac{1}{2}[v(i)+v(j)]\cdot e_{k}.$$<p>It is dual to the basis $\{\phi_k\}$ in the sense that</p>
+$$l_{\ell}(\phi _k) = \delta_{k,\ell}.$$<p>The 6 degree of freedoms for $\psi_k$ are:</p>
+$$l_k^1 (v) = 3\int_{e_k} v\cdot t(\lambda _i - \lambda_j) \, {\rm d}s  \approx \frac{1}{2}[v(i) - v(j)]\cdot e_{k}.$$<p>The 8 degree of freedoms for $\chi_i$ is given in `</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>
