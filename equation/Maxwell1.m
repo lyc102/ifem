@@ -98,7 +98,7 @@ else
     omega = 1;
 end
 
-tstart = tic;
+tstart = cputime;
 %% Element-wise basis
 % [1 2], [1 3], [1 4], [2 3], [2 4], [3 4]
 % phi = lambda_iDlambda_j - lambda_jDlambda_i;
@@ -324,7 +324,7 @@ if ~isempty(bdFlag) && ~isempty(pde.g_N)
     end
     % face 2
     isBdElem = find(bdFlag(:,2) == 2);
-    face = [1 4 3]; face2locdof = [6 2 3];
+    face = [1 3 4]; face2locdof = [6 3 2];
     if ~isempty(isBdElem)
         bdb = bdfaceintegral1(isBdElem,face,face2locdof);
         g = g + bdb;
@@ -338,7 +338,7 @@ if ~isempty(bdFlag) && ~isempty(pde.g_N)
     end
     % face 4
     isBdElem = find(bdFlag(:,4) == 2);
-    face = [1 3 2]; face2locdof = [4 1 2];
+    face = [1 2 3]; face2locdof = [4 2 1];
     if ~isempty(isBdElem)
         bdb = bdfaceintegral1(isBdElem,face,face2locdof);
         g = g + bdb;
@@ -364,11 +364,8 @@ end
 % Neumann faces.
 
 %% Record assembling time
-info.assembleTime = toc(tstart);
+assembleTime = cputime - tstart;
 if ~isfield(option,'printlevel'), option.printlevel = 1; end
-if option.printlevel >= 1
-    fprintf('Time to assemble matrix equation %4.2g s\n',info.assembleTime);
-end
 
 %% Solve the system of linear equations
 if strcmp(solver,'direct')
@@ -376,7 +373,10 @@ if strcmp(solver,'direct')
     freeDof = [find(~isBdEdge); NE + find(~isBdEdge)];
     tic
     u(freeDof) = bigAD(freeDof,freeDof)\f(freeDof);    
-    time = toc; itStep = 0; flag = 2; err = norm(f - bigAD*u);    
+    time = cputime - tstart; 
+    err = norm(f - bigAD*u);
+    info = struct('solverTime',time,'assembleTime',assembleTime,'itStep',0, ...
+                  'stopErr',0, 'error',err,'flag',2);      
     if (nargin > 4) && isfield(option,'printlevel') && (option.printlevel >= 1)
         fprintf('#dof: %8.0u, Direct solver %4.2g \n',length(f),time);
     end
@@ -387,12 +387,12 @@ elseif strcmp(solver,'none')
 else
     % option.x0 = edgeinterpolate1(pde.g_D(node),node,edge);
     option.x0 = u;
-    [u,flag,itStep,err,time] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
+    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
 end
 
 %% Output
 eqn = struct('A',A,'M',M,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge);
-info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
+info.assembleTime = assembleTime;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunctions bdfaceintegral1
@@ -409,7 +409,7 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
     
     %% Data structure
     tetLocEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4]; % edge of a tetrahedral [1 2 3 4]
-    face2locEdge = [2 3; 3 1; 1 2]; % edge of the face [1 2 3]
+    face2locEdge = [2 3; 1 3; 1 2]; % edge of the face [1 2 3]
 
     %% Compute surface integral
     Nbd = length(isBdElem);
@@ -425,33 +425,14 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
         gNp = pde.g_N(pxyz,normal);    
         for s = 1:3
             kk = face2locdof(s);
-            pidx = face(face2locEdge(s,1))< face(face2locEdge(s,2));
-            % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
-            % lambda_i is associated to the local index of the face [1 2 3]
-            % Dlambda_j is associtated to the index of tetrahedron
-            % - when the direction of the local edge s is consistent with the
-            %   global oritentation given in the triangulation, 
-            %           s(1) -- k(1),  s(2) -- k(2)
-            % - otherwise 
-            %           s(2) -- k(1),  s(1) -- k(2)
-            if pidx
-                phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      - lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
-            else
-                phi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      - lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
-            end
+            phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+                  - lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
             rhs = dot(phi_k,gNp,2);
             bt(:,s) = bt(:,s) + w(pp)*rhs; % area is included in normal; see line 28
             idx(:,s) = elem2dof(isBdElem,kk);
             % psi_k = lambda_iDlambda_j + lambda_jDlambda_i;
-            if pidx
-                psi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      + lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
-            else
-                psi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      + lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
-            end
+            psi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+                  + lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
             rhs = dot(psi_k,gNp,2);
             bt(:,s+3) = bt(:,s+3) + w(pp)*rhs; % area is included in normal; see line 27
             idx(:,s+3) = elem2dof(isBdElem,kk) + NE;

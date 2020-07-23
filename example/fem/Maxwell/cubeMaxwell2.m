@@ -8,8 +8,9 @@ close all;
 [node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
 pde = Maxwelldata2;
 % pde = planewavedata1;
-% bdFlag = setboundary3(node,elem,'Neumann');
-bdFlag = setboundary3(node,elem,'Dirichlet');
+% bdFlag = setboundary3(node,elem,'x==1','Neumann');
+ bdFlag = setboundary3(node,elem,'Dirichlet','all','Neumann','y==1');
+% bdFlag = setboundary3(node,elem,'Dirichlet');
 % option.solver = 'cg';
 
 %% Parameters

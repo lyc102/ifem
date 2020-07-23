@@ -157,3 +157,53 @@ If only A(freeDof, freeDof) is given, we cann't know the actual size of the orig
 `squarePoisson, cubeMaxwell, squareStokes` etc are middle level test functions.
 
 So we need another level: `int2d`, `int3d`, `int1d` etc to compute the variational form for different elements. Then it can be used to do more equations. 
+
+
+
+## Move MaxwellH to ifem_local
+
+Some subroutines are not tested yet and thus move to ifem_local.
+
+
+
+## Maxwell2 Neumann boundary condition
+
+In the boundary surface integral, check the ordering
+
+```
+            pidx = face(face2locEdge(s,1))< face(face2locEdge(s,2));
+            % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
+            % lambda_i is associated to the local index of the face [1 2 3]
+            % Dlambda_j is associtated to the index of tetrahedron
+            % - when the direction of the local edge s is consistent with the
+            %   global oritentation given in the triangulation, 
+            %           s(1) -- k(1),  s(2) -- k(2)
+            % - otherwise 
+            %           s(2) -- k(1),  s(1) -- k(2)
+            if pidx
+                phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+                      - lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
+            else
+                phi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+                      - lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
+            end
+
+```
+
+But if all faces and edges are ascend ordering, then no need to check. 
+
+```
+    tetLocEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4]; % edge of a tetrahedral [1 2 3 4]
+    face2locEdge = [2 3; 1 3; 1 2]; % edge of the face [1 2 3]
+```
+
+Note that in `face2locEdge`, the second edge is `[1 3]` not `[3 1]`
+
+And also make sure when call `bdfaceintegral`, the input face is ascend ordering. 
+
+```
+    face = [2 3 4]; face2locdof = [6 5 4];
+    if ~isempty(isBdElem)
+        bdb = bdfaceintegral(isBdElem,face,face2locdof);
+```
+

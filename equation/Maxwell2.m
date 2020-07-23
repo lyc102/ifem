@@ -87,7 +87,7 @@ if isfield(pde,'omega')
     epsilon = pde.omega*epsilon; 
 end
 
-tstart = tic;
+tstart = cputime;
 elemold = elem;
 
 %% Sort elem to ascend ordering
@@ -443,18 +443,18 @@ end
 % Neumann faces.
 
 %% Record assembling time
-info.assembleTime = toc(tstart);
+assembleTime = cputime - tstart;
 if ~isfield(option,'printlevel'), option.printlevel = 1; end
-if option.printlevel >= 1
-    fprintf('Time to assemble matrix equation %4.2g s\n',info.assembleTime);
-end
 
 %% Solve the system of linear equations
 if strcmp(solver,'direct')
     % exact solver
     freeDof = find(~isBdDof);
     u(freeDof) = bigAD(freeDof,freeDof)\f(freeDof);
-    time = toc; itStep = 0; flag = 2; err = norm(f - bigAD*u);    
+    time = cputime - tstart; 
+    err = norm(f - bigAD*u);
+    info = struct('solverTime',time,'assembleTime',assembleTime,'itStep',0, ...
+                  'stopErr',0, 'error',err,'flag',2);      
     if (nargin > 4) && isfield(option,'printlevel') && (option.printlevel >= 1)
         fprintf('#dof: %8.0u, Direct solver %4.2g \n',length(f),time);
     end
@@ -465,20 +465,22 @@ elseif strcmp(solver,'none')
 else
 %    option.x0 = edgeinterpolate2(pde.g_D,node,T.edge,T.face,T.face2edge);
     option.x0 = u;
-    [u,flag,itStep,err,time] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
+    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
 end
 
 %% Output
 eqn = struct('A',A,'M',M,'f',f,'g',g,'bigA',bigAD);
-info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
+info.assembleTime = assembleTime;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunctions bdfaceintegral2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function bdb = bdfaceintegral2(isBdElem,face,face2locdof)
-    %% Compute boundary surface integral of lowest order edge element.
+    %% Compute boundary surface integral of quadratic edge element.
     %  bdb(k) = \int_{face} (n×g_N, phi_k) dS
     %  bdb(k+3) = \int_{face} (n×g_N, psi_k) dS
-
+    %  bdb(k+6) = \int_{face} (n×g_N, chi_k) dS
+    
     %% Compute scaled normal
     faceIdx = true(4,1);
     faceIdx(face) = false;
@@ -486,7 +488,7 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
     
     %% Data structure
     tetLocEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4]; % edge of a tetrahedral [1 2 3 4]
-    face2locEdge = [2 3; 3 1; 1 2]; % edge of the face [1 2 3]
+    face2locEdge = [2 3; 1 3; 1 2]; % edge of the face [1 2 3]
 
     %% Compute surface integral
     Nbd = length(isBdElem);
@@ -503,13 +505,10 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
         % basis associated to edges
         for s = 1:3
             kk = face2locdof(s);
-            % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
-            % lambda_i is associated to the local index of the face [1 2 3]
-            % Dlambda_j is associtated to the index of tetrahedron
             phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
                   - lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
             rhs = dot(phi_k,gNp,2);
-            bt(:,s) = bt(:,s) + w(pp)*rhs; % area is included in normal
+            bt(:,s) = bt(:,s) + w(pp)*rhs; % area is included in normal; see line 28
             idx(:,s) = elem2dof(isBdElem,kk);
             % psi_k = lambda_iDlambda_j + lambda_jDlambda_i;
             psi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...

@@ -1,4 +1,4 @@
-function [x,flag,itStep,err,time] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge,option)
+function [x,info] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge,option)
 %% MGMAXWELL multigrid-type solver for Maxwell equations.
 % 
 % x = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge) attempts to solve
@@ -28,7 +28,7 @@ function [x,flag,itStep,err,time] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,is
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-tic;
+t = cputime;
 %% Initial check
 Ndof = length(b);                  % number of dof
 N = max(elem(:));                  % number of nodes
@@ -51,7 +51,8 @@ if (norm(b) == 0)                  % if rhs vector is all zeros
     flag = 0;                      
     itStep = 0;                    
     err = 0;  
-    time = toc;
+    time = cputime - t;
+    info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr',max(err(end,:)));        
     return
 end
 
@@ -153,7 +154,7 @@ if k > maxIt || (max(err(end,:))>tol)
 else
     flag = 0;
 end
-time = toc;
+time = cputime - t;
 if printlevel >= 1
     fprintf('#dof: %8.0u,   #nnz: %8.0u,   iter: %2.0u,   err = %8.4e,   time = %4.2g s\n',...
                  Ndof, nnz(A), itStep, max(err(end,:)), time)
@@ -161,6 +162,8 @@ end
 if  (flag == 1) && (printlevel>0)
     fprintf('NOTE: the iterative method does not converge');    
 end
+info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr',max(err(end,:)));    
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunctions HXpreconditioner

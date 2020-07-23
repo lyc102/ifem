@@ -57,43 +57,50 @@ for k = 1:maxIt
     switch elemType
         case 'ND0'     % the lowest order edge element
             if(abs(pde.epsilon)>1.0e-8)
-                [soln,eqn,info] = Maxwell(node,elem,bdFlag,pde,option);
+                [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option);
             else
                 [u,edge,eqn] = Maxwellsaddle(node,elem,bdFlag,pde,option); 
             end                
         case 'ND1'     % the lowest order second family
             if(abs(pde.epsilon)>1.0e-8)
-                [soln,eqn,info] = Maxwell1(node,elem,bdFlag,pde,option);
+                [u,edge,eqn,info] = Maxwell1(node,elem,bdFlag,pde,option);
             else
                 [u,edge,eqn] = Maxwellsaddle1(node,elem,bdFlag,pde,option); 
             end                
         case 'ND2'     % quadratic Nedelec element
             if(abs(pde.epsilon)>1.0e-8)
-                [soln,eqn,info] = Maxwell2(node,elem,bdFlag,pde,option);
+                [u,T,eqn,info] = Maxwell2(node,elem,bdFlag,pde,option); 
             else
                 [u,edge,eqn] = Maxwellsaddle2(node,elem,bdFlag,pde,option); 
             end                
     end
-    uh = soln.u;
     % compute error
     t = cputime;
-    if isfield(pde,'curl')
-       errHcurl(k) = getHcurlerror3ND(node,elem,pde.curlu,real(u));
+    if isfield(pde,'curlu')
+        switch elemType
+            case 'ND0'            
+               errHcurl(k) = getHcurlerror3ND(node,elem,pde.curlu,real(u));
+            case 'ND1'
+               errHcurl(k) = getHcurlerror3ND1(node,elem,pde.curlu,real(u));
+            case 'ND2'
+               errHcurl(k) = getHcurlerror3ND2(node,elem,pde.curlu,real(u));               
+        end
     end
     if isfield(pde,'exactu')
         % interpolation
         switch elemType
             case 'ND0'
                 errL2(k) = getL2error3ND(node,elem,pde.exactu,real(u));        
-                uI = edgeinterpolate(pde.exactu,node,elem);
+                uI = edgeinterpolate(pde.exactu,node,edge);
             case 'ND1'
                 errL2(k) = getL2error3ND1(node,elem,pde.exactu,real(u));        
                 uI = edgeinterpolate1(pde.exactu,node,edge);
             case 'ND2'
-                uI = Lagrangeinterpolate(pde.exactu,node,elem,'P2',eqn.edge);
+                errL2(k) = getL2error3ND2(node,elem,pde.exactu,real(u));  
+                uI = edgeinterpolate2(pde.exactu,node,T.edge,T.face,T.face2edge);
         end
-        erruIuh(k) = sqrt((uh-uI)'*eqn.A*(uh-uI));
-        errMax(k) = max(abs(uh-uI));
+        erruIuh(k) = sqrt((u-uI)'*eqn.A*(u-uI));
+        errMax(k) = max(abs(u-uI));
     end
     errTime(k) = cputime - t;
     % record time
@@ -108,25 +115,8 @@ for k = 1:maxIt
     stopErr(k) = info.stopErr;
     flag(k) = info.flag;
     % plot 
-    N(k) = length(soln.u);
+    N(k) = length(u);
     h(k) = 1./(size(node,1)^(1/3)-1);    
-    if  strcmp(elemType,'WG') % modify size for WG
-        if ~isfield(option,'reducesystem') || (option.reducesystem == 1)
-            N(k) = N(k) - size(elem,1); % reduced system
-        end    
-    end                
-    if option.plotflag && N(k) < 2e4 % show mesh and solution for small size
-        switch elemType
-        case 'P1'     % piecewise linear function P1 element
-            figure(1);  showresult3(node,elem,uh);    
-        case 'CR'     % piecewise linear function CR element
-            continue;
-        case 'P2'     % piecewise quadratic function
-            figure(1);  showresult3(node,elem,uh(1:size(node,1)));    
-        case 'WG'     % weak Galerkin element
-            continue;
-        end
-    end
     if N(k) > maxN
         break;
     end
