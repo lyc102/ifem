@@ -10,7 +10,7 @@ bdFlag = setboundary(node,elem,'Dirichlet','x==0','Neumann','~(x==0)');
 err = zeros(4,1); N = zeros(4,1);
 option.solver = 'direct';
 for i = 1:4
-    [sigma,u] = HodgeLaplacianE(node,elem,pde,bdFlag,option);
+    [sigma,u] = HodgeLaplacianE(node,elem,bdFlag,pde,option);
 %     [sigma,u,AD] = HodgeLaplacianF(node,elem,pde,bdFlag,option);
     err(i) = getL2error(node,elem,pde.sigma,sigma);
     N(i) = size(u,1);

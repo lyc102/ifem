@@ -11,7 +11,6 @@ function [err,time,solver,eqn] = mfemHodgeLap(mesh,pde,option,varargin)
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
 %% Check input arguments
-%% Check input arguments
 if isfield(mesh,'node') && isfield(mesh,'elem')
     node = mesh.node;
     elem = double(mesh.elem);

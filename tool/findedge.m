@@ -44,7 +44,7 @@ if ndim == 2
          'MarkerFaceColor',[0.6 0.5 0.8],'MarkerSize',20);
 elseif ndim == 3
     h = plot3(midEdge(:,1),midEdge(:,2),midEdge(:,3),'o','LineWidth',1,'MarkerEdgeColor','k',...
-         'MarkerFaceColor',[0.35 0.6 0.4],'MarkerSize',20);
+         'MarkerFaceColor',[0.6 0.5 0.8],'MarkerSize',20);
 end
 if nargin > 3
     if strcmp(varargin{1},'draw') 
