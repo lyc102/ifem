@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<title>Untitled1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+body {
+  overflow: visible;
+  padding: 8px;
+}
+div#notebook {
+  overflow: visible;
+  border-top: none;
+}@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+}
+</style>
+
+<!-- Custom stylesheet, it must be in the parent directory as the html file -->
+<link rel="stylesheet" type="text/css" media="all" href="../doc.css" />
+<link rel="stylesheet" type="text/css" media="all" href="doc.css" />
+
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+<body>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">node</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">elem</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">];</span>
+<span class="n">localEdge</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">];</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">figure</span><span class="p">;</span>
+<span class="n">showmesh3</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre><span class="ansi-red-fg">Error using eval
+Undefined function &#39;showmesh3&#39; for input arguments of type &#39;double&#39;.
+
+</span></pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAAGkCAIAAACgjIjwAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA
+B3RJTUUH5AcXEyoQUlOBZwAAACR0RVh0U29mdHdhcmUATUFUTEFCLCBUaGUgTWF0aFdvcmtzLCBJ
+bmMuPFjdGAAAACJ0RVh0Q3JlYXRpb24gVGltZQAyMy1KdWwtMjAyMCAxMjo0MjoxNuTKE1EAAAZE
+SURBVHic7dUxAQAgDMCwgX/PQwY9EgX9enZ3AOC3+zsAAGYMCYAIQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAk
+ABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAA
+SDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAk
+ABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAA
+SDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAk
+ABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAA
+SDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAk
+ABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAA
+SDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAk
+ABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAA
+SDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIg
+wZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAE
+QwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIMCYAEQwIgwZAASDAkABIM
+CYAEQwIg4QGxEwZFtUDTLwAAAABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+</body>
+
+ 
+
+
+</html>
