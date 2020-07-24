@@ -1,4 +1,4 @@
-function showsolutionRT(node,elem,u,varargin)
+function unew = showsolutionRT(node,elem,u,varargin)
 %% SHOWSOLUTIONRT plots a RT function u on a triangular mesh in 2-D.
 %
 %  [node, elem] = squaremesh([0,1,0,1],1/2^6);
@@ -12,7 +12,7 @@ function showsolutionRT(node,elem,u,varargin)
 
 NT = size(elem,1);
 
-%% Generate a big triangulation
+%% Generate a big and discontinuous triangulation
 elemnew = reshape(1:3*NT,NT,3);
 nodenew = node(elem(:),:);
 
@@ -20,6 +20,7 @@ nodenew = node(elem(:),:);
 elem = sortelem(elem);
 elem2edge = dofedge(elem);
 Clambda = curlbasis(node,elem);
+% evaluate RT function at three vertices
 unew(1:NT,:) = [u(elem2edge(:,3)) u(elem2edge(:,3))].*Clambda(:,:,2) ...
              + [u(elem2edge(:,2)) u(elem2edge(:,2))].*Clambda(:,:,3);
 unew(NT+(1:NT),:) = - [u(elem2edge(:,3)) u(elem2edge(:,3))].*Clambda(:,:,1) ...
@@ -27,6 +28,6 @@ unew(NT+(1:NT),:) = - [u(elem2edge(:,3)) u(elem2edge(:,3))].*Clambda(:,:,1) ...
 unew(2*NT+(1:NT),:) = - [u(elem2edge(:,2)) u(elem2edge(:,2))].*Clambda(:,:,1) ...
                       - [u(elem2edge(:,1)) u(elem2edge(:,1))].*Clambda(:,:,2);
 
-%% Plot the solution
+%% Plot the piecewise linear solution
 subplot(1,2,1); showsolution(nodenew,elemnew,unew(:,1),varargin{:});
 subplot(1,2,2); showsolution(nodenew,elemnew,unew(:,2),varargin{:});

@@ -168,9 +168,6 @@ Ry = Iy';
 
 %% Restriction
 rc3d = zeros(nyc,nx1c,nx2c);
-% rc3d = tprod(Ry,[1,-1],r3d,[-1,2,3]); % restriction in y-direction
-% rc3d = tprod(Rx1,[2,-1],rc3d,[1,-1,3]);
-% rc3d = tprod(Rx2,[3,-1],rc3d,[1,2,-1]);
 rc3dtemp = reshape(Ry*reshape(r3d,ny,nx1*nx2),nyc,nx1,nx2); % restriction in y-direction
 for iy = 1:nyc
     rc3d(iy,:,:) = Rx1*squeeze(rc3dtemp(iy,:,:))*Ix2;
@@ -193,9 +190,6 @@ for iy = 1:nyc
     ec3dtemp(iy,:,:) = Ix1*squeeze(ec3d(iy,:,:))*Rx2;
 end
 ec3d = reshape(Iy*reshape(ec3dtemp,nyc,nx1*nx2),ny,nx1,nx2); % prolongation in y-direction
-% ec3d = tprod(Iy,[1,-1],ec3d,[-1,2,3]);
-% ec3d = tprod(Ix1,[2,-1],ec3d,[1,-1,3]);
-% ec3d = tprod(Ix2,[3,-1],ec3d,[1,2,-1]);
 e3d = e3d + ec3d;
 e = e3d(:);
 % update residual when e updated. remember we are solving Ae = rold.

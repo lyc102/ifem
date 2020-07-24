@@ -160,9 +160,9 @@ So we need another level: `int2d`, `int3d`, `int1d` etc to compute the variation
 
 
 
-## Move MaxwellH to ifem_local
+## Move some files to ifem_local
 
-Some subroutines are not tested yet and thus move to ifem_local.
+Some subroutines are not tested yet and thus move to ifem_local. Removed MaxwellH and Helmholtz for example.
 
 
 
