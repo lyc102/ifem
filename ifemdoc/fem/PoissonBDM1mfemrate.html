@@ -35,7 +35,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -60,16 +60,14 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="BDM1-P0-Element-for-Poisson-Equation-in-2D">BDM1-P0 Element for Poisson Equation in 2D<a class="anchor-link" href="#BDM1-P0-Element-for-Poisson-Equation-in-2D">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This example is to show the rate of convergence of the BDM1-P0 mixed finite element approximation of the Poisson equation on the unit square:</p>
 $$- \nabla (d \nabla) u = f \; \hbox{in } (0,1)^2$$<p>for the following boundary conditions</p>
@@ -78,8 +76,8 @@ $$- \nabla (d \nabla) u = f \; \hbox{in } (0,1)^2$$<p>for the following boundary
 <li>Pure Neumann boundary condition: $d\nabla u\cdot n=g_N \text{ on } \partial \Omega$.</li>
 <li>mixed boundary condition: $u=g_D \text{ on }\Gamma_D, \nabla u\cdot n=g_N \text{ on }\Gamma_N.$</li>
 </ul>
-<p>Find $(\sigma , u)$ in $H_{g_N,\Gamma_N}(div,\Omega)\times L^2(\Omega)$ s.t.</p>
-$$ (d^{-1}\sigma,\tau) + (div \tau, u)  = \langle \tau \cdot n, g_D \rangle_{\Gamma_D} \quad \forall \tau \in H_{0,\Gamma_N}(div,\Omega)$$$$ (div \sigma, v)                =  -(f,v) \quad \forall v \in L^2(\Omega) $$<p>where</p>
+<p>Find $(\sigma , u)$ in $H_{g_N,\Gamma_N}({\rm div},\Omega)\times L^2(\Omega)$ s.t.</p>
+$$ (d^{-1}\sigma,\tau) + ({\rm div} \tau, u)  = \langle \tau \cdot n, g_D \rangle_{\Gamma_D} \quad \forall \tau \in H_{0,\Gamma_N}(div,\Omega)$$$$ (div \sigma, v)                =  -(f,v) \quad \forall v \in L^2(\Omega) $$<p>where</p>
 <p>$$H_{g,\Gamma}(div,\Omega) = \{\sigma \in H(div,\Omega); \sigma \cdot n = g  \text{ on } \Gamma \subset \partial\Omega \}.$$</p>
 <p>The unknown $\sigma = d\nabla u$ is approximated using the lowest order Brezzi-Douglas-Marini element (BDM1) and $u$ by piecewise constant element (P0).</p>
 <p><strong>References</strong></p>
@@ -97,8 +95,7 @@ $$ (d^{-1}\sigma,\tau) + (div \tau, u)  = \langle \tau \cdot n, g_D \rangle_{\Ga
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="BDM1-Linear-H(div)-Element-in-2D">BDM1 Linear H(div) Element in 2D<a class="anchor-link" href="#BDM1-Linear-H(div)-Element-in-2D">&#182;</a></h2><p>We explain degree of freedoms and basis functions for Brezzi-Douglas-Marini element (BDM1) element on a triangle.</p>
 <h3 id="Asecond-orientation">Asecond orientation<a class="anchor-link" href="#Asecond-orientation">&#182;</a></h3><p>The dofs and basis depends on the orientation of the mesh. We shall use the asecond orientation, i.e., <code>elem(t,1)&lt; elem(t,2)&lt; elem(t,3)</code> not the positive orientation. Given an <code>elem</code>, the asecond orientation can be constructed by</p>
@@ -127,7 +124,7 @@ $$ (d^{-1}\sigma,\tau) + (div \tau, u)  = \langle \tau \cdot n, g_D \rangle_{\Ga
 <span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="s">&#39;rotvec&#39;</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -137,7 +134,7 @@ $$ (d^{-1}\sigma,\tau) + (div \tau, u)  = \langle \tau \cdot n, g_D \rangle_{\Ga
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -284,26 +281,26 @@ AQCkQJAAAFIgSAAAKRAkAIAUCBIAQAoECQAgBYIEAJACQQIASIEgAQCkQJAAAFIgSAAAKRAkAIAU
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Local-bases-of-BDM1-element">Local bases of BDM1 element<a class="anchor-link" href="#Local-bases-of-BDM1-element">&#182;</a></h3><p>Suppose <code>[i,j]</code> is the k-th edge. The two dimensional curl is a rotated graident defined as $\nabla^{\bot} f = (-\partial_y f, \partial _x f).$ The basis of this edge along with its divergence are given by</p>
-$$ \phi_k = \lambda_i \nabla^{\bot} \lambda_j - \lambda_j \nabla^{\bot} \lambda_i. $$<p>Inside one triangular, the 3 bases corresponding to 3 local edges [2 3; 1
+<h3 id="Local-bases-of-BDM1-element">Local bases of BDM1 element<a class="anchor-link" href="#Local-bases-of-BDM1-element">&#182;</a></h3><p>Suppose <code>[i,j]</code> is the k-th edge. The two dimensional curl is a rotated graident defined as $\nabla^{\bot} f = (-\partial_y f, \partial _x f).$ For RT0, the basis of this edge along with its divergence are given by</p>
+$$ \phi_k = \lambda_i \nabla^{\bot} \lambda_j - \lambda_j \nabla^{\bot} \lambda_i. $$<p>For BDM1, one more basis is added on this edge</p>
+$$ \psi_k = \lambda_i \nabla^{\bot} \lambda_j + \lambda_j \nabla^{\bot} \lambda_i. $$<p>Inside one triangular, the 6 bases corresponding to 3 local edges [2 3; 1
 3; 1 2] are:</p>
-$$ \phi_1 = \lambda_2 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_2. $$<p></p>
-$$ \phi_2 = \lambda_1 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_1. $$$$ \phi_3 = \lambda_1 \nabla^{\bot} \lambda_2 - \lambda_2 \nabla^{\bot} \lambda_1. $$$$ \psi_1 = \lambda_2 \nabla^{\bot} \lambda_3 + \lambda_3 \nabla^{\bot} \lambda_2. $$<p></p>
-$$ \psi_2 = \lambda_1 \nabla^{\bot} \lambda_3 + \lambda_3 \nabla^{\bot} \lambda_1. $$$$ \psi_3 = \lambda_1 \nabla^{\bot} \lambda_2 + \lambda_2 \nabla^{\bot} \lambda_1. $$<p>Inside one triangle, we order the local bases in the following way:</p>
+$$ \phi_1 = \lambda_2 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_2, \quad  \psi_1 = \lambda_2 \nabla^{\bot} \lambda_3 + \lambda_3 \nabla^{\bot} \lambda_2.$$<p></p>
+$$ \phi_2 = \lambda_1 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_1, \quad  \psi_2 = \lambda_1 \nabla^{\bot} \lambda_3 + \lambda_3 \nabla^{\bot} \lambda_1. $$$$ \phi_3 = \lambda_1 \nabla^{\bot} \lambda_2 - \lambda_2 \nabla^{\bot} \lambda_1, \quad  \psi_3 = \lambda_1 \nabla^{\bot} \lambda_2 + \lambda_2 \nabla^{\bot} \lambda_1. $$<p>Inside one triangle, we order the local bases in the following way:</p>
 $$\{\phi_1,~\,\phi_2,~\,\phi_3,~\,\psi_1,~\,\psi_2,~\, \psi_3.\}$$<p>Note that $RT_0 \subset BDM_1$, and $\{ \phi_1,~\,\phi_2,~\,\phi_3 \}$ is the local bases for $RT_0$.</p>
-<p>The dual basis is the line integral over an orientated edge</p>
-$$\int_{e_i} \phi_j \cdot n_i \, ds = \delta(i,j),$$<p></p>
-<p>where $n_i = t_i^{\bot}$ is the rotation of the unit tangential vector of $e_i$ by $90^{\deg}$ counterclockwise.</p>
+<p>The first 3 dual bases are the line integral over orientated edges</p>
+$$d_i^{\phi}(u) = \int_{e_i} u \cdot n_i \, ds,$$<p>and the second 3 dual bases are</p>
+$$d_{ij}^{\psi}(u) = 3 \int_{e_{i, j}} \boldsymbol{u} \cdot \boldsymbol{n}_{i, j}\left(\lambda_{i}-\lambda_{j}\right) \, ds,$$<p>where $n_i = t_i^{\bot}$ is the rotation of the unit tangential vector of $e_i$ by $90^{\deg}$ counterclockwise.</p>
+<p>It is straightforward to verify the "orthogonality":
+$$d^{\phi}(\psi) = 0, \quad d^{\psi}(\phi) = 0, \quad d_i^{\phi}(\phi_j) = \delta_{ij}, \quad  d_i^{\psi}(\psi_j) = \delta_{ij}.$$</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Local-to-global-index-map">Local to global index map<a class="anchor-link" href="#Local-to-global-index-map">&#182;</a></h3><p>Three local edges are <code>locEdge = [2 3; 1 3; 1 2]</code>. The pointer from the local to global index can be constructured by</p>
 
@@ -328,7 +325,7 @@ $$\int_{e_i} \phi_j \cdot n_i \, ds = \delta(i,j),$$<p></p>
 <span class="n">display</span><span class="p">(</span><span class="n">elem2edge</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -338,7 +335,7 @@ $$\int_{e_i} \phi_j \cdot n_i \, ds = \delta(i,j),$$<p></p>
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -362,7 +359,7 @@ elem2edge =
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -825,8 +822,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Assembling-the-matrix-equation">Assembling the matrix equation<a class="anchor-link" href="#Assembling-the-matrix-equation">&#182;</a></h2><p>We discuss several issues in the assembling.</p>
 <h3 id="Mass-matrix">Mass matrix<a class="anchor-link" href="#Mass-matrix">&#182;</a></h3><p>The mass matrix can be computed by</p>
@@ -837,8 +833,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="divergence-matrix">divergence matrix<a class="anchor-link" href="#divergence-matrix">&#182;</a></h3><p>The ascend ordering orientation is not consistent with the induced orientation. The second edge would be <code>[3 1]</code> for the consistent orientation. So <code>[1 -1 1]</code> is used in the construction of div operator.</p>
 <p>For triangle t, the basis for the constant function space is $p = 1$, the characteristic function. So in the computation of divergence operator, <code>elemSign</code> should be used to correct the sign. In the output of <code>gradbasis</code>, <code>-Dlambda</code> is always the outwards normal direction. The signed area could be negative but in the ouput, <code>area</code> is the absolute value (for the easy of integration on elements) and <code>elemSign</code> is used to record elements with negative area.</p>
@@ -860,7 +855,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 <span class="nb">disp</span><span class="p">(</span><span class="n">full</span><span class="p">(</span><span class="n">B</span><span class="p">));</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -870,7 +865,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -916,8 +911,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Boundary-edges">Boundary edges<a class="anchor-link" href="#Boundary-edges">&#182;</a></h3><p>Direction of boundary edges may not be the outwards normal direction of the domain since now <code>elem</code> is ascend orientation. <code>edgeSign</code> is introduced to record this inconsistency.</p>
 
@@ -933,8 +927,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Test-Examples">Test Examples<a class="anchor-link" href="#Test-Examples">&#182;</a></h2><h3 id="Mixed-boundary-condition">Mixed boundary condition<a class="anchor-link" href="#Mixed-boundary-condition">&#182;</a></h3>
 </div>
@@ -955,7 +948,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 <span class="n">pde</span> <span class="p">=</span> <span class="n">sincosNeumanndata</span><span class="p">;</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -971,7 +964,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 <span class="n">mfemPoisson</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="n">pde</span><span class="p">,</span><span class="n">option</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -981,7 +974,7 @@ AQ0JAACYgIYEAABMQEMCAAAmoCEBAAAT/h+uFznOS0RMfgAAAABJRU5ErkJggg==
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -1015,7 +1008,7 @@ Uzawa-type MultiGrid Preconditioned PCG
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -1580,7 +1573,7 @@ A1GRXUdTutbjAAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -2047,8 +2040,7 @@ IAEApEAgAQCkQCABAKRAIAEApPD/YwHzNYOXsgEAAAAASUVORK5CYII=
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Pure-Neumann-boundary-condition">Pure Neumann boundary condition<a class="anchor-link" href="#Pure-Neumann-boundary-condition">&#182;</a></h3><p>In mixed formulation，the Neumann boundary condition for $d\nabla u$ becomes the Dirichlet boundary condiiton for $\sigma$. The space for $u$ is $L^2_0$ and thus one dof should be removed to have a non-singular system.</p>
 
@@ -2066,7 +2058,7 @@ IAEApEAgAQCkQCABAKRAIAEApPD/YwHzNYOXsgEAAAAASUVORK5CYII=
 <span class="n">mfemPoisson</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="n">pde</span><span class="p">,</span><span class="n">option</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -2076,7 +2068,7 @@ IAEApEAgAQCkQCABAKRAIAEApPD/YwHzNYOXsgEAAAAASUVORK5CYII=
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -2110,7 +2102,7 @@ Triangular Preconditioner Preconditioned GMRES
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -2639,8 +2631,7 @@ BABTgUFOJZCQAAAAEAKcQwIAAEAIkJAAAAAQAiQkAAAAhPD/R7LqtZ0TnikAAAAASUVORK5CYII=
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Pure-Dirichlet-boundary-condition">Pure Dirichlet boundary condition<a class="anchor-link" href="#Pure-Dirichlet-boundary-condition">&#182;</a></h3>
 </div>
@@ -2656,7 +2647,7 @@ BABTgUFOJZCQAAAAEAKcQwIAAEAIkJAAAAAQAiQkAAAAhPD/R7LqtZ0TnikAAAAASUVORK5CYII=
 <span class="n">mfemPoisson</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="n">pde</span><span class="p">,</span><span class="n">option</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -2666,7 +2657,7 @@ BABTgUFOJZCQAAAAEAKcQwIAAEAIkJAAAAAQAiQkAAAAhPD/R7LqtZ0TnikAAAAASUVORK5CYII=
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -2700,7 +2691,7 @@ Triangular Preconditioner Preconditioned GMRES
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -3262,8 +3253,7 @@ V8FGLicYkBBCCIkC3kNCCCEkChiQEEIIiQIGJIQQQqLw/8FhAMeZmv6cAAAAAElFTkSuQmCC
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h2><p>The optimal rates of convergence for $u$ and $\sigma$ are observed, namely, 1st order for L2 norm of u and H(div) norm of $\sigma$. The 2nd order convergent rates between two discrete functions $\|u_I - u_h\|$ is known as superconvergence. Compare with RT0, the L2 norm of $\sigma$ is 2nd order.</p>
 <p>Triangular preconditioned GMRES (the default solver) and Uzawa preconditioned CG converges uniformly in all cases. Traingular preconditioner is two times faster than PCG although GMRES is used and iteration steps are doubled.</p>

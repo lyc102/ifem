@@ -63,13 +63,13 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="TMAC-for-Stokes-Equations">TMAC for Stokes Equations<a class="anchor-link" href="#TMAC-for-Stokes-Equations">&#182;</a></h2><p>This example is to show the rate of convergence of RT0-P0 finite element approximation of the Stokes equations</p>
-$$-{\rm grad\, div}\, u + {\rm curl\, rot}\, u + {\rm grad}\, p  = f \quad div u    = 0  \quad  \text{ in } \quad \Omega,$$<p>with the Dirichlet boundary condition:</p>
+$$- \Delta u + {\rm grad}\, p  = f \quad div u    = 0  \quad  \text{ in } \quad \Omega,$$<p>with the Dirichlet boundary condition:</p>
 $$u \cdot t    = g_t   \quad  u \cdot n   = g_n   \text{ in }\;  \Gamma.$$<p></p>
-<p>In the error table, $(u_h,p_h)$ is the RT0-P0 approximation of velocity and
-pressure. $u_I$ is the canonical edge interpolant of RT0 element and $p_I$ is
-the interpolant of p at the barycenter of each triangle. $w = {\rm rot} u$ is the
-vorticity, $w_h = {\rm rot}_hu_h$ is the numerical approximation and $w_I$ is the
-Lagrange interpolation of $w$ in P1 finite element space.</p>
+<p>The bilinear form used in the discretization is not the standard one for Laplace operator but Hodge Laplace $-\Delta u = {\rm grad\, div}\, u + {\rm curl\, rot} u$</p>
+\begin{align}
+({\rm rot}_h u_h, {\rm rot}_h v_h) +({\rm div} u_h, {\rm div} v_h).
+\end{align}<p>The quantity $w_h = {\rm rot}_h u_h$ is an approximation of vorticity $w = {\rm rot} u$. Mass lumping is introduced in the computation of $w_h$ so that the formulation only involves $u_h$ and $p_h$.</p>
+<p>In the error table, $(u_h,p_h)$ is the RT0-P0 approximation of velocity and pressure. $u_I$ is the canonical edge interpolant of RT0 element and $p_I$ is the interpolant of p at the barycenter of each triangle. $w = {\rm rot} u$ is the vorticity, $w_h = {\rm rot}_hu_h$ is the numerical approximation and $w_I$ is the Lagrange interpolation of $w$ in P1 finite element space.</p>
 <p><strong>References</strong>:</p>
 <ul>
 <li><a href="http://www.math.uci.edu/~chenlong/226/FEMStokes.pdf">Finite Element Methods For Stokes Equations</a></li>
@@ -87,6 +87,22 @@ Lagrange interpolation of $w$ in P1 finite element space.</p>
 <p>See also</p>
 
 <pre><code>  StokesBDM1bfemrate    </code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="(RT0,P0,P1)-Element">(RT0,P0,P1) Element<a class="anchor-link" href="#(RT0,P0,P1)-Element">&#182;</a></h2><p>The velocity is RT0 element and the pressure is P0 element. The vorticity is P1 element.</p>
+<p>We list the basis for RT0 below and refer to <a href="PoissonRT0mfemrate.html">PoissonRT0femrate</a> for data structure.</p>
+<h3 id="Local-bases-of-RT0-element">Local bases of RT0 element<a class="anchor-link" href="#Local-bases-of-RT0-element">&#182;</a></h3><p>Suppose <code>[i,j]</code> is the k-th edge. The two dimensional curl is a rotated graident defined as $\nabla^{\bot} f = (-\partial_y f, \partial _x f).$ The basis of this edge along with its divergence are given by</p>
+$$ \phi_k = \lambda_i \nabla^{\bot} \lambda_j - \lambda_j \nabla^{\bot} \lambda_i. $$<p>Inside one triangular, the 3 bases corresponding to 3 local edges <code>[2 3; 1 3; 1 2]</code> are:</p>
+$$ \phi_1 = \lambda_2 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_2. $$<p></p>
+$$ \phi_2 = \lambda_1 \nabla^{\bot} \lambda_3 - \lambda_3 \nabla^{\bot} \lambda_1. $$$$ \phi_3 = \lambda_1 \nabla^{\bot} \lambda_2 - \lambda_2 \nabla^{\bot} \lambda_1. $$<p>The 3 dual bases are the line integral over orientated edges</p>
+$$l_i(u) = \int_{e_i} u \cdot n_i \, ds,$$<p>where $n_i = t_i^{\bot}$ is the rotation of the unit tangential vector of $e_i$ by $90^{\deg}$ counterclockwise.</p>
+<p>It is straightforward to verify the "orthogonality":
+$$l_i(\phi_j) = \delta_{ij}.$$</p>
 
 </div>
 </div>
@@ -376,14 +392,26 @@ Table: CPU time
 <h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h2><p>The rate of convergence of RT0-P0 depends crucially on the symmetry of
 the grids. For general unstructured grids, only half order for vorticity
 (consequently velocity in the energy norm) and pressure can be obtained. When the grid satisfies
-the approximately parallegram property, optimal first order is recovered.
-Furthermore for zero Dirichlet boundary condition, even second order for
-vorticity and pressure can be observed.</p>
+the approximately parallegram property, optimal first order is recovered.</p>
 <p>Change the method to BDM1b-P0 will lead to optimal order of
-convergence on general unstructured grids.</p>
+convergence on general unstructured grids. See <a href="StokesBDM1bfemrate.html">StokesBDM1bfemrate</a>.</p>
+<p>Multigrid solver based on DGS smoother converges uniformly.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
     </div>
   </div>
