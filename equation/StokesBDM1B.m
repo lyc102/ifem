@@ -152,7 +152,6 @@ switch solver
     case 'mg'
         option.solver  = 'WCYCLE';
         [u(ufreeDof),p,info] = mgstokesBDM(A0,B0,f0,g0,u,p,node,elemunSort,ufreeDof,option);
-%         [u(ufreeDof),p,info] = mgstokesRT0old(A0,B0,f0,g0,u,p,node,elemunSort,ufreeDof,option);
     case 'asmg'
         [u(ufreeDof),p,info] = asmgstokes(A0,B0,f0,g0,u,p,node,elemunSort,bdFlag,ufreeDof,option);                              
 end

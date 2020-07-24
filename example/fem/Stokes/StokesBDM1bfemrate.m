@@ -43,22 +43,20 @@ option.L0 = 1;
 option.elemType = 'BDM1B-P0';
 option.maxIt = 4;
 option.solver = 'mg';
+option.printlevel = 1;
 option.refType = 'bisect';
+option.viewanglep = [-21,88];
+option.viewanglew = [31,88];
 % fem
 femStokesHdiv(mesh,pde,option);
 %% 
-% For bisection grids, only half order for vorticity and pressure. It is
-% interesting to note that the energy norm $||u_I - u_h||_1$ doesn't converge
-% due to the loss of consistency $|| rot u - rot_h u_I||$ for the standard
-% edge interpolant. Also no convergence of maximum norm for pressure at the
-% barycenter.
 
 %% Example 2: Unit square with regular grids. Non-zero Dirichlet condition.
 clear variables; 
 close all;
 % setup
 [node,elem] = squaremesh([0,1,0,1],0.5);
-pde = Stokesdata1;  % non-zero Dirichlet boundary condition
+pde = Stokesdata1; % zero Dirichlet boundary condition
 bdFlag = setboundary(node,elem,'Dirichlet');
 mesh = struct('node',node,'elem',elem,'bdFlag',bdFlag);
 % option
@@ -68,11 +66,7 @@ option.maxIt = 4;
 option.solver = 'mg';
 option.printlevel = 1;
 option.refType = 'red';
+option.viewanglep = [-21,88];
+option.viewanglew = [31,88];
 % fem
 femStokesHdiv(mesh,pde,option);
-%%
-% The same pde data is used but the refinement rule is changed to red
-% refinement. For red refinement grids and zero Dirichlet boundary
-% condition, second order convergence for vorticity, and discrete pressure
-% error (i.e. comparing to the interpolant p_I) is observed. The energy
-% norm of u_I - u_h is 1.5 order.

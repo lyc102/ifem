@@ -168,9 +168,11 @@ Some subroutines are not tested yet and thus move to ifem_local. Removed Maxwell
 
 ## Maxwell2 Neumann boundary condition
 
+*July 23, 2020* 
+
 In the boundary surface integral, check the ordering
 
-```
+```matlab
             pidx = face(face2locEdge(s,1))< face(face2locEdge(s,2));
             % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
             % lambda_i is associated to the local index of the face [1 2 3]
@@ -182,28 +184,57 @@ In the boundary surface integral, check the ordering
             %           s(2) -- k(1),  s(1) -- k(2)
             if pidx
                 phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      - lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
+lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
             else
                 phi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
-                      - lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
+lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
             end
 
 ```
 
 But if all faces and edges are ascend ordering, then no need to check. 
 
-```
-    tetLocEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4]; % edge of a tetrahedral [1 2 3 4]
-    face2locEdge = [2 3; 1 3; 1 2]; % edge of the face [1 2 3]
+```matlab
+tetLocEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4]; % edge of a tetrahedral [1 2 3 4]
+face2locEdge = [2 3; 1 3; 1 2]; % edge of the face [1 2 3]
 ```
 
 Note that in `face2locEdge`, the second edge is `[1 3]` not `[3 1]`
 
 And also make sure when call `bdfaceintegral`, the input face is ascend ordering. 
 
-```
+```matlab
     face = [2 3 4]; face2locdof = [6 5 4];
     if ~isempty(isBdElem)
         bdb = bdfaceintegral(isBdElem,face,face2locdof);
 ```
+
+
+
+## StokesBDM1bfemrate
+
+*July 24, 2020 11 - 12:49 PM* 
+
+Spend 1.5 hour to correct a typo. Record the debug procedure. 
+
+1. The rate is not optimal and oscillation is observed. So it is wrong. Find backup 2019-06-05 which works well. So run two sessions and try to figure out the bug.
+2. Change the solver to `direct` and make sure it is not caused by solver.
+3. Compare the final linear systems and found the matrix is different. 
+4. Put a breakpoint after several components of the big matrix is assembled and compare each component. Find the matrix R is different.
+5. Check components involved in the assembling of R and found `Meb` from `getmassmatvec` is wrong.
+6. `diff` two files and find the assembling is simplified. Copy back, then it works.
+7. Then check more carefuly why the simplification is wrong and finally find a typo in the simplification
+
+```matlab
+	+ DiDj(:,i1,i1)...
+	+ DiDj(:,i1,i2));
+```
+
+line 151: the last line should be `DiDj(:,i1,i2)` but it must be copied from above line and still `DiDj(:,i1,i1)`. 
+
+What is the lesson?           
+
+**Test after any change.** 
+
+Since `BDM1B`  case is  used in `StokesBDM1b`,  I should test when I change the code `getmassmatvec` . Then it will save the time to trace back the bug. 
 
