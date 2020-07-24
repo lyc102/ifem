@@ -1,4 +1,4 @@
-function [err,time,solver,eqn] = femStokesHdiv(mesh,pde,option,varargin)
+function [soln,eqn,err,time,solver] = femStokesHdiv(mesh,pde,option,varargin)
 %% FEMSTOKESHDIV solve Stokes equation by H(div) finite element methods
 %
 %   FEMSTOKESHDIV computes approximations to the Stokes equation on a
@@ -146,11 +146,39 @@ for k = 1:maxIt
     % plot 
     N(k) = length(uh) + length(ph);
     h(k) = 1./(sqrt(size(node,1))-1);
-    if option.plotflag && length(ph) < 3e4 % show mesh and solution for small size
+    if ~isfield(option,'contour')
+        option.contour = 0;
+    end
+    if option.contour % plot contour         
+        tricontour(node,elem,wh,10);
+    end
+    if option.plotflag && length(ph) < 5e4 % show mesh and solution for small size
+       if isfield(option,'viewangleu')
+           viewangleu = option.viewangleu;
+       else
+           viewangleu = [25, 87];
+       end
+       if isfield(option,'viewanglep')
+           viewanglep = option.viewanglep;
+       else
+           viewanglep = [-22, 88];
+       end
+       if isfield(option,'viewanglew')
+           viewanglew = option.viewanglew;
+       else
+           viewanglew = [-22, 88];
+       end
        figure(1); 
-       showresult(node,elem,ph); pause(0.1);
-       figure(2); 
-       showsolutionRT(node,elem,uh); pause(0.1);
+       showsolutionRT(node,elem,uh,viewangleu);
+       title('Velocity')
+       figure(2);
+       subplot(1,2,1);
+       showsolution(node,elem,ph,viewanglep);
+       title('Pressure')
+       subplot(1,2,2);
+       showsolution(node,elem,wh,viewanglew);
+%        showsolution(node,elem,soln.psi,viewanglew);
+       title('Vorticity')       
     end
     if N(k) > maxN
         break;
@@ -166,14 +194,16 @@ if option.rateflag
     showrateh3(h(1:k),erruL2(1:k),2,'k-+','|| u-u_h||',...
                h(1:k),erruIuhH1(1:k),2,'r-*','|| u_I-u_h||_1',...
                h(1:k),erruInf(1:k),2,'b-*','|| u_I-u_h||_{\infty}');
+    title('Error of velocity')
     subplot(1,3,2)
-    showrateh4(h(1:k),errpL2(1:k),2,'k-+', '|| p - p_h||',...
+    showrateh3(h(1:k),errpL2(1:k),2,'k-+', '|| p - p_h||',...
                h(1:k),errpL2re(1:k),2,'g-+','|| p- p_h^r||',...
-               h(1:k),errpIphL2(1:k),2,'r-+','|| p_I - p_h||',...
-               h(1:k),errpInf(1:k),2,'b-+','|| p_I - p_h||_{\infty}');
+               h(1:k),errpIphL2(1:k),2,'r-+','|| p_I - p_h||');
+    title('Error of pressure')           
     subplot(1,3,3)
     showrateh2(h(1:k),errwL2(1:k),2,'k-+','|| w - w_h||',...
                h(1:k),errwIwh(1:k),2,'r-+','|| w_I - w_h||');
+    title('Error of vorticity')                     
 end
 
 % Output

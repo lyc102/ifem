@@ -300,7 +300,7 @@ else
 %     u0 = edgeinterpolate(pde.g_D,node,edge);
     u0 = u;
     option.x0 = u0;
-    [u,flag,itStep,err,time] = mgMaxwell(bigAD,f,AP,BP,node,elem,edge,[],isBdEdge,option);
+    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elem,edge,[],isBdEdge,option);
 end
 
 %% Output

@@ -54,13 +54,13 @@ n = ceil(sqrt(mesh.size/4^L)); % number of nodes in one direction
 if strcmp(mesh.type,'adaptive')
     switch lower(mesh.shape)
         case 'square'
-            load squareadaptivemesh;
+            load('squareadaptivemesh','node','elem');
         case 'lshape'
-            load Lshapeadaptivemesh;
+            load('Lshapeadaptivemesh','node','elem');
         case 'circle'
-            load circleadaptivemesh
+            load('circleadaptivemesh','node','elem');
         case 'lake'
-            load lakemesh
+            load('lakemesh','node','elem');
     end
 else
     switch lower(mesh.shape)
@@ -72,7 +72,7 @@ else
         case 'circle'
             [node,elem] = circlemesh(0,0,1,3/n);
         case 'lake'
-            load lakemesh
+            load('lakemesh','node','elem');
     end    
 end
 bdFlag = setboundary(node,elem,'Dirichlet');

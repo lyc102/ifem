@@ -134,12 +134,23 @@ if length(pDof)~=Np % p is unique up to a constant
     p = p - c;
 end
 w = R*u + utbd./vecMv;
-
+psi = zeros(N,1);
+% compute streamline function
+if isfield(option,'stream') && option.stream
+    [As,Ms] = assemblematrix(node,elem);
+    [fixedNode,bdEdge,isBdNode] = findboundary(elem,bdFlag);
+    freeNode = ~isBdNode;
+    rhs = Ms*w;
+    streamoption.freeDof = freeNode;
+    psi(freeNode) = mg(As(freeNode,freeNode),rhs(freeNode),elemunSort,streamoption);
+    % assume u\cdot n = 0. 
+end
+    
 %% Output information
 info.assembleTime = assembleTime;
 
 %% Output
-soln = struct('u',u,'p',p,'w',w);
+soln = struct('u',u,'p',p,'w',w,'psi',psi);
 eqn = struct('A',A0,'B',B0,'Me',Me,'Mv',Mv,'f',f0,'g',g0,...
              'edge',edge,'ufreeDof',ufreeDof,'pDof',pDof);
 info.assembleTime = assembleTime;
