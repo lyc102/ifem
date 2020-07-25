@@ -11,23 +11,42 @@ function err = getL2error(node,elem,uexact,uh,quadOrder,varargin)
 %    - P1 element i.e. continuous and piecewise linear
 %    - CR element i.e. piecewise linear and continuous at mid pts of edges
 %    - P2 element i.e. continuous and piecewise quadratic
+%    - P3 element i.e. continuous and piecewise cubic
 %    - P1+P0 element which could happen in the fluid application
 %
 %  err = getL2error(node,elem,@uexact,uh,quadOrder) computes error
-%  using the quadrature rule with order quadOrder (up to 5). The default
-%  order is 3.
+%  using the quadrature rule with order quadOrder (up to 9). The default
+%  order is 2 + degree.
 %   
-%  Example: compute L2 error of piecewise linear interpolation
+%  Example: compute L2 error of nodal interpolation of linear element
 %
 %     [node,elem] = squaremesh([0,1,0,1],0.25);
+%     exactu = inline('sin(pi*pxy(:,1)).*sin(pi*pxy(:,2))','pxy');
+%     err = zeros(4,1); h = zeros(4,1);
 %     for k = 1:4
-%         exactu = inline('sin(pi*pxy(:,1)).*sin(pi*pxy(:,2))','pxy');
-%         uI = exactu(node);
-%         N(k) = size(node,1);
-%         err(k) = getL2error(node,elem,exactu,uI);
 %         [node,elem] = uniformrefine(node,elem);
+%         uI = exactu(node);
+%         h(k) = 1/sqrt(size(elem,1));
+%         err(k) = getL2error(node,elem,exactu,uI);
 %     end
-%     showrate(N,err);
+%     showrateh(h,err);
+%
+%  Vector Lagrange elements are also supported which is useful for Stokes
+%  and elasticity equations.
+% 
+% Example: compute L2 error of vector P2 interpolation.
+%
+%     pde = Stokesdata2;
+%     [node,elem] = squaremesh([0,1,0,1],0.25);
+%     err = zeros(4,1); h = zeros(4,1);
+%     for k = 1:4
+%         [node,elem] = uniformrefine(node,elem);
+%         [elem2edge,edge] = dofedge(elem);
+%         uI = pde.exactu([node; (node(edge(:,1),:)+node(edge(:,2),:))/2]);
+%         h(k) = 1/sqrt(size(elem,1));
+%         err(k) = getL2error(node,elem,pde.exactu,uI);
+%     end
+%     showrateh(h,err);
 %
 % The cubic element is added by Jie Zhou.
 %
@@ -36,7 +55,7 @@ function err = getL2error(node,elem,uexact,uh,quadOrder,varargin)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 %% Number of vertices, elements, edges, and degrees of freedom
-Nu = length(uh);    N = size(node,1);   NT = size(elem,1);   
+Nu = size(uh,1);    N = size(node,1);   NT = size(elem,1);   
 % Euler formula N-NE+NT = c % rough estimateus using Euler formula
 NE = N + NT - 1;    NP2 = N + NE;   NP3 = N + 2*NE + NT;  
 if Nu > N+NT-5
@@ -67,7 +86,8 @@ if ~exist('quadOrder','var') || isempty(quadOrder)
 end
 
 %% compute L2 error element-wise using quadrature rule with order quadOrder
-err = zeros(NT,1);
+d = size(uh,2);  % uh could be a vector function
+err = zeros(NT,d);
 [lambda,weight] = quadpts(quadOrder);
 % basis function at quadrature points
 switch Nu
@@ -109,41 +129,41 @@ for p = 1:nQuad
         case NT   % P0 piecewise constant function
             uhp = uh;
         case N    % P1 piecewise linear function
-            uhp = uh(elem(:,1))*phi(p,1) + ...
-                  uh(elem(:,2))*phi(p,2) + ...
-                  uh(elem(:,3))*phi(p,3);
+            uhp = uh(elem(:,1),:)*phi(p,1) + ...
+                  uh(elem(:,2),:)*phi(p,2) + ...
+                  uh(elem(:,3),:)*phi(p,3);
         case N+NT % P1+P0
-            uhp = uh(elem(:,1))*phi(p,1) + ...
-                  uh(elem(:,2))*phi(p,2) + ...
-                  uh(elem(:,3))*phi(p,3);
+            uhp = uh(elem(:,1),:)*phi(p,1) + ...
+                  uh(elem(:,2),:)*phi(p,2) + ...
+                  uh(elem(:,3),:)*phi(p,3);
             uhp = uhp + uh(N+1:end);
         case NE  % CR nonconforming P1 element
-            uhp = uh(elem2edge(:,1))*phi(p,1) + ...
-                  uh(elem2edge(:,2))*phi(p,2) + ...
-                  uh(elem2edge(:,3))*phi(p,3);
+            uhp = uh(elem2edge(:,1),:)*phi(p,1) + ...
+                  uh(elem2edge(:,2),:)*phi(p,2) + ...
+                  uh(elem2edge(:,3),:)*phi(p,3);
         case NP2 % P2 piecewise quadratic function
-            uhp = uh(elem2dof(:,1)).*phi(p,1) + ...
-                  uh(elem2dof(:,2)).*phi(p,2) + ...
-                  uh(elem2dof(:,3)).*phi(p,3) + ...        
-                  uh(elem2dof(:,4)).*phi(p,4) + ...
-                  uh(elem2dof(:,5)).*phi(p,5) + ...
-                  uh(elem2dof(:,6)).*phi(p,6);
+            uhp = uh(elem2dof(:,1),:)*phi(p,1) + ...
+                  uh(elem2dof(:,2),:)*phi(p,2) + ...
+                  uh(elem2dof(:,3),:)*phi(p,3) + ...        
+                  uh(elem2dof(:,4),:)*phi(p,4) + ...
+                  uh(elem2dof(:,5),:)*phi(p,5) + ...
+                  uh(elem2dof(:,6),:)*phi(p,6);
         case NP3
-            uhp = uh(elem2dof(:,1)).*phi(p,1) + ...
-                  uh(elem2dof(:,2)).*phi(p,2) + ...
-                  uh(elem2dof(:,3)).*phi(p,3) + ...
-                  uh(elem2dof(:,4)).*phi(p,4) + ...
-                  uh(elem2dof(:,5)).*phi(p,5) + ...
-                  uh(elem2dof(:,6)).*phi(p,6) + ...
-                  uh(elem2dof(:,7)).*phi(p,7) + ...
-                  uh(elem2dof(:,8)).*phi(p,8) + ...
-                  uh(elem2dof(:,9)).*phi(p,9) + ...
-                  uh(elem2dof(:,10)).*phi(p,10);
+            uhp = uh(elem2dof(:,1),:)*phi(p,1) + ...
+                  uh(elem2dof(:,2),:)*phi(p,2) + ...
+                  uh(elem2dof(:,3),:)*phi(p,3) + ...
+                  uh(elem2dof(:,4),:)*phi(p,4) + ...
+                  uh(elem2dof(:,5),:)*phi(p,5) + ...
+                  uh(elem2dof(:,6),:)*phi(p,6) + ...
+                  uh(elem2dof(:,7),:)*phi(p,7) + ...
+                  uh(elem2dof(:,8),:)*phi(p,8) + ...
+                  uh(elem2dof(:,9),:)*phi(p,9) + ...
+                  uh(elem2dof(:,10),:)*phi(p,10);
         case NE+NT  % weak Galerkin element
 %             uhp = uh(1:NT); % only count the interior part
-            uhp = uh(elem2edge(:,1))*phi(p,1) + ...
-                  uh(elem2edge(:,2))*phi(p,2) + ...
-                  uh(elem2edge(:,3))*phi(p,3);
+            uhp = uh(elem2edge(:,1),:)*phi(p,1) + ...
+                  uh(elem2edge(:,2),:)*phi(p,2) + ...
+                  uh(elem2edge(:,3),:)*phi(p,3);
     end
     % quadrature points in the x-y coordinate
     pxy = lambda(p,1)*node(elem(:,1),:) ...
@@ -151,11 +171,13 @@ for p = 1:nQuad
         + lambda(p,3)*node(elem(:,3),:);
     err = err + weight(p)*(uexact(pxy) - uhp).^2;
 end
+
 %% Modification
 % area of triangles
 ve2 = node(elem(:,1),:)-node(elem(:,3),:);
 ve3 = node(elem(:,2),:)-node(elem(:,1),:);
 area = 0.5*abs(-ve3(:,1).*ve2(:,2)+ve3(:,2).*ve2(:,1));
-err = area.*err;
+err = area.*sum(err,2);
 err(isnan(err)) = 0; % singular values, i.e. uexact(p) = infty, are excluded
+
 err = sqrt(sum(err));

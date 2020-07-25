@@ -20,10 +20,11 @@ end
 if (nargin<=3) 
     opt = '-*';
 end
+if ~exist('str','var')
+    str = 'Error';
+end    
 r = -showrate(N,err,k,opt);
-if exist('str','var')
-    h_legend = legend(str,['C_1h^{' num2str(r,2) '}'],'LOCATION','Best');
-    set(h_legend,'FontSize', 14);
-end
+h_legend = legend(str,['C_1h^{' num2str(r,2) '}'],'LOCATION','Best');
+set(h_legend,'FontSize', 14);
 xlabel('log(1/h)');
 title(['Rate of convergence is Ch^{' num2str(r,2) '}'],'FontSize', 14);

@@ -1,4 +1,4 @@
-function [err,time,solver,eqn] = femStokes(mesh,pde,option,varargin)
+function [soln,eqn,err,time,solver] = femStokes(mesh,pde,option,varargin)
 %% FEMSTOKES solve the Stokes equation by various finite element methods
 %
 %   FEMSTOKES computes approximations to the Stokes equation on a
@@ -24,6 +24,10 @@ if ~exist('option','var'), option = []; end
 if ~exist('pde','var')
     pde = Stokesdata1;                          % default data
 end
+% default elemType
+if ~isfield(option,'elemType')
+    option.elemType = 'CRP0';
+end
 
 %% Parameters
 option = femoption(option);
@@ -44,11 +48,12 @@ for k = 1:L0
 end
 
 %% Initialize err
-erruH1 = zeros(maxIt,1); errpL2 = zeros(maxIt,1); 
+erruH1 = zeros(maxIt,1); erruL2 = zeros(maxIt,1); erruInf = zeros(maxIt,1);
+errpL2 = zeros(maxIt,1); errpIphL2 = zeros(maxIt,1);
 errTime = zeros(maxIt,1); solverTime = zeros(maxIt,1); 
 assembleTime = zeros(maxIt,1); meshTime = zeros(maxIt,1); 
 itStep = zeros(maxIt,1);  stopErr = zeros(maxIt,1); flag = zeros(maxIt,1);
-N = zeros(maxIt,1);
+N = zeros(maxIt,1); h = zeros(maxIt,1);
 
 %% Finite Element Method        
 for k = 1:maxIt
@@ -87,13 +92,12 @@ for k = 1:maxIt
     t = cputime;
     uh = soln.u;
     ph = soln.p;
+    % interpolation
     if strcmp(elemType,'P2P0') || strcmp(elemType,'P2P1') || ...
        strcmp(elemType,'isoP2P0') || strcmp(elemType,'isoP2P1')
         uI = pde.exactu([node; (node(eqn.edge(:,1),:)+node(eqn.edge(:,2),:))/2]);
     elseif strcmp(elemType,'CRP0') || strcmp(elemType,'CRP1')
         uI = pde.exactu((node(eqn.edge(:,1),:)+node(eqn.edge(:,2),:))/2);
-%     elseif strcmp(elemType,'Mini')
-%         uI = pde.exactu(node);
     elseif strcmp(elemType,'P1bP1')
         % bubble part won't be taken in the error computation
         Nv = size(node,1); NT = size(elem,1);
@@ -102,6 +106,9 @@ for k = 1:maxIt
         uI([(1:Nv)'; NT+Nv+(1:Nv)']) = u0(:);
     end
     erruH1(k) = sqrt((uh-uI(:))'*eqn.Lap*(uh-uI(:)));
+    if isfield(pde,'exactu')
+        erruL2(k) = getL2error(node,elem,pde.exactu,uh);
+    end
     errpL2(k) = getL2error(node,elem,pde.exactp,ph);
     errTime(k) = cputime - t;
     % record time

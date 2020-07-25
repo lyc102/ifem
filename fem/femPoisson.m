@@ -1,4 +1,4 @@
-function [err,time,solver,eqn] = femPoisson(mesh,pde,option,varargin)
+function [soln,eqn,err,time,solver] = femPoisson(mesh,pde,option,varargin)
 %% FEMPOISSON solve Poisson equation by various finite element methods
 %
 %   FEMPOISSON computes approximations to the Poisson equation on a
