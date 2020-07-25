@@ -63,7 +63,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="TMAC-for-Stokes-Equations">TMAC for Stokes Equations<a class="anchor-link" href="#TMAC-for-Stokes-Equations">&#182;</a></h2><p>This example is to show the rate of convergence of RT0-P0 finite element approximation of the Stokes equations</p>
-$$- \Delta u + {\rm grad}\, p  = f \quad div u    = 0  \quad  \text{ in } \quad \Omega,$$<p>with the Dirichlet boundary condition:</p>
+$$- \Delta u + {\rm grad}\, p  = f \quad {\rm div}\, u    = 0  \quad  \text{ in } \quad \Omega,$$<p>with the Dirichlet boundary condition:</p>
 $$u \cdot t    = g_t   \quad  u \cdot n   = g_n   \text{ in }\;  \Gamma.$$<p></p>
 <p>The bilinear form used in the discretization is not the standard one for Laplace operator but Hodge Laplace $-\Delta u = {\rm grad\, div}\, u + {\rm curl\, rot} u$</p>
 \begin{align}
