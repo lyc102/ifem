@@ -48,7 +48,7 @@ for k = 1:L0
 end
 
 %% Initialize err
-erruH1 = zeros(maxIt,1); erruL2 = zeros(maxIt,1); erruInf = zeros(maxIt,1);
+erruIuhH1 = zeros(maxIt,1); erruL2 = zeros(maxIt,1); erruInf = zeros(maxIt,1);
 errpL2 = zeros(maxIt,1); errpIphL2 = zeros(maxIt,1);
 errTime = zeros(maxIt,1); solverTime = zeros(maxIt,1); 
 assembleTime = zeros(maxIt,1); meshTime = zeros(maxIt,1); 
@@ -92,6 +92,9 @@ for k = 1:maxIt
     t = cputime;
     uh = soln.u;
     ph = soln.p;
+    N(k) = length(uh) + length(ph);
+    h(k) = 1./(sqrt(size(node,1))-1);    
+    Nv = size(node,1); NT = size(elem,1);    
     % interpolation
     if strcmp(elemType,'P2P0') || strcmp(elemType,'P2P1') || ...
        strcmp(elemType,'isoP2P0') || strcmp(elemType,'isoP2P1')
@@ -99,69 +102,114 @@ for k = 1:maxIt
     elseif strcmp(elemType,'CRP0') || strcmp(elemType,'CRP1')
         uI = pde.exactu((node(eqn.edge(:,1),:)+node(eqn.edge(:,2),:))/2);
     elseif strcmp(elemType,'P1bP1')
-        % bubble part won't be taken in the error computation
-        Nv = size(node,1); NT = size(elem,1);
+        % bubble part won't be taken into the error computation
         u0 = pde.exactu(node);
         uI = uh;
         uI([(1:Nv)'; NT+Nv+(1:Nv)']) = u0(:);
     end
-    erruH1(k) = sqrt((uh-uI(:))'*eqn.Lap*(uh-uI(:)));
+    % error for velocity
+    erruIuhH1(k) = sqrt((uh-uI(:))'*eqn.Lap*(uh-uI(:)));
+    erruInf(k) = max(abs(uh-uI(:)));
+    Nu = length(uh);
+    uhvec = reshape(uh,Nu/2,2);
     if isfield(pde,'exactu')
-        erruL2(k) = getL2error(node,elem,pde.exactu,uh);
+        if strcmp(elemType,'P1bP1')
+            uhvec = uhvec(1:Nv,:);
+        end
+        erruL2(k) = getL2error(node,elem,pde.exactu,uhvec);
     end
+    % error for pressure
     errpL2(k) = getL2error(node,elem,pde.exactp,ph);
-    errTime(k) = cputime - t;
+    area = simplexvolume(node,elem);    
+    switch elemType(end-1:end)
+        case 'P0'
+            pI = Lagrangeinterpolate(pde.exactp,node,elem,'P0');
+            errpIphL2(k) = sqrt(sum((pI-ph).^2.*area));
+        case 'P1'
+            pI = Lagrangeinterpolate(pde.exactp,node,elem);
+            M = accumarray([elem(:,1);elem(:,2);elem(:,3)],[area;area;area]/3,[Nv,1]);
+            ep = pI - ph;
+            errpIphL2(k) = sqrt(sum(ep.*(M.*ep)));            
+    end
     % record time
+    errTime(k) = cputime - t;
     solverTime(k) = info.solverTime;
     assembleTime(k) = info.assembleTime;
     if option.printlevel>1
         fprintf('Time to compute the error %4.2g s \n H1 err %4.2g    L2err %4.2g \n',...
-            errTime(k),erruH1(k), errpL2(k));
+                errTime(k),erruIuhH1(k), errpL2(k));
     end
     % record solver information
     itStep(k) = info.itStep;
-%    stopErr(k) = info.stopErr;
-%    flag(k) = info.flag;
-    % plot
-    N(k) = size(node,1);
-    if option.plotflag && N(k) < 2e3 % show mesh and solution for small size
-        if length(ph) == size(elem,1) % piecewise constant function
-            p1 = recoverP02P1(node,elem,ph); % recovery a linear velocity
-        elseif length(ph) == size(node,1)
-           p1 = ph;
-        end
-        figure(1);  showresult(node,elem,p1);
+    stopErr(k) = info.stopErr;
+    flag(k) = info.flag;
+    % plot 
+    if ~isfield(option,'contour')
+        option.contour = 0;
+    end
+    if option.contour % plot contour refine it later        
+        tricontour(node,elem,uh,10);
+    end
+    if option.plotflag && length(ph) < 5e4 % show mesh and solution for small size
+       if isfield(option,'viewangleu')
+           viewangleu = option.viewangleu;
+       else
+           viewangleu = [25, 87];
+       end
+       if isfield(option,'viewanglep')
+           viewanglep = option.viewanglep;
+       else
+           viewanglep = [-22, 88];
+       end
+       figure(1); 
+       subplot(1,3,1); showsolution(node,elem,uhvec(:,1),viewangleu);        
+       title('Velocity u')
+       subplot(1,3,2); showsolution(node,elem,uhvec(:,2),viewangleu);
+       title('Velocity v')
+       subplot(1,3,3);
+       showsolution(node,elem,ph,viewanglep);
+       title('Pressure')
     end
     if N(k) > maxN
         break;
     end
 end
-h = 1./(sqrt(N(1:k))-1);
 
 %% Plot convergence rates
 if option.rateflag
     figure;
     set(gcf,'Units','normal'); 
-    set(gcf,'Position',[0.25,0.25,0.55,0.4]);
+    set(gcf,'Position',[0.25,0.25,0.5,0.40]);
     subplot(1,2,1)
-    showrateh(h,erruH1(1:k),1,'k-+','|u_I-u_h|_1');
+    showrateh3(h(1:k),erruIuhH1(1:k),2,'r-*','| u_I-u_h |_1',...
+               h(1:k),erruL2(1:k),2,'k-+','|| u-u_h ||',...
+               h(1:k),erruInf(1:k),2,'b-*','|| u_I-u_h ||_{\infty}');
+    title('Error of velocity')
     subplot(1,2,2)
-    showrateh(h,errpL2(1:k),1,'m-+','|| p-p_h||');
+    showrateh2(h(1:k),errpL2(1:k),2,'k-+', '|| p - p_h ||',...
+               h(1:k),errpIphL2(1:k),2,'r-+','|| p_I - p_h ||');
+    title('Error of pressure')           
 end
 
 %% Output
-err = struct('h',h,'N',N,'uH1',erruH1(1:k),'pL2',errpL2(1:k));          
+err = struct('h',h(1:k),'N',N,'uL2',erruL2(1:k),'uInf',erruInf,'uIuhH1',erruIuhH1(1:k),...
+             'pL2',errpL2(1:k),'pIphL2',errpIphL2(1:k));
 time = struct('N',N,'err',errTime(1:k),'solver',solverTime(1:k), ...
               'assemble',assembleTime(1:k),'mesh',meshTime(1:k));
 solver = struct('N',N(1:k),'itStep',itStep(1:k),'time',solverTime(1:k),...
                 'stopErr',stopErr(1:k),'flag',flag(1:k));
             
-%% Display error
+%% Display error and time
 disp('Table: Error')
-colname = {'#nodes'     '|u_I-u_h|_1'      '||p-p_h||'};
-disptable(colname,err.N,[],err.uH1,'%0.5e',err.pL2,'%0.5e');
+% error of u
+colname = {'#Dof','h','|u_I-u_h|_1','||u-u_h||','||u_I-u_h||_{max}'};
+disptable(colname,err.N,[],err.h,'%0.2e',err.uIuhH1,'%0.5e',err.uL2,'%0.5e',err.uInf,'%0.5e');
+% error of p
+colname = {'#Dof','h','||p_I-p_h||','||p-p_h||'};
+disptable(colname,err.N,[],err.h,'%0.2e',err.pIphL2,'%0.5e',err.pL2,'%0.5e');
 
 disp('Table: CPU time')
 colname = {'#Dof','Assemble','Solve','Error','Mesh'};
 disptable(colname,time.N,[],time.assemble,'%0.2e',time.solver,'%0.2e',...
                   time.err,'%0.2e',time.mesh,'%0.2e');
+              

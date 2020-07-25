@@ -26,7 +26,7 @@ bdFlag = setboundary(node,elem,'Dirichlet');
 mesh = struct('node',node,'elem',elem,'bdFlag',bdFlag);
 figure; showmesh(node,elem); pause(0.5);
 % pde
-pde = Stokesdata2; 
+pde = Stokesdata1; 
 % options
 option.L0 = 0;
 option.maxIt = 4;
@@ -54,7 +54,7 @@ option.elemType = 'isoP2P1';
 femStokes(mesh,pde,option);
 
 %% P1b-P1 element
-disp('P1b-P0')
+disp('P1b-P1')
 option.elemType = 'P1bP1';
 option.solver = 'asmg';
 femStokes(mesh,pde,option);
@@ -62,7 +62,4 @@ femStokes(mesh,pde,option);
 %% P2-P1 element
 disp('P2-P1')
 option.elemType = 'P2P1';
-% option.smoothingStep = 3;
-% option.smootherbarSp   = 'VCYCLE';
-% option.smootherbarSpPara = 0.75;
 femStokes(mesh,pde,option);

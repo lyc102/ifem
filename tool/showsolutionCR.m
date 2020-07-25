@@ -15,7 +15,7 @@ function showsolutionCR(node,elem,u,varargin)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
 NT = size(elem,1);
-%% Generate a big triangulation
+%% Generate a big and discontinuous triangulation
 elemnew = reshape(1:3*NT,NT,3);
 nodenew = node(elem(:),:);
 

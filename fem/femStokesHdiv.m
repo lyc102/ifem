@@ -85,6 +85,8 @@ for k = 1:maxIt
     uh = soln.u;
     ph = soln.p;
     wh = soln.w;
+    N(k) = length(uh) + length(ph);
+    h(k) = 1./(sqrt(size(node,1))-1);
     % ================== error for velocity ==================
     if isfield(pde,'exactu') 
         switch elemType
@@ -144,8 +146,6 @@ for k = 1:maxIt
     stopErr(k) = info.stopErr;
     flag(k) = info.flag;
     % plot 
-    N(k) = length(uh) + length(ph);
-    h(k) = 1./(sqrt(size(node,1))-1);
     if ~isfield(option,'contour')
         option.contour = 0;
     end
@@ -191,9 +191,9 @@ if option.rateflag
     set(gcf,'Units','normal'); 
     set(gcf,'Position',[0.25,0.25,0.80,0.40]);
     subplot(1,3,1)
-    showrateh3(h(1:k),erruL2(1:k),2,'k-+','|| u-u_h||',...
-               h(1:k),erruIuhH1(1:k),2,'r-*','|| u_I-u_h||_1',...
-               h(1:k),erruInf(1:k),2,'b-*','|| u_I-u_h||_{\infty}');
+    showrateh3(h(1:k),erruIuhH1(1:k),2,'r-*','| u_I-u_h |_1',...
+               h(1:k),erruL2(1:k),2,'k-+','|| u-u_h ||',...
+               h(1:k),erruInf(1:k),2,'b-*','|| u_I-u_h ||_{\infty}');
     title('Error of velocity')
     subplot(1,3,2)
     showrateh3(h(1:k),errpL2(1:k),2,'k-+', '|| p - p_h||',...
@@ -218,7 +218,7 @@ solver = struct('N',N(1:k),'itStep',itStep(1:k),'time',solverTime(1:k),...
 %% Display error and time
 disp('Table: Error')
 % error of u
-colname = {'#Dof','h','||u_I-u_h||_1','||u-u_h||','||u_I-u_h||_{max}'};
+colname = {'#Dof','h','|u_I-u_h|_1','||u-u_h||','||u_I-u_h||_{max}'};
 disptable(colname,err.N,[],err.h,'%0.2e',err.uIuhH1,'%0.5e',err.uL2,'%0.5e',err.uInf,'%0.5e');
 % error of p
 colname = {'#Dof','h','||p_I-p_h||','||p-p_h||','||p_I-p_h||_{max}','||p_I - p^r_h||'};
