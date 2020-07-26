@@ -238,3 +238,36 @@ What is the lesson?
 
 Since `BDM1B`  case is  used in `StokesBDM1b`,  I should test when I change the code `getmassmatvec` . Then it will save the time to trace back the bug. 
 
+
+
+## Maxwell1saddle
+
+The non-trivial part is to compute $\nabla p$ for $p\in P^2(\mathbb R^3)$. The `grad` matrix is for $P^1$ element which can be computed by the incidence matrix. For quadratic bubble functions, $4\lambda_i\lambda_j$ is map to $4\psi$. So in the hierachical basis, the matrix is a block diagonal 
+$$
+\begin{pmatrix}
+{\rm grad} & 0 \\
+0 & 4 I \\
+\end{pmatrix}.
+$$
+Pretty easy. 
+
+Now we need to express the quadratic nodal basis in terms of hierarchical basis. The nodal basis at vertex $i$ is $\eta_i = \lambda_i(2\lambda_i - 1)$. Express $\lambda_i = 1 - \sum_{j\neq i}\lambda_j$, we get
+$$
+\eta_i = 2\lambda_i(1 - \sum_{j\neq i}\lambda_j) - \lambda_i = \lambda_i - 2\sum_{j\neq i}\lambda_i\lambda_j.
+$$
+Then for the expansion in nodal basis 
+$$
+\sum_i d_i \eta_i = \sum_i d_i\lambda_i - \sum_i 2d_i\left (\sum_{j\neq i}\lambda_i\lambda_j\right ).
+$$
+So there is a contribution from nodal to edge bubble. The grad matrix becomes
+$$
+\begin{pmatrix}
+{\rm grad} & 0 \\
+e2v & 4 I \\
+\end{pmatrix}.
+$$
+
+
+
+
+ 
