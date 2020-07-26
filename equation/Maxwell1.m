@@ -1,4 +1,4 @@
-function [u,edge,eqn,info] = Maxwell1(node,elem,bdFlag,pde,option)
+function [u,edge,eqn,info] = Maxwell1(node,elem,bdFlag,pde,option,varargin)
 %% MAXWELL1 Maxwell equation: linear edge element.
 %
 % u = Maxwell1(node,elem,HB,pde,bdFlag) produces the linear edge
@@ -59,8 +59,8 @@ function [u,edge,eqn,info] = Maxwell1(node,elem,bdFlag,pde,option)
 %% Set up optional input arguments
 if ~exist('bdFlag','var'), bdFlag = []; end
 if ~exist('option','var'), option = []; end
-if isfield(option,'HB')
-    HB = option.HB;
+if nargin>=6
+    HB = varargin{1};
 else
     HB = [];
 end

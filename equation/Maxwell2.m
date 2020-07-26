@@ -1,4 +1,4 @@
-function [u,T,eqn,info] = Maxwell2(node,elem,bdFlag,pde,option)
+function [u,T,eqn,info] = Maxwell2(node,elem,bdFlag,pde,option,varargin)
 %% MAXWELL2 Maxwell equation: quadratic edge element.
 %
 % u = Maxwell2(node,elem,HB,pde,bdFlag) produces the quadratic (1st kind)
@@ -57,14 +57,15 @@ function [u,T,eqn,info] = Maxwell2(node,elem,bdFlag,pde,option)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
+tstart = cputime;
 %% Set up optional input arguments
 if ~exist('bdFlag','var'), bdFlag = []; end
 if ~exist('option','var'), option = []; end
-if isfield(option,'HB')
-    HB = option.HB;
+if nargin>=6
+    HB = varargin{1};
 else
     HB = [];
-end
+end        
 
 %% Compute coefficients
 if ~isfield(pde,'mu'), pde.mu = 1; end
@@ -87,10 +88,8 @@ if isfield(pde,'omega')
     epsilon = pde.omega*epsilon; 
 end
 
-tstart = cputime;
-elemold = elem;
-
 %% Sort elem to ascend ordering
+elemold = elem;
 [elem,bdFlag] = sortelem3(elem,bdFlag);
 
 %% Construct Data Structure

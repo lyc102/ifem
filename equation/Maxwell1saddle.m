@@ -64,11 +64,15 @@ function [soln,eqn,info] = Maxwell1saddle(node,elem,bdFlag,pde,option,varargin)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-
+t = cputime;
 %% Set up optional input arguments
 if ~exist('bdFlag','var'), bdFlag = []; end
 if ~exist('option','var'), option = []; end
-t = cputime;
+if nargin>=6
+    HB = varargin{1};
+else
+    HB = [];
+end        
 
 %% Sort elem to ascend ordering
 elemMG  = elem;     % save elem and bdFlag for multigrid
@@ -329,11 +333,6 @@ if isfield(option,'solver')
 else
     method = 'MG';
 end
-if nargin>=6
-    HB = varargin{1};
-else
-    HB = [];
-end        
 
 % multigrid options 
 option.mg.isFreeEdge = isFreeEdge; % needed in mg solver

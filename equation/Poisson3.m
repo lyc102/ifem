@@ -28,9 +28,15 @@ function [soln,eqn,info] = Poisson3(node,elem,bdFlag,pde,option,varargin)
 %
 %   Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-%% Parameters
+%% Set up optional input arguments
 if ~exist('bdFlag','var'), bdFlag = []; end
 if ~exist('option','var'), option = []; end
+if nargin>=6
+    HB = varargin{1};
+else
+    HB = [];
+end
+
 N = size(node,1); 
 NT = size(elem,1);
 Ndof = N;
@@ -163,11 +169,6 @@ switch solver
         if ~isfield(option,'mgoption')   % no option.mgoption
             option.mgoption.x0 = u;
             option.mgoption.solver = 'CG';
-        end
-        if nargin>=6
-            HB = varargin{1};
-        else
-            HB = [];
         end
         [u,info] = mg(AD,b,elem,option.mgoption,HB); 
     case 'amg'

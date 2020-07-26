@@ -79,7 +79,7 @@ else                            % beta is a function
     beta = pde.beta(center);              
 end
 
-tstart = tic;
+tstart = cputime;
 %% Element-wise basis
 % edge indices of 3 local bases: 
 % [2,3;3,1;1,2];
@@ -279,19 +279,22 @@ end
 % Neumann faces.
     
 %% Record assembling time
-info.assembleTime = toc(tstart);
+assembleTime = cputime - tstart;
 if ~isfield(option,'printlevel'), option.printlevel = 1; end
-if option.printlevel >= 1
-    fprintf('Time to assemble matrix equation %4.2g s\n',info.assembleTime);
+if option.printlevel >= 2
+    fprintf('Time to assemble matrix equation %4.2g s\n',assembleTime);
 end
 
 %% Solve the system of linear equations
 if strcmp(solver,'direct')
     % exact solver
-    tstart = tic;
+    t = cputime;
     freeDof = find(~isBdEdge);
     u(freeDof) = bigAD(freeDof,freeDof)\f(freeDof);
-    time = toc(tstart); itStep = 0; flag = 2; err = norm(f - bigAD*u);    
+    time = cputime-t; 
+    err = norm(f - bigAD*u); 
+    info = struct('solverTime',time,'assembleTime',assembleTime,'itStep',0, ...
+                  'stopErr',0, 'error',err,'flag',2);          
 elseif strcmp(solver,'nosolve')
     eqn = struct('A',A,'M',M,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
     info = [];
@@ -305,4 +308,4 @@ end
 
 %% Output
 eqn = struct('A',A,'M',M,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge);
-info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag);
+info.assembleTime = assembleTime;

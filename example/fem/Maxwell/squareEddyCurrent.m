@@ -19,7 +19,7 @@ for k = 1:maxIt
     % refine mesh    
     [node,elem,bdFlag] = uniformrefine(node,elem,bdFlag);
     % solve the equation
-    [u,edge,eqn] = eddycurrent(node,elem,bdFlag,pde,option);
+    [u,edge,eqn] = eddycurrent(node,elem,bdFlag,pde);
     % compute error
     % In 2-D, ND is rotation of RT
     errHcurl(k) = getHdiverrorRT0(node,elem,0,u); 

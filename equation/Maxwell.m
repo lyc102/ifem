@@ -1,4 +1,4 @@
-function [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option)
+function [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option,varargin)
 %% MAXWELL Maxwell equation: lowest order edge element.
 %
 % u = Maxwell(node,elem,HB,pde,bdFlag) produces the lowest order edge
@@ -72,8 +72,8 @@ function [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option)
 %% Set up optional input arguments
 if ~exist('bdFlag','var'), bdFlag = []; end
 if ~exist('option','var'), option = []; end
-if isfield(option,'HB')
-    HB = option.HB;
+if nargin>=6
+    HB = varargin{1};
 else
     HB = [];
 end
@@ -364,6 +364,9 @@ end
 %% Record assembling time
 assembleTime = cputime - tstart;
 if ~isfield(option,'printlevel'), option.printlevel = 1; end
+if option.printlevel >= 2
+    fprintf('Time to assemble matrix equation %4.2g s\n',assembleTime);
+end
 
 %% Solve the system of linear equations
 if strcmp(solver,'direct')
