@@ -66,7 +66,7 @@ else
 end
 
 %% Sort elem to ascend ordering
-elemold = elem;
+elemMG = elem;  % save elem for multigrid
 [elem,bdFlag] = sortelem3(elem,bdFlag);
 
 %% Construct Data Structure
@@ -83,7 +83,9 @@ else                            % mu is a function
               node(elem(:,3),:) + node(elem(:,4),:))/4;
     mu = pde.mu(center);              
 end
-if ~isfield(pde,'epsilon'), pde.epsilon = 1; end
+if ~isfield(pde,'epsilon') || isempty(pde.epsilon)
+    pde.epsilon = 1; 
+end
 if ~isempty(pde.epsilon) && isnumeric(pde.epsilon)
     epsilon = pde.epsilon;      % epsilon is an array
 else                            % epsilon is a function
@@ -172,9 +174,9 @@ for i = 1:6
         i1 = locEdge(i,1); i2 = locEdge(i,2);
         j1 = locEdge(j,1); j2 = locEdge(j,2);
         Mij = 1/20*volume.*( (1+(i1==j1))*DiDj(:,i2,j2) ...
-                   - (1+(i1==j2))*DiDj(:,i2,j1) ...
-                   + (1+(i2==j1))*DiDj(:,i1,j2) ...
-                   - (1+(i2==j2))*DiDj(:,i1,j1));
+                           - (1+(i1==j2))*DiDj(:,i2,j1) ...
+                           + (1+(i2==j1))*DiDj(:,i1,j2) ...
+                           - (1+(i2==j2))*DiDj(:,i1,j1));
         Mij = Mij.*epsilon;
         ii(index+1:index+NT) = double(elem2dof(:,i))+NE; 
         jj(index+1:index+NT) = double(elem2dof(:,j));
@@ -355,7 +357,7 @@ if ~isempty(bdEdge) && ~isempty(pde.g_D) && ...
     else
         u(bdDof) = edgeinterpolate1(pde.g_D,node,bdEdge);
     end
-    f = f - (A-M)*u;
+    f = f - A*u + M*u;
     f(bdDof) = u(bdDof);
 end
 %% Remark
@@ -387,7 +389,7 @@ elseif strcmp(solver,'none')
 else
     % option.x0 = edgeinterpolate1(pde.g_D(node),node,edge);
     option.x0 = u;
-    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
+    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemMG,edge,HB,isBdEdge,option);
 end
 
 %% Output

@@ -353,7 +353,7 @@ if ~isempty(bdEdge) && ~isempty(pde.g_D) && ...
     else
         u(isBdEdge) = edgeinterpolate(pde.g_D,node,bdEdge);
     end
-    f = f - (A-M)*u;
+    f = f - A*u + M*u;
     f(isBdEdge) = u(isBdEdge);
 end
 %% Remark
