@@ -35,8 +35,7 @@ for k = 1:maxIt
     % refine grid    
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
     % solve the equation
-%     [u,edge,A,M] = Maxwell(node,elem,HB,pde,bdFlag);
-    [u,edge,eqn] = Maxwell(node,elem,HB,pde,bdFlag,option); 
+    [u,edge,eqn] = Maxwell(node,elem,bdFlag,pde); 
     % compute the error
     uI = edgeinterpolate(pde.exactu,node,edge);
     L2Err(k) = sqrt(abs(real(u-uI)'*eqn.M*real(u-uI)));    

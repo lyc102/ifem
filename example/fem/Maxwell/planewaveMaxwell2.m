@@ -3,7 +3,8 @@
 % Test Maxwell function can solve problems with complex solution and
 % indefinite case.
 %
-% Check: the order seems wrong.
+%
+% See also  planewaveMaxwell, planewaveMaxwell1
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
@@ -37,16 +38,15 @@ for k = 1:maxIt
     % refine grid    
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
     % solve the equation
-%     [u,edge,A,M] = Maxwell(node,elem,HB,pde,bdFlag);
-    [u,T,eqn] = Maxwell2(node,elem,HB,pde,bdFlag,option); 
+    [u,T,eqn] = Maxwell2(node,elem,bdFlag,pde); 
     % compute the error
     uI = edgeinterpolate2(pde.exactu,node,T.edge,T.face,T.face2edge);
     L2Err(k) = sqrt(abs(real(u-uI)'*eqn.M*real(u-uI)));    
     energyErr(k) = sqrt(abs(real(u-uI)'*eqn.A*real(u-uI)) + L2Err(k)^2);
     L2ErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.M*imag(u-uI)));
     energyErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.A*imag(u-uI)) + L2ErrImag(k)^2);
-%     energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,u);
-%     L2Err(k) = getL2error3ND(node,elem,pde.exactu,u);
+%     energyErr(k) = getHcurlerror3ND2(node,elem,pde.curlu,u);
+%     L2Err(k) = getL2error3ND2(node,elem,pde.exactu,u);
     N(k) = length(u);
     h(k) = 1./(size(node,1)^(1/3)-1);       
 end

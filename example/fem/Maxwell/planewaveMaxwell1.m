@@ -38,15 +38,15 @@ for k = 1:maxIt
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
     % solve the equation
 %     [u,edge,A,M] = Maxwell(node,elem,HB,pde,bdFlag);
-    [u,edge,eqn] = Maxwell1(node,elem,HB,pde,bdFlag,option); 
+    [u,edge,eqn] =  Maxwell1(node,elem,bdFlag,pde); 
     % compute the error
     uI = edgeinterpolate1(pde.exactu,node,edge);
     L2Err(k) = sqrt(abs(real(u-uI)'*eqn.M*real(u-uI)));    
     energyErr(k) = sqrt(abs(real(u-uI)'*eqn.A*real(u-uI)) + L2Err(k)^2);
     L2ErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.M*imag(u-uI)));
     energyErrImag(k) = sqrt(abs(imag(u-uI)'*eqn.A*imag(u-uI)) + L2ErrImag(k)^2);
-%     energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,u);
-%     L2Err(k) = getL2error3ND(node,elem,pde.exactu,u);
+%     energyErr(k) = getHcurlerror3ND1(node,elem,pde.curlu,u);
+%     L2Err(k) = getL2error3ND1(node,elem,pde.exactu,u);
     N(k) = length(u);
     h(k) = 1./(size(node,1)^(1/3)-1);       
 end
