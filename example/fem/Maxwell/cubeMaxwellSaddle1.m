@@ -22,7 +22,8 @@ pde.mu = 1;
 %%
 bdFlag = setboundary3(node,elem,'Dirichlet');
 option.printlevel = 0;
-option.solver = 'direct';
+% option.solver = 'direct';
+option.solver = 'mg';
 
 %% Parameters
 maxIt = 3; 

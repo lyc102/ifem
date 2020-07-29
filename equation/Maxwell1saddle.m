@@ -251,21 +251,23 @@ if isfield(pde,'J') && ~isempty(pde.J) && ~isnumeric(pde.J)
     end
     bt = bt.*repmat(volume,1,12);
     f = accumarray([elem2edge(:); elem2edge(:)+NE],bt(:),[Nudof 1]);
-% elseif isfield(pde,'J') && ~isempty(pde.J) && isnumeric(pde.J)
-%     switch size(pde.J,1)
-%         case NE % rhs already computed
-%             f = pde.J;
-%         case NT % piecwise constant
-%             bt = zeros(NT,6);
-%             for k = 1:6
-%                 i = locEdge(k,1); j = locEdge(k,2);
-%                 % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
-%                 phi_k = (Dlambda(:,:,j)-Dlambda(:,:,i))/4;
-%                 bt(:,k) = dot(phi_k,pde.J,2);
-%             end
-%             bt = bt.*repmat(volume,1,6);
-%             f = accumarray(elem2dof(:),bt(:),[NE 1]);
-%     end
+elseif isfield(pde,'J') && ~isempty(pde.J) && isnumeric(pde.J)
+    switch size(pde.J,1)
+        case Nudof % rhs already computed
+            f = pde.J;
+        case NT % piecwise constant
+            bt = zeros(NT,12);
+            for k = 1:6
+                i = locEdge(k,1); j = locEdge(k,2);
+                % phi_k = lambda_i Dlambda_j - lambda_j Dlambda_i;
+                phi_k = (Dlambda(:,:,j)-Dlambda(:,:,i))/4;
+                % psi_k = lambda_i Dlambda_j + lambda_j Dlambda_i;
+                psi_k = (Dlambda(:,:,j)+Dlambda(:,:,i))/4;
+                bt(:,k+6) = dot(psi_k,pde.J,2);
+            end
+            bt = bt.*repmat(volume,1,12);
+            f = accumarray([elem2edge(:); elem2edge(:)+NE],bt(:),[Nudof 1]);
+    end
 end
 clear pxyz Jp bt rhs phi_k psi_k
 
