@@ -1,14 +1,12 @@
 function [curlu,volume,curlPhi] = curlu3(node,elem,u)
-%% CURLU3 curl of an ND0 function in 3-D.
+%% CURLU3 curl of a lowest order Nedelec or linear Nedelec function in 3-D.
 %
-% curlu = curlu3(node,elem,u) compute the gradient of an ND0 vector field
-% u on a 3-D mesh representing by edge basis lambda_i Dlambda_j - lambda_j Dlambda_i.
+% curlu = curlu3(node,elem,u) compute the gradient of an ND0 or a linear ND
+% vector field  u on a 3-D mesh representing by edge basis 
+% lambda_i Dlambda_j - lambda_j Dlambda_i, lambda_i Dlambda_j + lambda_j Dlambda_i.
 % 
 % [curlu,volume,curlPhi] = curlu3(node,elem,u) also outputs volume and curlPhi
-% which is the curl of ND0 basis. 
-%
-% curlu = curlu3(node,elem,u,Dlambda) compute the gradient with Dlambda. It
-% will save time when Dlambda is available.
+% which is the curl of ND0 basis (additional part of linear ND is curl free). 
 % 
 % Local node index in a tetrahedron
 %    _1_
@@ -16,8 +14,9 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 %  2_ | _3
 %    -4-
 % 6 edges are indexed with incremental fashion.
+% The global indexing of the additional curl free bases is assumed to be (NE+1:2*NE).
 % 
-% See also gradu3, gradbasis3
+% See also gradu3, gradbasis3, Maxwell1saddle
 %
 % Added by Shuhao Cao, Apr 2020. 
 %
@@ -27,7 +26,8 @@ function [curlu,volume,curlPhi] = curlu3(node,elem,u)
 elem = sort(elem,2);
 elem2edge = dof3edge(elem);
 NT = size(elem,1);
-[volume,elemSign] = simplexvolume(node,elem); 
+[volume,elemSign] = simplexvolume(node,elem);
+if length(u) == 2*max(elem2edge(:)); u = u(1:NE); end
 
 %% Edge vector
 locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
