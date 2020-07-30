@@ -52,5 +52,40 @@ switch n
             end
         end        
     end
-    case 10 % P2 element        
+    case 10 % P2 element
+        %% Assemble the full mass matrix using nodal basis
+        % indexing follows Poisson3P2
+        [lambda, w] = quadpts3(2);
+        nQuad = size(lambda,1);
+        ii = zeros(55*NT,1); % 55: # of upper triangular entries
+        jj = zeros(55*NT,1); 
+        sM = zeros(55*NT,1);
+        phi(:,1) = lambda(:,1).*(2*lambda(:,1)-1);
+        phi(:,2) = lambda(:,2).*(2*lambda(:,2)-1);
+        phi(:,3) = lambda(:,3).*(2*lambda(:,3)-1);
+        phi(:,4) = lambda(:,4).*(2*lambda(:,4)-1);
+        phi(:,5) = 4*lambda(:,1).*lambda(:,2);
+        phi(:,6) = 4*lambda(:,1).*lambda(:,3);
+        phi(:,7) = 4*lambda(:,1).*lambda(:,4);
+        phi(:,8) = 4*lambda(:,2).*lambda(:,3);
+        phi(:,9) = 4*lambda(:,2).*lambda(:,4);
+        phi(:,10)= 4*lambda(:,3).*lambda(:,4);
+        
+        index = 0;
+        for i = 1:10
+            for j = i:10
+                Mij = 0;
+                for p = 1:nQuad; Mij = Mij + w(p)*phi(p,i).*phi(p,j); end
+                Mij = Mij.*volume;
+                ii(index+1:index+NT) = double(elem2dof(:,i));
+                jj(index+1:index+NT) = double(elem2dof(:,j));
+                sM(index+1:index+NT) = Mij;
+                index = index + NT;
+            end
+        end
+        diagIdx = (ii == jj);   upperIdx = ~diagIdx;
+        M = sparse(ii(diagIdx),jj(diagIdx),sM(diagIdx),Ndof,Ndof);
+        MU = sparse(ii(upperIdx),jj(upperIdx),sM(upperIdx),Ndof,Ndof);
+        M = M + MU + MU';
+        
 end

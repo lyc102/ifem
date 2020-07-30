@@ -27,7 +27,8 @@ elem = sort(elem,2);
 elem2edge = dof3edge(elem);
 NT = size(elem,1);
 [volume,elemSign] = simplexvolume(node,elem);
-if length(u) == 2*max(elem2edge(:)); u = u(1:NE); end
+NE = max(elem2edge(:));
+if length(u) == 2*NE; u = u(1:NE); end
 
 %% Edge vector
 locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];

@@ -27,6 +27,7 @@ function [u,p,info,info2] =  mgMaxwellsaddle(A,G,f,g,node,elem,bdFlag,Me,grad,op
 
 Nf = length(f); 
 Ng = length(g);
+N = size(node,1);
 t = cputime;
 
 %% Parameters
@@ -42,14 +43,26 @@ option = mgoptions(option,Ndof);    % parameters
 d = size(node,2);
 
 %% Set up auxiliary matrices
-if d == 2
+if d == 2 
     area = simplexvolume(node,elem);
-    Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3)],[area;area;area]/3,...
-                        [max(elem(:)),1]);
+    if N > Ng % lowest order ND
+        Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3)],[area;area;area]/3,...
+            [max(elem(:)),1]);
+    else % linear ND (quadratic Lagrange for p)
+        elem2dof = dofP2(elem);
+        M = getmassmatrixP2(elem2dof,area,'NB');
+        Mvlump = sum(M,2);
+    end
 elseif d == 3
-    volume = abs(simplexvolume(node,elem)); % uniform refine in 3D is not orientation presereved
-    Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3);elem(:,4)],...
-                        [volume;volume;volume;volume]/4,[max(elem(:)),1]);    
+    volume = abs(simplexvolume(node,elem)); % uniform refine in 3D is not orientation preserved
+    if N > Ng % lowest order ND
+        Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3);elem(:,4)],...
+            [volume;volume;volume;volume]/4,[max(elem(:)),1]);
+    else
+        elem2dof = dof3P2(elem);
+        M = getmassmat3(node,elem2dof,volume);
+        Mvlump = sum(M,2);
+    end
 end
 DMinv = spdiags(1./Mvlump(option.isFreeNode),0,Ng,Ng);
 f = f + G*(DMinv*g);  % add second equation to the first one

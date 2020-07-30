@@ -337,8 +337,10 @@ else
 end
 
 % multigrid options 
-option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
-option.mg.isFreeNode = isFreeNode; 
+% option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
+option.mg.isFreeEdge = isFreeDofu;
+% option.mg.isFreeNode = isFreeNode; 
+option.mg.isFreeNode = isFreeDofp; 
 switch method
     case 'DIRECT'
         t = cputime;
@@ -352,7 +354,7 @@ switch method
         residual = norm([f;g0] - bigA*temp);
         info = struct('solverTime',cputime - t,'itStep',0,'err',residual,'flag',2,'stopErr',residual);
     case 'MG'
-        [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,grad,option.mg,HB);
+        [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,bigGrad,option.mg,HB);
         u(isFreeDofu)  = u0;
         p(isFreeDofu)  = p0;        
 end

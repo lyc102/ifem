@@ -261,13 +261,21 @@ $$
 $$
 So there is a contribution from nodal to edge bubble. The grad matrix becomes
 $$
+\tag{G}
 \begin{pmatrix}
 {\rm grad} & 0 \\
 e2v & 4 I \\
 \end{pmatrix}.
 $$
 
+#### Update Jul 30, 2020
+Trying to fix the multigrid preconditioning for `Maxwell1saddle.m`.
 
+**Progress**
+* Mass matrix for $P^2$ element added.
+* Fixed several discrepancies in setting up the auxiliaries matrices. The gradient matrix `grad` fed into `mgMaxwell` changed to `bigGrad` which is $(\rm G)$ above.
 
+**Problem/TO-DO**
+* prolongation and restriction operators in `mgHodgeLapE.m` is built for lowest order Nedelec elements. 
 
  
