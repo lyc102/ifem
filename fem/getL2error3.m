@@ -1,9 +1,11 @@
-function err = getL2error3(node,elem,uexact,uh,quadOrder,varargin)
+function [err, errK] = getL2error3(node,elem,uexact,uh,quadOrder,varargin)
 %% GETL2ERROR3 L2 norm of the approximation error in 3-D.
 %
 %  err = getL2error3(node,elem,@uexact,uh) computes the L2 norm of the error
 %  between the exact solution uexact and a finite element approximation uh
 %  on a mesh described by node and elem.
+%  
+%  [err, errK] = getL2error3(node,elem,@uexact,uh) also outputs the local error.
 %
 %  The input parameter uexact is a function handle and uh is a column array
 %  which could be:
@@ -169,4 +171,5 @@ d14 = node(elem(:,4),:)-node(elem(:,1),:);
 volume = abs(dot(mycross(d12,d13,2),d14,2))/6;
 err = volume.*sum(err,2);
 err(isnan(err)) = 0; % singular point is excluded
+if nargout > 1; errK = sqrt(err); end
 err = sqrt(sum(err));
