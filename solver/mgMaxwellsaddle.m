@@ -45,7 +45,7 @@ d = size(node,2);
 %% Set up auxiliary matrices
 if d == 2 
     area = simplexvolume(node,elem);
-    if N > Ng % lowest order ND
+    if N >= Ng % lowest order ND
         Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3)],[area;area;area]/3,...
             [max(elem(:)),1]);
     else % linear ND (quadratic Lagrange for p)
@@ -55,16 +55,21 @@ if d == 2
     end
 elseif d == 3
     volume = abs(simplexvolume(node,elem)); % uniform refine in 3D is not orientation preserved
-    if N > Ng % lowest order ND
+    if N >= Ng % lowest order ND
         Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3);elem(:,4)],...
             [volume;volume;volume;volume]/4,[max(elem(:)),1]);
-    else
+    else % linear ND (quadratic Lagrange for p)
         elem2dof = dof3P2(elem);
         M = getmassmat3(node,elem2dof,volume);
         Mvlump = sum(M,2);
     end
 end
-DMinv = spdiags(1./Mvlump(option.isFreeNode),0,Ng,Ng);
+if N>= Ng
+    DMinv = spdiags(1./Mvlump(option.isFreeNode),0,Ng,Ng);
+else
+    isFreeDofu = [option.isFreeNode; option.isFreeEdge];
+    DMinv = spdiags(1./Mvlump(isFreeDofu),0,Ng,Ng);
+end
 f = f + G*(DMinv*g);  % add second equation to the first one
 Abar = A + G*DMinv*G'; % Hodge Laplacian
 Ap = grad'*Me*grad;    % scalar Laplacian
@@ -79,15 +84,24 @@ if nargin>=6
     HB = varargin{1};
 else
     HB = [];
-end        
-[u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
-% [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); %#ok<*ASGLU>
+end
+if N>= Ng
+    [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); % lowest order
+else
+    [u,info] = mgHodgeLapE1(Abar,f,node,elem,bdFlag,option); % linear
+end
 
 Apoption.x0 = p0;
 Apoption.printlevel = 1;
 Apoption.freeDof = option.isFreeNode;
 rg = g-G'*u;
-[p,info2] = mg(Ap,rg,elem,Apoption,HB);
+
+if N>=Ng
+    [p,info2] = mg(Ap,rg,elem,Apoption,HB);
+else
+    [~,edge] = dof3edge(elem);
+    [p,info2] = mg(Ap,rg,elem,Apoption,HB,edge);
+end
 % [p,info2] = amg(Ap,rg,Apmgoption);
 
 u = u + grad*p;
