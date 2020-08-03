@@ -1,4 +1,4 @@
-%% CUBEMAXWELLSADDLE solves Maxwell type equations in a cube using lowest order element.
+%% CUBEMAXWELLSADDLE solves Maxwell type equations in a cube using linear order element.
 % This is a special case of div u = g being nozero.
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
@@ -7,6 +7,7 @@ clear; close all;
 
 %% Defacult setting
 [node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
+[node,elem] = uniformrefine3(node,elem);
 %%
 pde.J = @(p) [sin(p(:,1)).*cos(p(:,2)).*sin(p(:,3)), ...
               cos(p(:,1)).*sin(p(:,2)).*sin(p(:,3)), ...

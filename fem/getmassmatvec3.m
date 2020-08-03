@@ -61,6 +61,7 @@ end
 %% ND1: The full linear Nedelec element
 if strcmp(elemType,'ND1') 
     NE = double(max(elem2dof(:)));
+    Ndof = 2*NE;
     DiDj = zeros(NT,4,4);
     for i = 1:4
         for j = i:4        

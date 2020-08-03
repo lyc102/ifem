@@ -1,4 +1,4 @@
-function [Abar,isFreeDofS,isFreeDofu,Mv,G,C] = HodgeLaplacian3E1_matrix(node,elem,bdFlag)
+function [Abar,isFreeEdge,isFreeNode,Mv,G,C] = HodgeLaplacian3E1_matrix(node,elem,bdFlag)
 %% HODEGELAPLACIAN3E1_MATRIX get matrices of Hodge Laplacian of the linear edge element
 %
 % [Abar,isFreeEdge,isFreeNode,Mv,G,C] = HodgeLaplacian3E1_matrix(node,elem,bdFlag)
@@ -10,8 +10,12 @@ function [Abar,isFreeDofS,isFreeDofu,Mv,G,C] = HodgeLaplacian3E1_matrix(node,ele
 %  - Mv: mass matrix
 %  - G: gradient matrix
 %  - C = R'*inv(Mt)*R
-%  - isFreeDofS: logic index of free dofs for sigma (no boundary condition given)
-%  - isFreeDofu: logic index of free dofs for u (no boundary condition given)
+%  - isFreeEdge: logical index of interior edges (no boundary condition given)
+%  - isFreeNode: logical index of interior nodes (no boundary condition given)
+%  
+%  Other key variables:
+%  - isFreeDofS: logical index of free dofs for sigma, two copies of isFreeEdge 
+%  - isFreeDofu: logical index of free dofs for u, freeDof for P2 elements
 %
 % The saddle point system is in the form 
 %      |-M   G| |sigma|  = |f|
@@ -30,14 +34,14 @@ function [Abar,isFreeDofS,isFreeDofu,Mv,G,C] = HodgeLaplacian3E1_matrix(node,ele
 [elem2edge,edge] = dof3edge(elem);
 [Dlambda,volume] = gradbasis3(node,elem);
 N = size(node,1); NT = size(elem,1); NE = size(edge,1);
-Ndofu = N+NE;
+NdofU = N+NE; NdofS = 2*NE;
 %% Assemble matrix 
 % Mass matrices
 elem2dofu = dof3P2(elem);
 Mv = getmassmat3(node,elem2dofu,volume);
 MvLump = diag(Mv);
-invMv = spdiags(1./MvLump,0,Ndofu,Ndofu);
-Mv = spdiags(MvLump,0,N,N);
+invMv = spdiags(1./MvLump,0,NdofU,NdofU);
+Mv = spdiags(MvLump,0,NdofU,NdofU);
 Me = getmassmatvec3(elem2edge,volume,Dlambda,'ND1');
 grad = icdmat(double(edge),[-1,1]); % P1 to ND0
 % e2v matrix: P1 to P2 lambda_i -> lambda_i(2lambda_i - 1)
@@ -72,8 +76,8 @@ for i = 1:6
 end
 clear curlPhi % clear large size data
 diagIdx = (ii == jj);   upperIdx = ~diagIdx;
-C = sparse(ii(diagIdx),jj(diagIdx),sC(diagIdx),2*NE,2*NE);
-CU = sparse(ii(upperIdx),jj(upperIdx),sC(upperIdx),2*NE,2*NE);
+C = sparse(ii(diagIdx),jj(diagIdx),sC(diagIdx),NdofS,NdofS);
+CU = sparse(ii(upperIdx),jj(upperIdx),sC(upperIdx),NdofS,NdofS);
 C = C + CU + CU';
 
 %% Boundary conditions
@@ -91,8 +95,10 @@ if ~isempty(bdFlag)
     bdEdge = edge(isBdEdge,:);
     isBdNode = false(N,1);
     isBdNode(bdEdge(:)) = true;
-    isFreeDofS = [~isBdEdge; ~isBdEdge];
-    isFreeDofu = [~isBdNode; ~isBdEdge];
+    isFreeEdge = ~isBdEdge;
+    isFreeNode = ~isBdNode;
+    isFreeDofS = [isFreeEdge; isFreeEdge];
+    isFreeDofu = [isFreeNode; isFreeEdge];
 end
 
 %% Restrict the matrix to free variables
