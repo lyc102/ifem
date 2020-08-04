@@ -61,14 +61,15 @@ elseif d == 3
     else % linear ND (quadratic Lagrange for p)
         elem2dof = dof3P2(elem);
         M = getmassmat3(node,elem2dof,volume);
-        Mvlump = sum(M,2);
+%         Mvlump = sum(M,2);
+        Mvlump = diag(M);
     end
 end
 if N>= Ng
     DMinv = spdiags(1./Mvlump(option.isFreeNode),0,Ng,Ng);
 else
-    isFreeDofu = [option.isFreeNode; option.isFreeEdge];
-    DMinv = spdiags(1./Mvlump(isFreeDofu),0,Ng,Ng);
+    isFreeDofp = [option.isFreeNode; option.isFreeEdge];
+    DMinv = spdiags(1./Mvlump(isFreeDofp),0,Ng,Ng);
 end
 f = f + G*(DMinv*g);  % add second equation to the first one
 Abar = A + G*DMinv*G'; % Hodge Laplacian
@@ -85,6 +86,7 @@ if nargin>=6
 else
     HB = [];
 end
+
 if N>= Ng
     [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); % lowest order
 else
@@ -93,14 +95,14 @@ end
 
 Apoption.x0 = p0;
 Apoption.printlevel = 1;
-Apoption.freeDof = option.isFreeNode;
 rg = g-G'*u;
 
 if N>=Ng
+    Apoption.freeDof = option.isFreeNode;
     [p,info2] = mg(Ap,rg,elem,Apoption,HB);
 else
-    [~,edge] = dof3edge(elem);
-    [p,info2] = mg(Ap,rg,elem,Apoption,HB,edge);
+    Apoption.freeDof = [option.isFreeNode; option.isFreeEdge];
+    [p,info2] = mg(Ap,rg,elem,Apoption,HB);
 end
 % [p,info2] = amg(Ap,rg,Apmgoption);
 

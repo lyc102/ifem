@@ -337,9 +337,7 @@ else
 end
 
 % multigrid options 
-% option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
-option.mg.isFreeEdge = isFreeEdge;
-% option.mg.isFreeNode = isFreeNode; 
+option.mg.isFreeEdge = isFreeEdge; % needed in mg solver
 option.mg.isFreeNode = isFreeNode; 
 switch method
     case 'DIRECT'

@@ -7,7 +7,6 @@ clear; close all;
 
 %% Defacult setting
 [node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
-[node,elem] = uniformrefine3(node,elem);
 %%
 pde.J = @(p) [sin(p(:,1)).*cos(p(:,2)).*sin(p(:,3)), ...
               cos(p(:,1)).*sin(p(:,2)).*sin(p(:,3)), ...
@@ -39,14 +38,14 @@ for k = 1:maxIt
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);     
     [soln,eqn,info] = Maxwell1saddle(node,elem,bdFlag,pde,option);  
     u = soln.u;
-    fprintf('\n # of DoFs = %d \n',length(u));
+    fprintf('\n\n # of DoFs = %d \n',length(u));
     % compute error
     uI = edgeinterpolate1(pde.exactu,node,eqn.edge);
     energyErr(k) = getHcurlerror3ND1(node,elem,pde.curlu,u);
     L2Err(k) = getL2error3ND1(node,elem,pde.exactu,u);
     uIuhErr(k) = sqrt((u-uI)'*(eqn.A)*(u-uI));        
 %     L2Err(k) = sqrt((u-uI)'*(eqn.M)*(u-uI));        
-    fprintf('||curl(u-u_h)|| is %g \n',energyErr(k))
+    fprintf('\n ||curl(u-u_h)|| is %g \n',energyErr(k))
     N(k) = length(u);
     h(k) = 1./(size(node,1)^(1/3)-1);   
 end

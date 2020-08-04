@@ -22,7 +22,7 @@ pde.mu = 1;
 %%
 bdFlag = setboundary3(node,elem,'Dirichlet');
 option.printlevel = 0;
-option.solver = 'direct';
+option.solver = 'mg';
 
 %% Parameters
 maxIt = 3; 
@@ -37,7 +37,7 @@ for k = 1:maxIt
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);    
     [soln,eqn,info] = Maxwellsaddle(node,elem,bdFlag,pde,option);    
     u = soln.u;
-    fprintf('\n # of DoFs = %d \n',length(u));
+    fprintf('\n\n # of DoFs = %d \n',length(u));
     % compute error
     uI = edgeinterpolate(pde.exactu,node,eqn.edge);
     energyErr(k) = getHcurlerror3ND(node,elem,pde.curlu,u);

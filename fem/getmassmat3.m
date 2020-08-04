@@ -5,8 +5,8 @@ function M = getmassmat3(node,elem2dof,volume,type,K)
 % space specified by elemType.  
 %
 % The type can be: 
-% - P1: full mass matrix for P1 element
-% - lump: lumped mass matrix for P1 element
+% - 'P1': full mass matrix for P1 element
+% - 'lump': lumped mass matrix for P1 element
 
 N = size(node,1);
 NT = length(volume);
