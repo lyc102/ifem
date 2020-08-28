@@ -2,11 +2,11 @@
 % The data is generated from delaunayTriangulation after R2013b
 % The attribute names may be different before R2016a.
 clear;close all;
-N = randi([10,20]); 
+N = randi([20,30]); 
 
 %% randomly generating N points
 box = [0 0 0; 1 0 0; 0 1 0; 0 0 1; 1 1 0; 1 0 1; 0 1 1; 1 1 1];
-coords = linspace(0.3,0.7,N);
+coords = linspace(0.2,0.8,N);
 n = floor(N/2);
 node = [coords(randi(n,[1,n]))',coords(randi(n,[1,n]))',coords(randi(n,[1,n]))'];
 node = [box; node];
