@@ -218,7 +218,7 @@ And also make sure when call `bdfaceintegral`, the input face is ascend ordering
 Spend 1.5 hour to correct a typo. Record the debug procedure. 
 
 1. The rate is not optimal and oscillation is observed. So it is wrong. Find backup 2019-06-05 which works well. So run two sessions and try to figure out the bug.
-2. Change the solver to `direct` and make sure it is not caused by solver.
+2. Change the solver to `direct` and make sure it is not caused by solvers.
 3. Compare the final linear systems and found the matrix is different. 
 4. Put a breakpoint after several components of the big matrix is assembled and compare each component. Find the matrix R is different.
 5. Check components involved in the assembling of R and found `Meb` from `getmassmatvec` is wrong.
@@ -236,7 +236,7 @@ What is the lesson?
 
 **Test after any change.** 
 
-Since `BDM1B`  case is  used in `StokesBDM1b`,  I should test when I change the code `getmassmatvec` . Then it will save the time to trace back the bug. 
+Since `BDM1B`  is  used in `StokesBDM1b`,  I should test when I change the code `getmassmatvec` . Then it will save the time to trace the bug. 
 
 
 
@@ -278,4 +278,34 @@ Trying to fix the multigrid preconditioning for `Maxwell1saddle.m`.
 **Problem/TO-DO**
 * prolongation and restriction operators in `mgHodgeLapE.m` is built for lowest order Nedelec elements. 
 
- 
+
+
+## cubemesh
+
+
+
+```matlab
+    shiftMatrix = [1 0 0; 0 1 0; -1/2 0 1/2]*...
+                  [1 0 0; -1/2 1/2 0; 0 0 1]*...
+                  [1 0 0; 0 1 0; 0 -1/2 1/2];
+    nodeShift = node*shiftMatrix;
+%     *[cos(pi/3), -sin(pi/3), 0; 1/2, 0, sqrt(3)/2; 1, 0, 0]);  
+    % shift the square to a parallegram to select the diagonal in delaunay
+    matlabversion = version();
+    if str2double(matlabversion(end-5:end-2)) <= 2013
+        T = DelaunayTri(nodeShift(:,1),nodeShift(:,2),nodeShift(:,3)); %#ok<*DDELTRI>
+        elem = T.Triangulation;
+    else
+        T = delaunayTriangulation(nodeShift(:,1),nodeShift(:,2),nodeShift(:,3));
+        elem = T.ConnectivityList;
+    end
+    elem = label3(node,elem);
+    showmesh3(nodeShift,elem);
+
+```
+
+The Delaunay triangulation can't pick the correct diagonal and thus it is different with the uniform grid. It will result different bisection. 
+
+Try to shift the cube to parallelpipe so that the diagonal can be consistent. But Delaunay is not robust and even shift the coplanar points to non coplanar and thus creates slivers. 
+
+Change the different length and different mesh size by loop over the index.
