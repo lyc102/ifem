@@ -1,4 +1,4 @@
-function [elem,idx,volume,bdFlag] = fixorder3(node,elem)
+function [elem,idx,volume,bdFlag] = fixorder3(node,elem,bdFlag)
 %% FIXORDER3 fix orientation of tetrahedron 
 % 
 %   elem = FIXORDER3(node,elem) computes signed volume of all tetrahedron
