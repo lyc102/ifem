@@ -52,15 +52,10 @@ if oldN >= newN % fine grid to coarse grid
 else            % coarse grid to fine grid
     if min(HB(:,1))>oldN % only new nodes are recorded in HB (2-D bisection)
         u(HB(1:end,1),:) = (u(HB(1:end,2),:)+u(HB(1:end,3),:))/2;
-    else        % new nodes is stored starting from oldN (3-D bisection)
-        coarseGeneration = max(HB(1:oldN,4)); % max generation in coarse grid
-        fineGeneration = max(HB(oldN:newN,4)); % max generation in fine grid
-        newNodeIdx = oldN+1:newN;
-        newGeneration = HB(newNodeIdx,4);
-        for k = coarseGeneration+1:fineGeneration % interpolate by generations
-            idx = (newGeneration == k);
-            newNode = newNodeIdx(idx);
-            u(HB(newNode,1),:) = (u(HB(newNode,2),:) + u(HB(newNode,3),:))/2;            
+    else        % new nodes is stored starting from oldN+1 (3-D bisection)
+        u(newN) = 0;  % preallocation
+        for k = oldN+1:newN  % have to perform the interpolation sequentially
+            u(HB(k,1),:) = (u(HB(k,2),:) + u(HB(k,3),:))/2;            
         end
     end
 end
