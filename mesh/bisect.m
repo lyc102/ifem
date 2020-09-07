@@ -20,10 +20,10 @@ function [node,elem,bdFlag,HB,tree] = bisect(node,elem,markedElem,bdFlag)
 %   global indices of two parent nodes of new added nodes. HB is usful
 %   for the interpolation between two grids; see also nodeinterpolate.
 % 
-% - tree(:,1:3) stores the binary tree of the coarsening. tree(:,1) is the
-%   index of parent element in coarsened mesh and tree(:,2:3) are two
-%   children indices in original mesh. tree is useful for the interpolation
-%   of elementwise function; see also eleminterpolate.
+% - tree(:,1:3) stores the binary tree of the refinement. tree(:,1) is the
+%   index of the parent element in the coarse mesh and tree(:,2:3) are two
+%   children indices in the fine mesh. tree is useful for the interpolation
+%   of elementwise function; see eleminterpolate.
 %
 % Example
 %
@@ -79,7 +79,8 @@ for k = 1:2
     t = find(edge2newNode(elem2edge(:,1))>0);
     newNT = length(t);
     if (newNT == 0), break; end
-    L = t; R = NT+1:NT+newNT;
+    L = t; 
+    R = NT+1:NT+newNT;
     p1 = elem(t,1); p2 = elem(t,2); p3 = elem(t,3);
     p4 = edge2newNode(elem2edge(t,1));
     elem(L,:) = [p4, p1, p2];
@@ -96,6 +97,7 @@ for k = 1:2
     tree(Nb+1:Nb+newNT,3) = R;
     elem2edge(L,1) = elem2edge(t,3);
     elem2edge(R,1) = elem2edge(t,2);
-    NT = NT + newNT; Nb = Nb + newNT;
+    NT = NT + newNT; 
+    Nb = Nb + newNT;
 end
 tree = tree(1:Nb,:);

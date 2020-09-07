@@ -1,4 +1,4 @@
-function [node,elem,bdFlag,HB] = bisect3(node,elem,markedElem,bdFlag,HB)
+function [node,elem,bdFlag,HB,tree] = bisect3(node,elem,markedElem,bdFlag,HB)
 %% BISECT3 bisect a 3-D triangulation.
 %
 % [node,elem] = BISECT3(node,elem,markedElem) refines the mesh (node,elem) 
@@ -12,12 +12,19 @@ function [node,elem,bdFlag,HB] = bisect3(node,elem,markedElem,bdFlag,HB)
 % the boundry condition for boundary faces (bdFlag). It will be used for
 % PDEs with mixed boundary conditions.
 %
-% [node,elem,bdFlag,HB] = BISECT3(node,elem,markedElem,bdFlag,HB) updates the
-% hierarchical structure (HB) of the nodes. HB(:,1) are the global indices
-% of new added nodes, and HB(:,2:3) the global indices of two parent nodes
-% of new added nodes. HB is usful for the interpolation between two grids;
-% see also nodeinterpolate. In 3-D, HB is indispensable for MultiGrid
-% methods on bisection grids; see mg. 
+% [node,elem,bdFlag,HB,tree] = BISECT3(node,elem,markedElem,bdFlag,HB) updates the
+% hierarchical structure (HB) of the nodes  and tree arrays of elements. 
+%
+% - HB(:,1) are the global indices of new added nodes, and HB(:,2:3)
+%   the global indices of two parent nodes of new added nodes. HB is useful
+%   for the interpolation between two grids; see nodeinterpolate. In 3-D,
+%   HB is indispensable for MultiGrid methods on bisection grids; see mg.
+%
+% - tree(:,1:3) stores the binary tree of the refinement. tree(:,1) is the
+%   index of the parent element in the coarse mesh and tree(:,2:3) are two
+%   children indices in the fine mesh. tree is useful for the interpolation
+%   of elementwise function; see eleminterpolate.
+%
 %   
 % Example
 %
@@ -66,15 +73,15 @@ if ~isempty(HB)
     generation(HB(:,1)) = HB(:,4);
 end
 
-%% Local Refinement
+%% Local Refinement via the longest edge bisection
 %* Find new cutedges and new nodes
 %* Bisect all marked elements
 %* Find non-conforming elements
-%* Update generation of nodes
 
 cutEdge = zeros(8*N,3);        % cut edges
 nCut = 0;                      % number of cut edges
 nonConforming = true(8*N,1);   % flag of the non-conformity of edges
+Nb = 0; tree = zeros(3*NT,3,'uint32');
 while ~isempty(markedElem)
     % switch element nodes such that elem(t,1:2) is the longest edge of t
     [elem,bdFlag] = label3(node,elem,markedElem,bdFlag);
@@ -131,7 +138,11 @@ while ~isempty(markedElem)
     	bdFlag(markedElem,[1 3 4]) = bdFlag(markedElem, [4 3 2]);
         bdFlag(markedElem,2) = 0;
     end
+    tree(Nb+1:Nb+nMarked,1) = markedElem;
+    tree(Nb+1:Nb+nMarked,2) = markedElem;
+    tree(Nb+1:Nb+nMarked,3) = NT+1:NT+nMarked;    
     NT = NT + nMarked;
+    Nb = Nb + nMarked;
     clear elemGeneration p1 p2 p3 p4 p5
     
     %% Find non-conforming elements
@@ -160,5 +171,6 @@ if ~isempty(HB)
 else
     HB = [];
 end
+tree = tree(1:Nb,:);
 %% TODO: ifem help doc to explain the bisection algorithm
 % <a href="matlab:ifem bisect3">ifem bisect3doc</a>
