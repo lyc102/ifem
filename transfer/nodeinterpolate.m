@@ -5,15 +5,13 @@ function u = nodeinterpolate(u,HB)
 % from a coarse grid to a fine grid or the other way around. The input
 % array HB(:,1:3) records hierarchical structure of new nodes HB(:,1) added
 % from a coarse grid to a fine one. HB(:,2:3) are two parent nodes of
-% HB(:,1). It can be obtained by bisection. 
-%
-% u = nodeinterpolate(u,indexMap) going from fine to coarse, HB =
+% HB(:,1). It can be obtained by bisection. Going from fine to coarse, HB =
 % indexMap which is the map between the indices of nodes in the fine grid
 % to that of the coarse grid. For example, indexMap(10) = 6 means the 10-th
 % node in the fine grid is now the 6-th node in the coarse one. Therefore
 % indexMap(k) = 0 means k is removed. indexMap is obtained by coarsening.
 %
-% Example
+% Example 1: 2D bisect and coarsen
 %   node = [0,0; 1,0; 1,1; 0,1];
 %   elem = [2,3,1; 4,1,3];      
 %   u = [0 0 0 1]; 
@@ -26,8 +24,19 @@ function u = nodeinterpolate(u,HB)
 %   u = nodeinterpolate(u,indexMap);
 %   subplot(1,3,3); showsolution(node,elem,u,'EdgeColor','k');
 %
+% Example 2: 3D bisect and coarsen
+%     [node,elem,HB] = cubemesh([-1,1,-1,1,-1,1],2);
+%     u = ones(size(node,1),1);
+%     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
+%     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
+%     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
+%     showmesh3(node,elem);
+%     u = nodeinterpolate(u,HB);
+%     [node,elem,~,HB,indexMap] = coarsen3(node,elem,'all',[],HB);
+%     u = nodeinterpolate(u,indexMap);
+%
 % See also bisect, coarsen, eleminterpolate
-% 
+%
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 %%
@@ -38,18 +47,20 @@ end
 oldN = size(u,1);
 newN = max(size(HB,1),max(HB(:,1)));
 if oldN >= newN % fine grid to coarse grid
-    idx = (HB == 0);
+    idx = (HB == 0);  % HB is indexMap output by coarsening
     u(idx,:) = [];
 else            % coarse grid to fine grid
-    u(newN,:) = 0;         % preallocation
     if min(HB(:,1))>oldN % only new nodes are recorded in HB (2-D bisection)
         u(HB(1:end,1),:) = (u(HB(1:end,2),:)+u(HB(1:end,3),:))/2;
     else        % new nodes is stored starting from oldN (3-D bisection)
-        while oldN < newN
-            newNode = (oldN+1):newN;
-            firstNewNode = newNode((HB(newNode,2) <= oldN) & (HB(newNode,3) <= oldN));        
-            u(HB(firstNewNode,1),:) = (u(HB(firstNewNode,2),:) + u(HB(firstNewNode,3),:))/2;
-            oldN = firstNewNode(end);
+        coarseGeneration = max(HB(1:oldN,4)); % max generation in coarse grid
+        fineGeneration = max(HB(oldN:newN,4)); % max generation in fine grid
+        newNodeIdx = oldN+1:newN;
+        newGeneration = HB(newNodeIdx,4);
+        for k = coarseGeneration+1:fineGeneration % interpolate by generations
+            idx = (newGeneration == k);
+            newNode = newNodeIdx(idx);
+            u(HB(newNode,1),:) = (u(HB(newNode,2),:) + u(HB(newNode,3),:))/2;            
         end
     end
 end

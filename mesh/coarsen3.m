@@ -35,7 +35,7 @@ function [node,elem,bdFlag,HB,indexMap,tree]= ...
 %     figure(2); subplot(1,2,1);
 %     showmesh3(node,elem,[],'FaceAlpha',0.15); view([210 8]);
 %     findnode3(node);
-%     [node,elem,HB,bdFlag,indexMap,tree] = coarsen3(node,elem,'all',HB,bdFlag);
+%     [node,elem,bdFlag,HB,indexMap,tree] = coarsen3(node,elem,'all',bdFlag,HB);
 %     figure(2); subplot(1,2,2);
 %     showmesh3(node,elem,[],'FaceAlpha',0.15); view([210 8]);
 %
