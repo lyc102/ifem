@@ -21,8 +21,8 @@ NT = size(elem,1);
 
 %% set up coefficient matrix (unfortunately arrayfun is not vectorization)
 tic;
-c = @(p) [1+p(:,1).^2/10 0.*p(:,1) 0.*p(:,1); ...
-    0*p(:,2) 1+p(:,2).^2/10 0*p(:,2); ...
+c = @(p) [1+p(:,1).^2/10 p(:,1).*p(:,2) 0.*p(:,1); ...
+    p(:,1).*p(:,2) 1+p(:,2).^2/10 0*p(:,2); ...
     0*p(:,2) 0*p(:,2) 1+p(:,3).^2/10];
 tmp = arrayfun(@(rowidx) c(center(rowidx,:)), 1:size(center,1), 'UniformOutput',0);
 c2elem = cat(3,tmp{:});
@@ -55,18 +55,26 @@ fprintf('Time to perform vectorized operation %5.4g s\n',t2);
 fprintf('Speed up factor is %4d.\n', floor(t1/t2));
 
 %% benchmark the vectorized routine
+% label for K   1 4 6
+%               4 2 5
+%               5 6 3
+
 tic;
+K(:,4) = center(:,1).*center(:,2);
 K(:,3) = 1+center(:,3).^2/10;
 K(:,1) = 1+center(:,1).^2/10;
 K(:,2) = 1+center(:,2).^2/10;
 toc;
 
 tic;
+% b1 = K1*D1 + K4*D2 + K6*D3
+% b2 = K4*D1 + K2*D2 + K5*D3
+% b3 = K5*D1 + K6*D2 + K3*D3
 b = zeros(NT,3,4);
 for j = 1:4
-    for i = 1:3
-        b(:,i,j) = K(:,i).*Dlambda(:,i,j);
-    end
+    b(:,1,j) = K(:,1).*Dlambda(:,1,j) + K(:,4).*Dlambda(:,3,j);
+    b(:,2,j) = K(:,4).*Dlambda(:,1,j) + K(:,2).*Dlambda(:,2,j);
+    b(:,3,j) = K(:,3).*Dlambda(:,3,j);
 end
 t3= toc;
 fprintf('Time to perform vectorized operation %5.4g s\n',t3);
