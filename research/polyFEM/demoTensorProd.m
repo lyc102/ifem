@@ -53,3 +53,22 @@ end
 t2= toc;
 fprintf('Time to perform vectorized operation %5.4g s\n',t2);
 fprintf('Speed up factor is %4d.\n', floor(t1/t2));
+
+%% benchmark the vectorized routine
+tic;
+K(:,3) = 1+center(:,3).^2/10;
+K(:,1) = 1+center(:,1).^2/10;
+K(:,2) = 1+center(:,2).^2/10;
+toc;
+
+tic;
+b = zeros(NT,3,4);
+for j = 1:4
+    for i = 1:3
+        b(:,i,j) = K(:,i).*Dlambda(:,i,j);
+    end
+end
+t3= toc;
+fprintf('Time to perform vectorized operation %5.4g s\n',t3);
+fprintf('Speed up factor is %4d.\n', floor(t1/t3));
+
