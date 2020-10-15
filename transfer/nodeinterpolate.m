@@ -28,8 +28,9 @@ function u = nodeinterpolate(u,HB)
 %     [node,elem,HB] = cubemesh([-1,1,-1,1,-1,1],2);
 %     u = ones(size(node,1),1);
 %     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
-%     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
-%     [node,elem,~,HB] = bisect3(node,elem,[1 2],[],HB);
+%     [node,elem,~,HB] = bisect3(node,elem,'all',[],HB);
+%     [node,elem,~,HB] = bisect3(node,elem,[1 2 3],[],HB);
+%     [node,elem,~,HB] = bisect3(node,elem,[1 2 3],[],HB);
 %     showmesh3(node,elem);
 %     u = nodeinterpolate(u,HB);
 %     [node,elem,~,HB,indexMap] = coarsen3(node,elem,'all',[],HB);
@@ -54,8 +55,18 @@ else            % coarse grid to fine grid
         u(HB(1:end,1),:) = (u(HB(1:end,2),:)+u(HB(1:end,3),:))/2;
     else        % new nodes is stored starting from oldN+1 (3-D bisection)
         u(newN) = 0;  % preallocation
-        for k = oldN+1:newN  % have to perform the interpolation sequentially
-            u(HB(k,1),:) = (u(HB(k,2),:) + u(HB(k,3),:))/2;            
+        isEvaluated = false(newN,1);
+        isEvaluated(1:oldN) = true;
+        newIdx = (oldN+1:newN)';
+        while any(newIdx)
+            validParentIdx = isEvaluated(HB(newIdx,2)) & isEvaluated(HB(newIdx,3));
+            idx = newIdx(validParentIdx);
+            u(HB(idx,1),:) = (u(HB(idx,2),:) + u(HB(idx,3),:))/2; 
+            isEvaluated(idx) = true;
+            newIdx = find(isEvaluated == false);
         end
+%         for k = oldN+1:newN  % perform the interpolation sequentially
+%             u(HB(k,1),:) = (u(HB(k,2),:) + u(HB(k,3),:))/2;            
+%         end
     end
 end
