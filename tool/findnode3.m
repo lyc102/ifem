@@ -27,7 +27,7 @@ function findnode3(node,range,varargin)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
 hold on
-if (nargin==1)
+if (nargin==1) || (ischar(range) && strcmp(range,'all'))
     range = (1:size(node,1))'; 
 end
 if islogical(range) 
