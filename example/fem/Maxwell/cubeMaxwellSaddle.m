@@ -6,7 +6,7 @@
 clear; close all;
 
 %% Defacult setting
-[node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
+[node,elem] = cubemesh([-1,1,-1,1,-1,1],0.5);
 %%
 pde.J = @(p) [sin(p(:,1)).*cos(p(:,2)).*sin(p(:,3)), ...
               cos(p(:,1)).*sin(p(:,2)).*sin(p(:,3)), ...
@@ -22,10 +22,11 @@ pde.mu = 1;
 %%
 bdFlag = setboundary3(node,elem,'Dirichlet');
 option.printlevel = 0;
-option.solver = 'mg';
+% option.solver = 'mg';
+option.solver = 'diag';
 
 %% Parameters
-maxIt = 3; 
+maxIt = 4; 
 N = zeros(maxIt,1); 
 h = zeros(maxIt,1);
 energyErr = zeros(maxIt,1);

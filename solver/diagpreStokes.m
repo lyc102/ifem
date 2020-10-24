@@ -28,6 +28,7 @@ bigb = [f; g];
 
 %% Set up the multilevel preconditioner for A
 setupOption.solver = 'NO';
+setupOption.setupflag = 1;
 % setupOption.freeDof = option.freeDof(1:Nu1);
 A1 = A(1:Nu1,1:Nu1);  % get one Poisson
 HB = varargin{end};

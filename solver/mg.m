@@ -315,47 +315,6 @@ if dim == 3  % 3-D
     end
 end
 
-%% No coarsening or coarsened nodes is small
-nnzlevel = find(NL);
-if Ndof <= N    % linear element
-    if (level == 1) || (NL(nnzlevel(end)) - NL(nnzlevel(1)))/N < 0.25
-        if Ndof < N0 % small size
-            solver = 'DIRECT';
-        else
-            [x,info] = amg(A,b,option);
-            if any(isFixDof) && Nborig > size(x,1) % a larger system
-                xD(isFreeDof,:) = x;
-                x = xD;
-            end
-            Ai{1} = A; Bi{1} = tril(A); BTi{1} = Bi'; Res = []; Pro = [];
-            fprintf('No hierarchical structure of the mesh is found. AMG is used. \n');    
-            return
-        end
-    end
-end    
-
-%% Direct solver
-if strcmp(solver,'DIRECT')        
-    x = A\b;                       % use direct solver                          
-    flag = 2; itStep = 0; err = norm(b-A*x)/norm(b); time = cputime - t;
-    %% Modify x to include fix dof
-    if any(isFixDof) && Nborig > size(x,1)
-        xD(isFreeDof,:) = x;
-        x = xD;
-    end
-    if printlevel >= 1
-        fprintf('Direct solver \n')
-        fprintf('#dof: %8.0u,  #nnz: %8.0u,  iter: %2.0u,  err = %8.4e,  time = %4.2g s\n',...
-                 Ndof, nnz(A), itStep, max(err(end,:)), time)
-        if level == 1
-            fprintf('No coarsening of the grid. \n')
-        end
-    end
-    info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr',max(err(end,:)));    
-    Ai{1} = A; Bi{1} = tril(A); BTi{1} = Bi'; Res = []; Pro = [];
-    return
-end
-
 %% Transfer operators between multilevel meshes for P1 element
 % standard prolongation and restriction operator for P1 element
 [Pro,Res] = transferoperator(HB,NL,isFreeNode); 
@@ -373,7 +332,12 @@ clear HB auxPro
 
 %% Matrices in each level
 Ai = cell(level,1);
-Ai{level} = A;    
+Ai{level} = A;
+if level == 1
+    Bi{1} = tril(Ai{1}); 
+    BTi{1} = transpose(Bi{1}); 
+    Res = []; Pro = [];
+end
 for j = level:-1:2
     Ai{j-1} = Res{j}*Ai{j}*Pro{j-1};           % Ac = Res*Af*Pro
     switch option.smoother
@@ -413,7 +377,7 @@ if setupflag == false
    level = length(Ai);
    isFixDof = ~isFreeDof;
    xD = zeros(Ndof,nb);
-   if any(isFixDof)
+   if any(isFixDof) && Ndof == length(isFreeDof) % larger system
         Nfix = sum(isFixDof);
         ADinv = spdiags(1./diag(A(isFixDof,isFixDof)),0,Nfix,Nfix);
         xD(isFixDof,:) = ADinv*b(isFixDof,:);
@@ -421,6 +385,46 @@ if setupflag == false
         A = A(isFreeDof,isFreeDof);
         x0 = x0(isFreeDof,:);
    end
+end
+
+%% No coarsening or coarsened nodes is small
+if Ndof <= N    % linear element
+    if level == 1
+        if Ndof < N0 % small size
+            solver = 'DIRECT';
+        else
+            [x,info] = amg(A,b,option);
+            if any(isFixDof) && Nborig > size(x,1) % a larger system
+                xD(isFreeDof,:) = x;
+                x = xD;
+            end
+            Ai{1} = A; Bi{1} = tril(A); BTi{1} = Bi'; Res = []; Pro = [];
+            fprintf('No hierarchical structure of the mesh is found. AMG is used. \n');    
+            return
+        end
+    end
+end    
+
+%% Direct solver
+if strcmp(solver,'DIRECT')        
+    x = A\b;                       % use direct solver                          
+    flag = 2; itStep = 0; err = norm(b-A*x)/norm(b); time = cputime - t;
+    %% Modify x to include fix dof
+    if any(isFixDof) && Nborig > size(x,1)
+        xD(isFreeDof,:) = x;
+        x = xD;
+    end
+    if printlevel >= 1
+        fprintf('Direct solver \n')
+        fprintf('#dof: %8.0u,  #nnz: %8.0u,  iter: %2.0u,  err = %8.4e,  time = %4.2g s\n',...
+                 Ndof, nnz(A), itStep, max(err(end,:)), time)
+        if level == 1
+            fprintf('No coarsening of the grid. \n')
+        end
+    end
+    info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr',max(err(end,:)));    
+    Ai{1} = A; Bi{1} = tril(A); BTi{1} = Bi'; Res = []; Pro = [];
+    return
 end
 
 %% Krylov iterative methods use Multigrid-type Preconditioners
