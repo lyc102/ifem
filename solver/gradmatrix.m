@@ -1,7 +1,7 @@
 function grad = gradmatrix(edge,isBdEdge)
 %% GRADMATRIX matrix for the gradient of a nodal linear element
 %
-% grad = gradmatrix(edge) returns the sparse matrix grad which an NE by 3N
+% grad = gradmatrix(edge) returns the sparse matrix grad which is an NE by 3N
 % matrix mapping linear nodal element (a vector with length N) to lowest
 % order linear edge element (a vector with length NE). The trace is zero at
 % certain boundary edges given by isBdEdge.

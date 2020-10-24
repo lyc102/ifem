@@ -1,26 +1,16 @@
-function [u,p,info] =  diapreMaxwellsaddle(A,G,f,g,node,elem,bdFlag,option)
+function [u,p,info] =  diapreMaxwellsaddle(A,G,f,g,node,elem,edge,option,varargin)
 %Solve the maxwell system with divgence free condition,
 %         [A  G] [u]  = f                (1.1)
-%         [G' O] [p]  = g0               (1.2)
+%         [G' O] [p]  = g                (1.2)
 % where  G = M_e*grad.
 %
-% This system can be rewritten as 
-%         [A+G*DMinv*G'       G] [u]  = f +G*DMinv*g0
-%         [G'                 O] [p]  = g0
-%
-%  We solve the above system using minres with the diagonal preconditioner
-%
-%      [Abar O]^{-1}
-%      [ O   M]
-%
-% Created by Jie Zhou based on tripreMaxwellsaddle on Aug 23, 2015.
-%
-% Modified by Long Chen. Sep 29, 2015. Use a different diagonal
-% precondtioner motivated by Stokes equation.
+
 
 
 Nf = length(f); 
 Ng = length(g);
+N = size(node,1);
+dim = size(node,2);
 t = cputime;
 
 %% Parameters
@@ -31,29 +21,31 @@ x0 = option.x0;
 tol = option.tol; 
 maxIt = option.solvermaxit; 
 printlevel = option.printlevel; 
-d = size(node,2);
+dim = size(node,2);
 
 %% Set up auxiliary matrices
-if d == 2
-    area = simplexvolume(node,elem);
-    Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3)],[area;area;area]/3,...
-                        [max(elem(:)),1]);
-elseif d == 3
-    volume = abs(simplexvolume(node,elem)); % uniform refinement in 3D is not orientation presereved
-    Mvlump = accumarray([elem(:,1);elem(:,2);elem(:,3);elem(:,4)],...
-                        [volume;volume;volume;volume]/4,[max(elem(:)),1]);    
-end
-DMinv = spdiags(1./Mvlump(option.isFreeNode),0,Ng,Ng);
-% f = f + G*(DMinv*g);  % add second equation to the first one
-Abar = G*DMinv*G' + A;
-
-%% Set up matrices for multigrid
+D = diag(A);
+B = tril(A);
+Bt = B';
+% Laplace for P1 element
+Ap = assemblematrix(node,elem); % Lap for P1 element
 setupOption.solver = 'NO';
-setupOption.isFreeEdge = option.isFreeEdge;
-[x,info,Ai,Bi,BBi,Res,Pro] = mgHodgeLapE(Abar,f,node,elem,bdFlag,setupOption); %#ok<*ASGLU>
+% setupOption.isFreeEdge = option.isFreeEdge;
+HB = varargin{end};
+if isempty(HB) 
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap,g,elem,setupOption);
+else % HB is only needed for adaptive grid in 3D
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap,g,elem,setupOption,HB);
+end
+% transfer matrix
+if Ndof == NE        % lowest order edge element
+    II = node2edgematrix(node,edge,isBdEdge);
+elseif Ndof >= 2*NE  % first or second order edge element
+    II = node2edgematrix1(node,edge,isBdEdge);
+end
+IIt = II';
 
 %% Form a big matrix equation
-% bigA = [Abar,G; G',sparse(Ng,Ng)];
 bigA = [A,G; G',sparse(Ng,Ng)];
 bigF = [f; g];
 
@@ -68,7 +60,7 @@ else
    option.solvermaxIt = 1; 
 end
 option.setupflag = false;
-option.x0 = zeros(Nf,1);
+option.x0 = zeros(Ndof,1);
 option.printlevel = 0;
 % minres for the saddle point system
 [x,flag,stopErr,itStep,err] = minres(bigA,bigF,tol,maxIt,@diagpreconditioner,[],x0);
@@ -91,10 +83,19 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
 
 %% Preconditioner 
     function e = diagpreconditioner(r)
-        r1 = r(1:Nf);
-        r2 = r(Nf+1:end);          
-        e1 =  mgHodgeLapE(Abar,r1,node,elem,bdFlag,option,Ai,Bi,BBi,Res,Pro);
-        e2 =  DMinv*r2;              
+        % separate residual 
+        ru = r(1:Nf);
+        rp = r(Nf+1:end);  
+        % HX preconditioner for curlcurl matrix
+        eh = Bt\(D.*(B\ru));  % Gauss-Seidal for A
+        % transfer to the vector P1 linear element space
+        rc = reshape(IIt*ru(1:size(IIt,2)),N,dim);  
+        eaux = mg(Ap,rc,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
+        % transfer back to the edge element space
+        eaux = [II*reshape(eaux,dim*N,1); zeros(Nf-size(IIt,2),1)]; 
+        e1 = eh + eaux;
+        % Laplacian for p
+        e2 = mg(Ap,rp,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
         e  =  [e1; e2];   
     end
 end
