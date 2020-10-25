@@ -57,7 +57,7 @@ p = up(Nu+1:end);
 %% Output
 time = cputime - t;
 if printlevel >= 1
-    fprintf('Diagonal Preconditioner Preconditioned MINRES \n');
+    fprintf('Diagonal Preconditioned MINRES for Stokes Equations \n');
     fprintf('#dof: %8.0u,  #nnz: %8.0u, V-cycle: %2.0u, iter: %2.0u,   err = %8.2e,   time = %4.2g s\n',...
                  Ndof, nnz(bigA), option.solvermaxIt, itStep, stopErr, time)
 end

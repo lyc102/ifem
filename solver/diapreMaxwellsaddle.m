@@ -64,10 +64,10 @@ else % HB is only needed for adaptive grid in 3D
     [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap1,zeros(Np1,1),elem,setupOption,HB);
 end
 % transfer matrix
-if Nu <= NE        % lowest order edge element
+if Nu <= NE && Np <= N   % lowest order edge element
     II = node2edgematrix(node,edge,isBdEdge);
     II = II(isFreeEdge,repmat(isFreeNode,dim,1));
-elseif Nu <= 2*NE  % first or second order edge element
+elseif Nu <= 2*NE && Np <= N+NE  % first or second order edge element
     II = node2edgematrix1(node,edge,isBdEdge);
     II = II([isFreeEdge; isFreeEdge],repmat(isFreeNode,dim,1));
 end
@@ -109,7 +109,7 @@ p = x(Nu+1:end);
 %% Output
 time = cputime - t;
 if printlevel >= 1
-    fprintf('Diagonal Preconditioned MINRES \n');
+    fprintf('Diagonal Preconditioned MINRES for Maxwell Equations \n');
     fprintf('#dof: %8.0u,  #nnz: %8.0u, V-cycle: %2.0u, iter: %2.0u,   err = %8.2e,   time = %4.2g s\n',...
                  Ndof, nnz(bigA), option.solvermaxIt, itStep, stopErr, time)
 end
