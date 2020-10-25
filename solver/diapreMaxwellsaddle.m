@@ -1,4 +1,4 @@
-function [u,p,info] =  diapreMaxwellsaddle(A,G,f,g,node,elem,HB,edge,isBdEdge,option)
+function [u,p,info] =  diapreMaxwellsaddle(A,G,f,g,node,elem,Me,HB,edge,isBdEdge,option)
 %Solve the maxwell system with divgence free condition,
 %         [A  G] [u]  = f                (1.1)
 %         [G' O] [p]  = g                (1.2)
@@ -25,23 +25,43 @@ printlevel = option.printlevel;
 dim = size(node,2);
 
 %% Set up auxiliary matrices
-D = diag(A);
-B = tril(A);
+AM = A + Me;
+D = diag(AM);
+B = tril(AM);
 Bt = B';
-% Laplace for P1 element
-Ap = assemblematrix(node,elem); % Lap for P1 element
+% Laplace for P1 element or P2 element
+Ap1 = assemblematrix(node,elem); % Lap for P1 element
+if  Np > N && Np <= N+NE % Lap for P2 element
+    mesh.node = node;
+    mesh.elem = elem;
+    mesh.size = size(node,1);
+    if dim == 2
+        eqn = getfemmatrix(mesh,'Poisson','P2');
+        Ap = eqn.A;
+    end
+    if dim == 3
+        eqn = getfemmatrix3(mesh,'Poisson','P2');
+        Ap = eqn.A;
+    end
+end
 setupOption.solver = 'NO';
 setupOption.setupflag = 1;
 isFreeNode = true(N,1);
 isFreeEdge = ~isBdEdge;
 isFreeNode(edge(isBdEdge,:)) = false;
+Ap1 = Ap1(isFreeNode,isFreeNode);
+Np1 = size(Ap1,1);  % length of free nodes
+Ne1 = sum(isFreeEdge); % length of free edges
 setupOption.freeDof = isFreeNode;
-Ap = Ap(isFreeNode,isFreeNode);
+if Np > N && Np <= N+NE  % P2 element
+    freeP2Dof = [isFreeNode; isFreeEdge];
+    Ap = Ap(freeP2Dof,freeP2Dof);
+end
 % setupOption.isFreeEdge = option.isFreeEdge;
 if isempty(HB) 
-    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap,g,elem,setupOption);
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap1,zeros(Np1,1),elem,setupOption);
 else % HB is only needed for adaptive grid in 3D
-    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap,g,elem,setupOption,HB);
+    [~,~,Ai,Bi,BBi,Res,Pro,isFreeDof] = mg(Ap1,zeros(Np1,1),elem,setupOption,HB);
 end
 % transfer matrix
 if Nu <= NE        % lowest order edge element
@@ -49,11 +69,19 @@ if Nu <= NE        % lowest order edge element
     II = II(isFreeEdge,repmat(isFreeNode,dim,1));
 elseif Nu <= 2*NE  % first or second order edge element
     II = node2edgematrix1(node,edge,isBdEdge);
+    II = II([isFreeEdge; isFreeEdge],repmat(isFreeNode,dim,1));
 end
 IIt = II';
 grad = gradmatrix(edge,isBdEdge);
 grad = grad(isFreeEdge,isFreeNode);
 gradt = grad';
+if Np > N && Np <= N+NE  % P2 element
+    P1toP2 = sparse([(1:N)'; N+(1:NE)'; N+(1:NE)'], ...
+                    [(1:N)'; double(edge(:))],...
+                    [ones(N,1); 0.5*ones(2*NE,1)]',Ndof,N);
+    auxPro = P1toP2(freeP2Dof,isFreeNode);        
+    auxRes = auxPro';
+end
 
 %% Form a big matrix equation
 bigA = [A,G; G',sparse(Np,Np)];
@@ -67,11 +95,11 @@ end
 if isfield(option,'Vit')
    option.solvermaxIt = option.Vit;
 else
-   option.solvermaxIt = 1; 
+   option.solvermaxIt = 2; 
 end
 option.setupflag = false;
 option.printlevel = 0;
-option.x0 = zeros(Np,1);
+option.x0 = zeros(Np1,1);
 % minres for the saddle point system
 [x,flag,stopErr,itStep,err] = minres(bigA,bigF,tol,maxIt,@diagpreconditioner,[],x0);
 % extract solution
@@ -99,18 +127,25 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
         % HX preconditioner for curlcurl matrix
         eh = Bt\(D.*(B\ru));  % Gauss-Seidal for A
         % transfer to the vector P1 linear element space
-        rc = reshape(IIt*ru(1:size(IIt,2)),Np,dim);  
-        eaux = mg(Ap,rc,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
+        rc = reshape(IIt*ru,Np1,dim);  
+        eaux = mg(Ap1,rc,elem,option,Ai,Bi,BBi,Res,Pro);
         % transfer back to the edge element space
-        eaux = [II*reshape(eaux,dim*Np,1); zeros(Nu-size(IIt,2),1)]; 
+        eaux = II*reshape(eaux,dim*Np1,1); 
         % another correction from P1
-        auxrp = gradt*ru;
+        auxrp = gradt*ru(1:Ne1);
         eaux2 = zeros(Nu,1);
-        auxep = mg(Ap,auxrp,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
-        eaux2(1:size(grad,1)) = grad*auxep;
+        auxep = mg(Ap1,auxrp,elem,option,Ai,Bi,BBi,Res,Pro);
+        eaux2(1:Ne1) = grad*auxep;
         e1 = eh + eaux + eaux2;
         % Laplacian for p
-        e2 = mg(Ap,rp,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
+        if Np <= N
+            e2 = mg(Ap1,rp,elem,option,Ai,Bi,BBi,Res,Pro);
+        elseif Np <= N+NE
+            e2 = triu(Ap)\(diag(Ap).*(tril(Ap)\rp));
+            rc = auxRes*(rp-Ap*e2);
+            ep1 = mg(Ap1,rc,elem,option,Ai,Bi,BBi,Res,Pro);
+            e2 = e2 + auxPro*ep1;
+        end
         e  =  [e1; e2];   
     end
 end

@@ -355,6 +355,10 @@ switch method
         [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,bigGrad,option.mg,HB);
         u(isFreeDofu)  = u0;
         p(isFreeDofp)  = p0;        
+    case 'DIAG' % MINRES with a diagonal preconditioner
+        [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,M,HB,edge,~isFreeEdge,option.mg);
+        u(isFreeDofu)  = u0;
+        p(isFreeDofp)  = p0;        
 end
 
 %% Output

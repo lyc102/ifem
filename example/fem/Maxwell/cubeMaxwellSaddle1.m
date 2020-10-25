@@ -24,6 +24,7 @@ bdFlag = setboundary3(node,elem,'Dirichlet');
 option.printlevel = 0;
 % option.solver = 'direct';
 option.solver = 'mg';
+option.solver = 'diag';
 
 %% Parameters
 maxIt = 3; 

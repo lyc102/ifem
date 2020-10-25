@@ -304,7 +304,7 @@ switch method
         u(isFreeEdge)  = u0;
         p(isFreeNode)  = p0;
     case 'DIAG' % MINRES with a diagonal preconditioner
-        [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,HB,edge,~isFreeEdge,option.mg);
+        [u0,p0,info] = diapreMaxwellsaddle(A,G,f,g0,node,elemMG,M,HB,edge,~isFreeEdge,option.mg);
         u(isFreeEdge)  = u0;
         p(isFreeNode)  = p0;
 end

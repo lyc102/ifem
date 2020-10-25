@@ -28,9 +28,12 @@ function [eqn,T,option] = getfemmatrix3(mesh,pde,fem,var)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 %% Mesh
+N0 = 1;
 if isfield(mesh,'node') && isfield(mesh,'elem')
     node = mesh.node;
     elem = mesh.elem;
+    mesh.shape = 'no'; % if the mesh is given, no need to generate
+    N0 = size(node,1);
 end
 if ~isfield(mesh,'size')
     mesh.size = 1e5; % default size is 100,000
@@ -42,7 +45,7 @@ if ~isfield(mesh,'type')
     mesh.type = 'uniform';
 end
 % estimate n0 and refinement level
-L = floor(log2(mesh.size)/3); 
+L = floor(log2(mesh.size/N0)/3); 
 n = ceil((mesh.size/8^L)^(1/3)); % number of nodes in one direction
 % types of meshes
 if strcmp(mesh.type,'adaptive')
@@ -70,7 +73,7 @@ else
     end    
 end
 bdFlag = setboundary3(node,elem,'Dirichlet');
-showboundary3(node,elem);
+% showboundary3(node,elem);
 option.N0 = size(node,1);
 
 %% FEM

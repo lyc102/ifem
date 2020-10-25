@@ -26,7 +26,7 @@ option.printlevel = 0;
 option.solver = 'diag';
 
 %% Parameters
-maxIt = 4; 
+maxIt = 3; 
 N = zeros(maxIt,1); 
 h = zeros(maxIt,1);
 energyErr = zeros(maxIt,1);
