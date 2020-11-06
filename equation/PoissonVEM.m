@@ -1,4 +1,4 @@
-function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
+function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde,option)
 %% POISSONVEM solve Poisson equation using virtual element method
 %
 %     -\Delta u = f,  in Omega
@@ -35,8 +35,14 @@ function [u,A,assembleTime,solverTime] = PoissonVEM(node,elem,pde)
 %
 % Copyright (C)  Long Chen. See COPYRIGHT.txt for details.
 
-%% Assemble the matrix equation
+%% Preprocess
+if ~exist('option','var'), option = []; end
 N = size(node,1); % number of nodes
+if ~isfield(pde,'d'), pde.d = []; end
+if ~isfield(option,'dquadorder'), option.dquadorder = 1; end
+if ~isfield(option,'bdFlag'), option.bdFlag = []; end
+
+%% Assemble the matrix equation
 elemVertexNumber = cellfun('length',elem);% number of vertices per element
 nnz = sum(elemVertexNumber.^2); % a upper bound on non-zeros
 ii = zeros(nnz,1); % initialization
@@ -88,13 +94,20 @@ for nv = min(elemVertexNumber):max(elemVertexNumber)
         end
         IminusP(:,i,i) = ones(NT,1) + IminusP(:,i,i);
     end
+    % diffusion coefficient
+    if ~isempty(pde.d) && isnumeric(pde.d)
+        K = pde.d(idx);                                 % d is an array
+    end
+    if ~isempty(pde.d) && ~isnumeric(pde.d)       % d is a function
+        K = pde.d([cx, cy]);
+    end
     % assemble the matrix
     for i = 1:nv
         for j = 1:nv
             ii(index+1:index+NT) = nvElem(:,i);
             jj(index+1:index+NT) = nvElem(:,j);
-            ss(index+1:index+NT) = Bx(:,i).*Bx(:,j) + By(:,i).*By(:,j) ...
-                                 + dot(IminusP(:,:,i),IminusP(:,:,j),2);
+            ss(index+1:index+NT) = K.*(Bx(:,i).*Bx(:,j) + By(:,i).*By(:,j) ...
+                                 + dot(IminusP(:,:,i),IminusP(:,:,j),2));
             index = index + NT;
         end
     end
@@ -116,6 +129,8 @@ isBdNode(bdEdge) = true;
 u = zeros(N,1);
 u(isBdNode) = pde.g_D(node(isBdNode,:));
 b = b - A*u;
+
+%% TODO:modify Neuman boundary
 
 %% Solve Au = b
 isFreeNode = ~isBdNode; % all interior nodes are free
