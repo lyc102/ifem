@@ -97,9 +97,10 @@ for nv = min(elemVertexNumber):max(elemVertexNumber)
     % diffusion coefficient
     if ~isempty(pde.d) && isnumeric(pde.d)
         K = pde.d(idx);                                 % d is an array
-    end
-    if ~isempty(pde.d) && ~isnumeric(pde.d)       % d is a function
+    elseif ~isempty(pde.d) && ~isnumeric(pde.d)       % d is a function
         K = pde.d([cx, cy]);
+    elseif isempty(pde.d)
+        K = 1;
     end
     % assemble the matrix
     for i = 1:nv
