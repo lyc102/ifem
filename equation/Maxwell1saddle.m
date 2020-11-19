@@ -351,6 +351,11 @@ switch method
         p(isFreeDofp) = temp(Nui+1:Nui+Npi);
         residual = norm([f;g0] - bigA*temp);
         info = struct('solverTime',cputime - t,'itStep',0,'err',residual,'flag',2,'stopErr',residual);
+        if option.printlevel >= 1
+            fprintf('Direct solver \n')
+            fprintf('#dof: %8.0u,  #nnz: %8.0u,  iter: %2.0u,  err = %8.4e,  time = %4.2g s\n',...
+                Npi+Nui, nnz(A), 0, residual, info.solverTime)
+        end
     case 'MG'
         [u0,p0,info] = mgMaxwellsaddle(A,G,f,g0,node,elemMG,bdFlagMG,M,bigGrad,option.mg,HB);
         u(isFreeDofu)  = u0;
