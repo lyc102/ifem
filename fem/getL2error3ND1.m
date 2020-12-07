@@ -1,4 +1,4 @@
-function err = getL2error3ND1(node,elem,exactE,Eh,markedElem)
+function [err, errElem] = getL2error3ND1(node,elem,exactE,Eh,markedElem)
 %% GETL2ERROR3ND1 L2 norm of the linear Nedelec edge element.
 % 
 %  err = GETL2ERROR3ND1(node,elem,exactE,Eh,markedElem);
@@ -59,4 +59,5 @@ err = err.*volume;
 if (nargin == 5) && ~isempty(markedElem)
     err = err(markedElem); % L2 err on some marked region
 end
+if nargout > 1; errElem = sqrt(err); end
 err = sqrt(sum(err));
