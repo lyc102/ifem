@@ -27,35 +27,26 @@ N = size(A,1);
 %% Index map between coarse grid and fine grid
 allNode = (1:N)';          
 fineNode = allNode(~isC);
+HB(:,1) = fineNode;
 % Nf = length(fineNode);  
 Nc = N-length(fineNode);
-coarseNode = (1:Nc)';    % coarse node index
-coarse2fine = find(isC); % coarse node index in the fine grid
+coarseNode = (1:Nc)';          % coarse node index
+coarseNodeFineIdx = find(isC); % coarse node index in the fine grid
 % fine2coarse(isC) = coarseNode;
-ip = coarse2fine;  % coarse node index in the fine grid
-jp = coarseNode;   % coarse node index
-sp = ones(Nc,1);   % identity matrix for coarse nodes in the fine grid
 
-%% Construct prolongation and restriction operator
-Afc = A(fineNode,coarse2fine);     % matrix-dependent interpolation
-[i,j,s] = find(Afc);
-i2j1(i(1:end)) = j(1:end);
-i2s1(i(1:end)) = s(1:end);
-i2j2(i(end:-1:1)) = j(end:-1:1);
-i2s2(i(end:-1:1)) = s(end:-1:1);
-Dsum = i2s1' + i2s2';
-idx = (Dsum ~= 0);
-Dsum = Dsum(idx);
-i2j1 = i2j1(idx)';  i2s1 = i2s1(idx)';
-i2j2 = i2j2(idx)';  i2s2 = i2s2(idx)';
-% Dsum = sum(Afc,2);
-% Dsum = spdiags(1./Dsum, 0, Nf, Nf); % normalize to preserve constant
-% [ti,tj,tw] = find(Dsum*Afc);
-% ip = [ip; fineNode(ti)];  % fine node index
-% jp = [jp; tj];            % coarse node index
-% sp = [sp; tw];            % weight
-ip = [ip; fineNode(idx); fineNode(idx)];  % fine node index
-jp = [jp; i2j1; i2j2];            % coarse node index
-sp = [sp; i2s1./Dsum; i2s2./Dsum];            % weight
+%% Construct matrix-dependent prolongation and restriction operator
+Afc = A(fineNode,coarseNodeFineIdx);     % sub-graph between F and C
+[i,j,s] = find(Afc);                     % edges between [F C]
+HB(i(end:-1:1),3) = j(end:-1:1);         % random chose two nodes in C
+HB(i(1:end),2) = j(1:end);               % as parents of a node in F
+w(i(end:-1:1),2) = s(end:-1:1);          
+w(i(1:end),1) = s(1:end);                % use corresponding aij as weight 
+Dsum = sum(w,2);     
+idx = (Dsum ~= 0);                       % consider non isolated vertices
+w = w(idx,:)./[Dsum(idx), Dsum(idx)];    % normalize the weight
+HB = HB(idx,:);
+ip = [coarseNodeFineIdx; HB(:,1); HB(:,1)];  % fine nodes index
+jp = [coarseNode;        HB(:,2); HB(:,3)];  % coarse nodes index
+sp = [ones(Nc,1);         w(:,1); w(:,2)];   % weight
 Pro = sparse(ip,jp,sp,N,Nc);
 Res = Pro';

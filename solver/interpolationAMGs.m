@@ -26,24 +26,19 @@ N = size(A,1);
 %% Index map between coarse grid and fine grid
 allNode = (1:N)';          
 fineNode = allNode(~isC);
-Nf = length(fineNode);  
 Nc = N-length(fineNode);
 coarseNode = (1:Nc)';    % coarse node index
-coarse2fine = find(isC); % coarse node index in the fine grid
-% fine2coarse(isC) = coarseNode;
-ip = coarse2fine;  % coarse node index in the fine grid
-jp = coarseNode;   % coarse node index
-sp = ones(Nc,1);   % identity matrix for coarse nodes in the fine grid
+coarseNodeFineIdx = find(isC); % coarse node index in the fine grid
 
 %% Construct prolongation and restriction operator
-Acf = A(coarse2fine,fineNode);     % matrix-dependent interpolation
+Acf = A(coarseNodeFineIdx,fineNode);     
 Dsum = sum(Acf,1);
 idx = (Dsum ~= 0);
 Nf = sum(idx);
 Dsum = spdiags(1./transpose(Dsum(idx)), 0, Nf, Nf); % normalize to preserve constant
 [tj,ti,tw] = find(Acf(:,idx)*Dsum);  % note the output i,j are switched 
-ip = [ip; fineNode(ti)];  % fine node index
-jp = [jp; tj];            % coarse node index
-sp = [sp; tw];            % weight
+ip = [coarseNodeFineIdx; fineNode(ti)];  % fine node index
+jp = [coarseNode; tj];            % coarse node index
+sp = [ones(Nc,1); tw];            % weight
 Pro = sparse(ip,jp,sp,N,Nc);
 Res = Pro';
