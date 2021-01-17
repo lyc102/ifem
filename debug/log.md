@@ -307,3 +307,9 @@ The Delaunay triangulation can't pick the correct diagonal and thus it is differ
 Try to shift the cube to parallelpipe so that the diagonal can be consistent. But Delaunay is not robust and even shift the coplanar points to non coplanar and thus creates slivers. 
 
 Change the different length and different mesh size by loop over the index.
+
+## Primal-Dual Weak-Galerkin
+Added a primal-dual weak-galerkin scheme in the `/research` folder. 
+TO-DO:
+-[ ] Fix the code when there are two or more cavities.
+-[ ] Currently the difference between $Qu - u_h$ can be used as an approximation to the harmonic field in that domain. Need to further verify this.
