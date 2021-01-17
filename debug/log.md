@@ -310,6 +310,8 @@ Change the different length and different mesh size by loop over the index.
 
 ## Primal-Dual Weak-Galerkin
 Added a primal-dual weak-galerkin scheme in the `/research` folder. 
+
 TO-DO:
--[ ] Fix the code when there are two or more cavities.
--[ ] Currently the difference between $Qu - u_h$ can be used as an approximation to the harmonic field in that domain. Need to further verify this.
+- [X] Add the postprocessing to the domain with 1 cavity.
+- [ ] Fix the code when there are two or more cavities.
+- [ ] Currently the difference between $Qu - u_h$ can be used as an approximation to the harmonic field in that domain. Need to further verify this.
