@@ -26,4 +26,4 @@ switch upper(method)
         isMark(idx(x < theta* x(NT))) = 1;
         isMark(idx(1)) = 1;
 end
-markedElem = uint32(find(isMark==true));
+markedElem = uint32(find(isMark));

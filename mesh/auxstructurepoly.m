@@ -90,6 +90,6 @@ bdEdge = allEdge(i1(i1 == i2), :);
 T.edge2elem = edge2elem;
 T.elem2edge = elem2edge;
 T.neighbor = neighbor;
-T.edge = uint32(edge);
+T.edge = edge;
 T.allEdge = uint32(allEdge);
 T.bdEdge = uint32(bdEdge);

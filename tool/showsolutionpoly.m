@@ -50,6 +50,6 @@ for Nv = min(elemVertexNumber):max(elemVertexNumber)
 end
 view(3); axis tight; grid on;
 camproj('perspective');
-
+hold off
 %%
 
