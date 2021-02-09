@@ -52,7 +52,7 @@ if ~exist('k', 'var'); k = 1; end
 err(abs(err) <= 1e-15) = 1e-15; % Prevent the case err = 0, log(err) = -Inf.
 p = polyfit(log(N(k:end)),log(err(k:end)),1);
 r = single(p(1));
-s = 0.75*err(1)/N(1)^r;
+s = 0.8*err(k)/N(k)^r;
 if exist('opt','var')
     h = loglog(N,err,opt{:});
     set(h,'linewidth',2);
