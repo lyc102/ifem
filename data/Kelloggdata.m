@@ -54,7 +54,8 @@ pde = struct('f',0,...
         theta = atan2(p(:,2),p(:,1));  % polar angle
         theta = (theta>= 0).*theta +(theta<0).*(theta+2*pi);
         t = 1+(p(:,2).^2)./(p(:,1).^2);
-        r = sqrt(sum(p.^2,2));
+        % r = sqrt(sum(p.^2,2));
+        r = sqrt(p(:,1).^2+p(:,2).^2); % good for both 2D and 3D
         rg = r.^gamma;
         
         ux1 = (p(:,1)> 0.0 & p(:,2)>= 0.0).*...
