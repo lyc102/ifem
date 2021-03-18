@@ -4,7 +4,9 @@ function elem = fixorientationpoly(node,elem,varargin)
 %   elem = fixorientationpoly(node,elem) reorder the elem to orient
 %   clockwise similar to the quad element set up. 
 %   elem{:} has to be a cell array. Default is counter-clockwise order.
-%
+%   Reference: A simple virtual element-based flux recovery on quadtree
+%              https://arxiv.org/abs/2006.05585
+%   
 %
 % See also fixorder, fixorder3
 %

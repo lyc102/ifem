@@ -13,7 +13,12 @@ function curlu = curlu3CR(elem2face,u,Dlambda)
 %    -4-
 % 
 % See also curlu3
-%
+% 
+% Reference: curlu3CR is used in computing the a posteriori error estimator 
+% for a decoupled formulation of the quad curl problem
+% - Error analysis of a decoupled finite element method for quad-curl problems
+%   arXiv:2102.03396
+% 
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 Dphi = -3*Dlambda;
