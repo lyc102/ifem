@@ -1,8 +1,8 @@
 function [soln,eqn,info] = Poisson3WG(node,elem,bdFlag,pde,option,varargin)
 %% POISSON3WG Poisson equation: P1 linear element in 3-D.
 %
-%   u = POISSON3WG(node,elem,pde,bdFlag) produces the linear finite element
-%   approximation of the Poisson equation
+%   u = POISSON3WG(node,elem,bdFlag,pde) produces the P0-P0 Weak Galerkin
+%   finite element approximation of the Poisson equation
 % 
 %       -div(d*grad(u))=f  in \Omega, with 
 %       Dirichlet boundary condition u=g_D on \Gamma_D, 
@@ -23,7 +23,7 @@ function [soln,eqn,info] = Poisson3WG(node,elem,bdFlag,pde,option,varargin)
 %   The diffusion coefficient d is a scalar function or a column array with
 %   the same length as the elem array. 
 % 
-%   u = Poisson3(node,elem,pde,bdFlag,HB,option) specifies the options.
+%   u = Poisson3WG(node,elem,bdFlag,pde,option) specifies the options.
 %     - option.solver == 'direct': the built in direct solver \ (mldivide)
 %     - option.solver == 'mg':     multigrid-type solvers mg is used.
 %     - option.solver == 'notsolve': the solution u = u_D. 
@@ -35,19 +35,19 @@ function [soln,eqn,info] = Poisson3WG(node,elem,bdFlag,pde,option,varargin)
 %   bdFlag can be skipped. The boundary condition is implicitly given in
 %   the pde structure by specifying g_D or g_N only. See examples below.
 %
-%   [u,A] = Poisson3(node,elem,pde,bdFlag,HB) returns also the
+%   [u,A] = Poisson3WG(node,elem,bdFlag,pde,HB) returns also the
 %   non-modified stiffness matrix A, which is semi-definite. The kernel of
 %   A consists of constant vectors. The matrix A can be used to evulate the
 %   bilinear form A(u,v) = u'*A*v, especially the enery norm of a finite
 %   element function u by sqrt(u'*A*u).
 %
-%   [u,A,eqn] = Poisson3(node,elem,pde,bdFlag,HB) returns also the equation
+%   [u,A,eqn] = Poisson3WG(node,elem,bdFlag,pde,HB) returns also the equation
 %   structure eqn, which includes: 
 %     - eqn.AD:  modified stiffness matrix AD;
 %     - eqn.b:   the right hand side. 
 %   The solution u = AD\b. The output eqn can be used to test other solvers.
 %
-%   [u,A,eqn,info] = Poisson3(node,elem,pde,bdFlag,HB) returns also the
+%   [u,A,eqn,info] = Poisson3WG(node,elem,bdFlag,pde) returns also the
 %   information on the assembeling and solver, which includes:
 %     - info.assembleTime: time to assemble the matrix equation
 %     - info.solverTime:   time to solve the matrix equation
@@ -69,26 +69,29 @@ function [soln,eqn,info] = Poisson3WG(node,elem,bdFlag,pde,option,varargin)
 %     % Homogenous Dirichlet boundary condition
 %     pde.f = inline('ones(size(p,1),1)','p');
 %     pde.g_D = 0;
-%     u = Poisson(node,elem,pde);
+%     u = Poisson3WG(node,elem,pde);
 %     figure(1); 
 %     showresult(node,elem,u);
 %     % Non-homogenous Dirichlet boundary condition
 %     pde.f = inline('-4*ones(size(p,1),1)','p');
 %     pde.g_D = inline('p(:,1).^2 + p(:,2).^2','p');
-%     u = Poisson(node,elem,pde);
+%     u = Poisson3WG(node,elem,pde);
 %     figure(2); 
 %     showresult(node,elem,u);
 %     % Homogenous Neumann boundary condition
 %     clear pde
 %     pde.f = inline('pi^2*cos(pi*p(:,1)).*cos(pi*p(:,2))','p');
-%     u = Poisson(node,elem,pde);
+%     u = Poisson3WG(node,elem,pde);
 %     figure(3);
 %     showresult(node,elem,u);
 %
 %   Example
 %     cubePoisson;
+
+%   Reference: Programming of Weak Galerkin Method. Long Chen 
+%   https://www.math.uci.edu/~chenlong/ifemdoc/fem/WGprogramming.pdf
 %
-%   See also Poisson3, squarePoisson, Lshape, crack, mg
+%   See also Poisson3, Poisson3WGfemrate, Lshape, crack, mg
 %
 %   Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
