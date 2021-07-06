@@ -1,4 +1,4 @@
-# ifem
+# iFEM: an integrated finite element method package in MATLAB
 iFEM is a MATLAB software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency. In this novel coding style, the sparse matrix and its operations are used extensively in the data structure and algorithms.
 
 
@@ -28,11 +28,20 @@ Add the path to iFEM into the path library of MATLAB by either:
 2. Go through examples in `\example` directory.
 
 
-## Feed Back
+## Feedback
 
 If you like it, please send me an email lyc102@gmail.com. If you  feel it is helpful for your research, please acknowledge your use by citing:
 
-L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical Report, University of California at Irvine, 2009.
+> L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical Report, University of California at Irvine, 2009.
+
+```bibtex
+@techreport{Chen:2008ifem,
+	author = {Long Chen},
+	journal = {Technical Report, University of California at Irvine},
+	title = {{$i$FEM}: an integrated finite element methods package in {MATLAB}},
+	url = {https://github.com/lyc102/ifem},
+	year = {2009}}
+```
 
 
 ## Acknowledgement
@@ -41,7 +50,7 @@ The author would like to thank Professor Michael Holst in University of Californ
 
 The author thanks students or postdocs Shuhao Cao, Ming Wang, Huayi Wei, Lin Zhong, and Jie Zhou for their contribution to iFEM in one way or another. Detailed credits can be found in the M-lint of several m files.
 
-The author is also grateful to the NSF for the partially support over the years. 
+The author is also grateful to the NSF for the partial support over the years. 
 
 
 Long Chen
