@@ -1,4 +1,4 @@
-function showrate2(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2)
+function [r1,r2] = showrate2(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2)
 %% SHOWRATE2 rate of two error sequences
 %
 % showrate2(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2) plots the

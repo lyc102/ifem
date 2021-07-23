@@ -1,4 +1,4 @@
-function showrate3(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2,N3,err3,k3,opt3,str3)
+function [r1,r2,r3] = showrate3(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2,N3,err3,k3,opt3,str3)
 %% SHOWRATE3 rate of two error sequences
 %
 % showrate3(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2,N3,err3,k3,opt3,str3)

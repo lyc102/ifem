@@ -39,10 +39,10 @@ p(cpointer:N) = pc;
 % coarest level
 Ac = A; % coarest grid matrix
 if ~isempty(Ac)
-    Nc = size(A,1);
+    Nc = size(Ac,1);
     i{level} = pc((1:Nc)');
     j{level} = pc((1:Nc)');
-    s{level} = ones(Nc,1);
+    s{level} = sqrt(diag(Ac));
 end
 % Lc = ichol(Ac);
 % [ic,jc,sc] = find(Lc);

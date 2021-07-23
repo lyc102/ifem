@@ -35,12 +35,10 @@ function [x,info,Ai,Bi,BBi,Res,Pro,cl] = amg(A,b,option,varargin)
 %   Example:
 %     load lakemesh
 %     [node,elem] = uniformrefine(node,elem);
-%     A = assemblematrix(node,elem);
-%     [bdNode,bdEdge,isBdNode] = findboundary(elem);
-%     A = A(~isBdNode,~isBdNode);
+%     [A,M] = assemblematrix(node,elem);
 %     N = size(A,1);
 %     b = ones(N,1)/N;
-%     x = amg(A,b);
+%     x = amg(A+M,b);
 %
 % See also mg
 %

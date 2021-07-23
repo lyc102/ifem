@@ -68,6 +68,9 @@ switch n
     %% Mass matrices for HB or NB bases
     [lambda, w] = quadpts(4);
     nQuad = size(lambda,1);
+    phi(:,6) = 4*lambda(:,1).*lambda(:,2);
+    phi(:,4) = 4*lambda(:,2).*lambda(:,3);
+    phi(:,5) = 4*lambda(:,3).*lambda(:,1);
     if strcmp(type,'HB')
         phi(:,1) = lambda(:,1);
         phi(:,2) = lambda(:,2);
@@ -77,9 +80,6 @@ switch n
         phi(:,2) = lambda(:,2).*(2*lambda(:,2)-1);
         phi(:,3) = lambda(:,3).*(2*lambda(:,3)-1);
     end
-    phi(:,4) = 4*lambda(:,2).*lambda(:,3);
-    phi(:,5) = 4*lambda(:,3).*lambda(:,1);
-    phi(:,6) = 4*lambda(:,1).*lambda(:,2);
 
     Nbases = 6; NMhalf = 21;
     ii = zeros(NMhalf*NT,1); 
