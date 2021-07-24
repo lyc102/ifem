@@ -12,12 +12,12 @@ sidebar:
 for the main building blocks of adaptive finite element methods and multigrid methods 
 on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency.
 
-- [Basic Data Structure](../ifemdoc/mesh/meshdoc.html)
-- [Finite Element Methods](../ifemdoc/fem/femcontent.html)
-- [Adaptive Finite Element Methods](../ifemdoc/afem/afemdoc.html)
-- [Solvers of Linear Algebraic Equations](../ifemdoc/solver/solverintroduction.html)
-- [Mesh Generator and Smoothing/Optimization](../ifemdoc/mesh/meshoptdoc.html)
-- [Projects](../ifemdoc/project/projectcontent.html)
+- [Basic Data Structure](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshdoc.html)
+- [Finite Element Methods](https://www.math.uci.edu/~chenlong/ifemdoc/fem/femcontent.html)
+- [Adaptive Finite Element Methods](https://www.math.uci.edu/~chenlong/ifemdoc/afem/afemdoc.html)
+- [Solvers of Linear Algebraic Equations](https://www.math.uci.edu/~chenlong/ifemdoc/solver/solverintroduction.html)
+- [Mesh Generator and Smoothing/Optimization](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshoptdoc.html)
+- [Projects](https://www.math.uci.edu/~chenlong/ifemdoc/project/projectcontent.html)
 
 
 
