@@ -6,4 +6,5 @@
 
 addpath(genpath(pwd),'-begin');
 rmpath(genpath('./.git'));
+rmpath(genpath('./docs'));
 savepath;

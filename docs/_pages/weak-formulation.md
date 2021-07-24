@@ -3,7 +3,7 @@ permalink: /docs/weak-formulation/
 title: "Weak formulation"
 excerpt: "FEM 101"
 sidebar:
-    nav: docs
+    nav: fem
 ---
 
 ## This is a test page

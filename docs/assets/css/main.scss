@@ -3,7 +3,12 @@
 ---
 
 @charset "utf-8";
-$monospace  : Monaco, Consolas, "Lucida Console", monospace;
+$sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
+$monospace: "Menlo", "Inconsolata", "Consolas", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+
+$right-sidebar-width-narrow: 150px !default;
+$right-sidebar-width: 200px !default;
+
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 
@@ -16,7 +21,7 @@ $monospace  : Monaco, Consolas, "Lucida Console", monospace;
 // This part is for code blocks
 code {
     font-family: $monospace;
-    font-size: 1.22em;
+    font-size: 1.2em;
   }
   
   // This part is for inline code
@@ -27,5 +32,18 @@ code {
   td > code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
-    font-size: 0.94em;
+    font-size: 1em;
+  }
+
+  .page {
+    @include breakpoint($large) {
+      float: right;
+      width: calc(100% - #{$right-sidebar-width-narrow});
+      padding-right: $right-sidebar-width-narrow;
+    }
+  
+    @include breakpoint($x-large) {
+      width: calc(100% - #{$right-sidebar-width});
+      padding-right: $right-sidebar-width-narrow;
+    }
   }

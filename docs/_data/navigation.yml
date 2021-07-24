@@ -8,10 +8,22 @@ main:
 docs:
   - title: Getting Started
     children:
-      - title: "Quick-Start Guide"
-        url: /docs/quick-start-guide/
       - title: "Installation"
         url: /docs/installation/
+      - title: "Quick-Start: Poisson equation in 2D"
+        url: /docs/quick-start-guide/
+  - title: Major Functions
+    children:
+      - title: "Basic Data Structure"
+        url: /docs/data-structure/
+      - title: "Finite Element Methods"
+        url: /docs/fem/
+      - title: "Adaptive Finite Element Methods"
+        url: /docs/afem/
+      - title: "Solvers of Linear Algebraic Equations"
+        url: /docs/solvers/
+      - title: "Mesh Generator and Smoothing/Optimization"
+        url: /docs/mesh-generator/
   - title: Finite element methods
     children:
       - title: "Weak formulation"
@@ -26,36 +38,19 @@ docs:
       #   url: /docs/authors/
       # - title: "Layouts"
       #   url: /docs/layouts/
-  - title: Data Structure
+  - title: Sample Projects
     children:
-      - title: "Generating auxiliary structures"
-        url: /docs/auxstruture/
-      - title: "TODO"
-        url: /todo/
-      # - title: "Working with Collections"
-      #   url: /docs/collections/
-      # - title: "Helpers"
-      #   url: /docs/helpers/
-      # - title: "Utility Classes"
-      #   url: /docs/utility-classes/
-  - title: Examples
-    children:
-      - title: "Poisson equation in 2D"
-        url: /pages/poisson/
       - title: "Maxwell equation in 3D"
         url: /pages/maxwell/
-  # - title: Meta
-  #   children:
-  #     - title: "History"
-  #       url: /docs/history/
-  #     - title: "Contributing"
-  #       url: /docs/contributing/
-  #     - title: "Old 2.2 Docs"
-  #       url: /docs/docs-2-2/
-  #     - title: "License"
-  #       url: /docs/license/
-  #     - title: "Terms &amp; Privacy Policy"
-  #       url: /terms/
+
+fem:
+  - title: "Back to main"
+    url: /
+  - title: "Finite Element Methods"
+    children:
+      - title: "weak formulation"
+        url: /docs/weak-formulation/
+
 
 # sidebar navigation list sample
 sidebar-sample:
