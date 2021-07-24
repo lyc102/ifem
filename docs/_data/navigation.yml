@@ -15,7 +15,7 @@ docs:
   - title: Major Functions
     children:
       - title: "Basic Data Structure"
-        url: /docs/data-structure/
+        url: /docs/mesh/
       - title: "Finite Element Methods"
         url: /docs/fem/
       - title: "Adaptive Finite Element Methods"
@@ -42,14 +42,43 @@ docs:
     children:
       - title: "Maxwell equation in 3D"
         url: /pages/maxwell/
+  - title: Develop
+    children:
+      - title: "Dev notes"
+        url: /docs/dev-logs/
+      - title: "Site logs"
+        url: /docs/site-logs/
 
 fem:
   - title: "Back to main"
     url: /
   - title: "Finite Element Methods"
     children:
-      - title: "weak formulation"
-        url: /docs/weak-formulation/
+      - title: "Finite Element Methods for Poisson Equation"
+        url: /docs/fem-poisson/
+      - title: "Projects: Linear Finite Element Methods"
+        url: /docs/fem-projects/
+      - title: "A List of Examples"
+        url: /docs/fem-examples/
+      - title: "FEM workflow"
+        url: /docs/fem-workflow/
+
+mesh:
+  - title: "Back to main"
+    url: /
+  - title: "Basic mesh data structure"
+    children:
+      - title: "Basic mesh data structure"
+        url: /docs/mesh-basic/
+      - title: "Boundary conditions"
+        url: /docs/mesh-bd/
+      - title: "Auxiliary mesh data structures"
+        url: /docs/mesh-auxstructure/
+      - title: "Simplicial complex in two dimensions"
+        url: /docs/mesh-sc/
+      - title: "Simplicial complex in three dimensions"
+        url: /docs/mesh-sc3/
+
 
 
 # sidebar navigation list sample

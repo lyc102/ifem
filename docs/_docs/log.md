@@ -1,3 +1,22 @@
+---
+permalink: /docs/dev-logs/
+title: "iFEM development notes"
+sidebar:
+    nav: docs
+---
+
+## TODO
+
+- [ ]: Design HX preconditioner for solving HodgeLap. The current one is only for edge element on uniform refine mesh since the transfer operator is only implemented. Then modify HX precondition to solve this restriction. 
+- [x]:  Stokes equations in 3D.
+- [ ]: Maxwellsaddle with more edge elements. 
+- [x] Add the postprocessing to the domain with 1 cavity.
+- [x] Fix the code when there are two or more cavities.
+- [x] Currently the difference between $Qu - u_h$ can be used as an approximation to the harmonic field in that domain. Need to further verify this.
+- [x] prolongation and restriction operators in `mgHodgeLapE.m` is built for lowest order Nedelec elements. 
+
+
+
 ## coarsen3
 
 - In the input and output, the ordering of arguments is changed to `bdFlag, HB` 
@@ -13,7 +32,7 @@ Search  `matlabversion` in iFEM folder to find all functions affected.
 
 
 
-## unique
+## `unique`
 
 In matlab, the behavior of `unique`  has been changed.  This includes:
 
@@ -75,23 +94,23 @@ For first 2 tests, I used the same $\sin(x)\sin(y)\sin(z)$ as true solutions on 
 
 - Test 1: Only $x==0$ face as Robin boundary, and I hard-coded the nodeso n z-axis as Robin nodes, not fixed DoFs; optimal rate of converge for $L_{\infty}$ norm. The error concentrates on where $\Delta u$ is big.
 
-  <img src="./figures/Robin1conv.png" style="zoom:40%;" />
+  <img src="../assets/images/robin/Robin1conv.png" style="zoom:40%;" />
 
-  <img src="./figures/Robin1error.png" alt="Robin1error" style="zoom:40%;" />
+  <img src="../assets/images/robin/Robin1error.png" alt="Robin1error" style="zoom:40%;" />
 
 - Test 2: $x==0$ and $y==0$, as Robin boundary; suddenly the rate for $L_{\infty}$ becomes suboptimal, and the error concentrates on the edge where these two faces intersect.
 
-<img src="./figures/Robin2conv.png" alt="Robin2conv" style="zoom:45%;" />
+<img src="../assets/images/robin/Robin2conv.png" alt="Robin2conv" style="zoom:45%;" />
 
-<img src="./figures/Robin2error.png" alt="Robin2error" style="zoom:40%;" />
+<img src="../assets/images/robin/Robin2error.png" alt="Robin2error" style="zoom:40%;" />
 
 - Test 3: Now I suspected it is caused by geometry, so I used the distmesh in ifem to generate a ball-mesh problem. The L-inf becomes optimal again for pure Robin problem in $\Omega =  {x^2+y^2+z^2 = 4}$, and the error is evenly distributed (maybe just for a few tetrahedra with bad mesh quality).
 
-<img src="./figures/Robin3conv.png" alt="Robin3conv" style="zoom:45%;" />![
+<img src="../assets/images/robin/Robin3conv.png" alt="Robin3conv" style="zoom:45%;" />![
 
 
 
-<img src="./figures/Robin3error.png" alt="Robin3conv" style="zoom:50%;" />
+<img src="../assets/images/robin/Robin3error.png" alt="Robin3conv" style="zoom:50%;" />
 
 I think from the perspective of using Green function approach to prove $L_{\infty}$  estimate, locally $W_{2,\infty}$ is illy defined on cubes due to the exterior normal vectors is not continuous. In 2D, the problem is
 kinda minimal (you only have 4 points), so we still observe $h^2|\log(h)|$ rate of convergence.
@@ -123,16 +142,7 @@ $$
 
 ## FreeNode, FreeEdge, FreeDof
 
-Change them to logical arrays. It might cause error when `lenght(freeNode)` is used. 
-
-
-
-## To-Do
-
-- Design HX preconditioner for solving HodgeLap. The current one is only for edge element on uniform refine mesh since the transfer operator is only implemented. Then modify HX precondition to solve this restriction. 
-- Stokes equations in 3D.
-- Maxwellsaddle with more edge elements. 
-- 
+Change them to logical arrays. It might cause error when `length(freeNode)` is used. 
 
 ## mg
 
@@ -173,22 +183,22 @@ Some subroutines are not tested yet and thus move to ifem_local. Removed Maxwell
 In the boundary surface integral, check the ordering
 
 ```matlab
-            pidx = face(face2locEdge(s,1))< face(face2locEdge(s,2));
-            % phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
-            % lambda_i is associated to the local index of the face [1 2 3]
-            % Dlambda_j is associtated to the index of tetrahedron
-            % - when the direction of the local edge s is consistent with the
-            %   global oritentation given in the triangulation, 
-            %           s(1) -- k(1),  s(2) -- k(2)
-            % - otherwise 
-            %           s(2) -- k(1),  s(1) -- k(2)
-            if pidx
-                phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+pidx = face(face2locEdge(s,1))< face(face2locEdge(s,2));
+% phi_k = lambda_iDlambda_j - lambda_jDlambda_i;
+% lambda_i is associated to the local index of the face [1 2 3]
+% Dlambda_j is associtated to the index of tetrahedron
+% - when the direction of the local edge s is consistent with the
+%   global oritentation given in the triangulation, 
+%           s(1) -- k(1),  s(2) -- k(2)
+% - otherwise 
+%           s(2) -- k(1),  s(1) -- k(2)
+if pidx
+    phi_k = lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
 lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,1));
-            else
-                phi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
+else
+    phi_k = lambda(pp,face2locEdge(s,2))*Dlambda(isBdElem,:,tetLocEdge(kk,2)) ...
 lambda(pp,face2locEdge(s,1))*Dlambda(isBdElem,:,tetLocEdge(kk,1));                   
-            end
+end
 
 ```
 
@@ -268,15 +278,12 @@ e2v & 4 I \\
 \end{pmatrix}.
 $$
 
-#### Update Jul 30, 2020
+### Update Jul 30, 2020
 Trying to fix the multigrid preconditioning for `Maxwell1saddle.m`.
 
 **Progress**
 * Mass matrix for $P^2$ element added.
 * Fixed several discrepancies in setting up the auxiliaries matrices. The gradient matrix `grad` fed into `mgMaxwell` changed to `bigGrad` which is $(\rm G)$ above.
-
-**Problem/TO-DO**
-* prolongation and restriction operators in `mgHodgeLapE.m` is built for lowest order Nedelec elements. 
 
 
 
@@ -310,8 +317,3 @@ Change the different length and different mesh size by loop over the index.
 
 ## Primal-Dual Weak-Galerkin
 Added a primal-dual weak-galerkin scheme in the `/research` folder. 
-
-TO-DO:
-- [X] Add the postprocessing to the domain with 1 cavity.
-- [ ] Fix the code when there are two or more cavities.
-- [ ] Currently the difference between $Qu - u_h$ can be used as an approximation to the harmonic field in that domain. Need to further verify this.
