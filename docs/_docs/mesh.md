@@ -1,9 +1,4 @@
----
-permalink: /docs/mesh/
-title: "Basic Mesh Data Structure"
-sidebar:
-    nav: mesh
----
+
 
 We explain the basic mesh data structure: `(node,elem)` representing a mesh, `bdFlag` for boundary conditions, and the auxiliary data structures for exploring the mesh. We also discuss several ordering for simplical complexes in 2-D and 3-D which is helpful for orientation dependended data structure.
 

@@ -1,6 +1,6 @@
 main:
   - title: "Quick-Start Guide"
-    url: /docs/quick-start-guide/
+    url: /docs/fem-poisson/
   - title: "GitHub"
     url: https://github.com/lyc102/ifem
 
@@ -11,7 +11,7 @@ docs:
       - title: "Installation"
         url: /docs/installation/
       - title: "Quick-Start: Poisson equation in 2D"
-        url: /docs/quick-start-guide/
+        url: /docs/fem-poisson/
   - title: Major Functions
     children:
       - title: "Basic Data Structure"
@@ -28,16 +28,6 @@ docs:
     children:
       - title: "Weak formulation"
         url: /docs/weak-formulation/
-      # - title: "Overriding Theme Defaults"
-      #   url: /docs/overriding-theme-defaults/
-      # - title: "Navigation"
-      #   url: /docs/navigation/
-      # - title: "UI Text"
-      #   url: /docs/ui-text/
-      # - title: "Authors"
-      #   url: /docs/authors/
-      # - title: "Layouts"
-      #   url: /docs/layouts/
   - title: Sample Projects
     children:
       - title: "Maxwell equation in 3D"

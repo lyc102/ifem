@@ -110,7 +110,8 @@ showsolution(node,elem,u,[30,26],'facecolor','g','facealpha',0.5,'edgecolor','k'
 
 ## Linear Algebraic System
 
-For any function $v\in V_{h}$, there is a unique representation: $v=\sum _{i=1}^Nv_i\phi _i$.  We thus can define an isomorphism $V_{h}\cong \mathbb R^N$ by
+For any function $v\in V_{h}$, there is a unique representation: 
+$v=\sum_{i=1}^Nv_i\phi_i$.  We thus can define an isomorphism $V_{h}\cong \mathbb R^N$ by
 
 $$
 v=\sum _{i=1}^Nv_i\phi _i \longleftrightarrow \boldsymbol  v=(v_1, \cdots, v_N)^{\intercal},
