@@ -1,4 +1,10 @@
-# Data Structure: Boundary Conditions
+---
+permalink: /docs/mesh-bd/
+title: "Data Structure: Boundary Conditions"
+sidebar:
+    nav: mesh
+---
+
 
 We use `bdFlag(1:NT,1:3)` to record the type of three edges of each
 triangle. Similarly in 3-D, we use `bdFlag(1:NT,1:4)` to record the type
@@ -16,9 +22,13 @@ flux).
 The function `setboundary` is to set up the bdFlag matrix for a 2-D
 triangulation and `setboundary3` for a 3-D triangulation. Examples
 
-- `bdFlag = setboundary(node,elem,'Dirichlet','abs(x) + abs(y) == 1','Neumann','y==0');`
+```matlab
+bdFlag = setboundary(node,elem,'Dirichlet','abs(x) + abs(y) == 1','Neumann','y==0');
+```
 
-- `bdFlag = setboundary3(node,elem,'Dirichlet','(z==1) | (z==-1)');`
+```matlab
+bdFlag = setboundary3(node,elem,'Dirichlet','(z==1) | (z==-1)');
+```
 
 ## Local labeling of edges and faces
 
@@ -38,7 +48,7 @@ findedge(node,locEdge,'all','vec');
 
 
     
-![png](bddoc_files/bddoc_4_0.png)
+![png]({{site.baseurl}}/assets/images/mesh/bddoc_4_0.png)
     
 
 
@@ -84,7 +94,7 @@ findedge(node,totalEdge,bdFlag(:) == 2,'MarkerFaceColor','y');
 
 
     
-![png](bddoc_files/bddoc_9_0.png)
+![png]({{site.baseurl}}/assets/images/mesh/bddoc_9_0.png)
     
 
 
@@ -127,7 +137,7 @@ display(bdFlag)
 
 
     
-![png](bddoc_files/bddoc_11_1.png)
+![png]({{site.baseurl}}/assets/images/mesh/bddoc_11_1.png)
     
 
 
@@ -184,7 +194,7 @@ display(bdFlag)
 
 
     
-![png](bddoc_files/bddoc_15_1.png)
+![png]({{site.baseurl}}/assets/images/mesh/bddoc_15_1.png)
     
 
 
@@ -193,4 +203,4 @@ flux).
 
 ## Remark
 
-It would save storage if we record boundary edges or faces only. The current data structure is convenient for the local refinement and coarsening since the boundary can be easily updated along with the change of elements. The matrix `bdFlag` is sparse but a dense matrix is used. We do not save `bdFlag` as a sparse matrix since updating sparse matrices is time consuming. Instead we set up the type of `bdFlag` to `uint8` to minimize the waste of memory.
+It would save storage if we record boundary edges or faces only. The current data structure is convenient for the local refinement and coarsening since the boundary can be easily updated along with the change of elements. The matrix `bdFlag` is sparse but a dense matrix is used. We do not save `bdFlag` as a sparse matrix since updating sparse matrices is time-consuming. Instead we set up the type of `bdFlag` to `uint8` to minimize the waste of memory.

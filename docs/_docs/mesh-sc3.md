@@ -1,17 +1,23 @@
-# Simplicial Complex in Three Dimensions
+---
+permalink: /docs/mesh-sc3/
+title: "Simplicial Complex in Three Dimensions"
+sidebar:
+    nav: mesh
+---
 
-We dsecribe the data structure of the simplicial complex associated to a three dimensional trianglulation give by `node,elem` . The `node` records
+We describe the data structure of the simplicial complex associated to a three-dimensional triangulation give by `node,elem`. The `node` records
 the coordinates of vertices and `elem` is the pointer from local to
-global incices of vertices. See [Basic mesh data structure](meshbasicdoc.html).
+global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _docs/mesh-basic.md %}).
 
 A brief summary.
-- `edge`: asecond ordering, i.e. `edge(:,1)<edge(:,2)`
 
-- `face`: asecond ordering, i.e. `face(:,1)<face(:,2)<face(:,3)`
+- `edge`: ascending ordering, i.e. `edge(:,1)<edge(:,2)`
 
-- `elem`: either the positive ordering or the ascend ordering. The default one is the positive ordering and the asecond ordering is mainly used for edge and face elements. 
+- `face`: ascending ordering, i.e. `face(:,1)<face(:,2)<face(:,3)`
 
-- Use `[elem,bdFlag] = sortelem3(elem,bdFlag)` to change the ordering to the ascend ordering. Note that `bdFlag` should be switched together. 
+- `elem`: either the positive ordering or the ascending ordering. The default one is the positive ordering and the ascending ordering is mainly used for edge and face elements. 
+
+- Use `[elem,bdFlag] = sortelem3(elem,bdFlag)` to change the ordering to the ascending ordering. Note that `bdFlag` should be switched together. 
 
 > The multigrid solvers use the original ordering of `elem` obtained from either uniform refinement or bisection methods. So let `elemold=elem` before sort.
 
@@ -26,10 +32,10 @@ The basic data structure of a mesh consists of `node` and `elem`. The correspond
 - *Orientation* of simplexes
 
 The indexing and ordering are related and the ordering and orientation
-are mixed together. However the indexing has nothing to do with the
-orientation. The indexing and ordering are the combinarotry structure,
+are mixed together. However, the indexing has nothing to do with the
+orientation. The indexing and ordering are the combinatory structure,
 i.e. only `elem` is needed, while the orientation also depends on `node`,
-the geometry emembdding of vertices.
+the geometry embedding of vertices.
 
 For indexing, ordering and orientation, there are always local and global versions. The relation between the local and global version is the most complicated issue.
 
@@ -38,13 +44,13 @@ For indexing, ordering and orientation, there are always local and global versio
 The indexing refers to the numbering of simplexes, e.g., which face is
 numbered as the first one. There are two types of the indexing: local and
 global. Each simplex in the simplicial complex has a unique index which
-is called the global index. In one tetrahedra, the four vertices and four
+is called the global index. In one tetrahedron, the four vertices and four
 faces have their local index from 1:4. 
 
 In the assembling procedure of finite element methods, an element-wise
 matrix using the local indexing is first computed and then assembled to get a
 big matrix using the global indexing. Thus the pointer from the local
-indexing to the global indexing is indispensible. For bases independent of
+indexing to the global indexing is indispensable. For bases independent of
 the ordering and orientation, e.g., `P1` and `P2` elements, this pointer
 is sufficient, otherwise, the inconsistency of the local ordering/orientation
 and the global ordering/orientation should be taken into account.
@@ -57,7 +63,7 @@ tetrahedron contains four faces and six edges. They can be indexed as
     locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3];
     locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
 
-In `locFace`, the i-th face is opposite to the i-th vertices and thus
+In `locFace`, the $i$-th face is opposite to the $i$-th vertices and thus
 this is called _opposite indexing_. In `locEdge`, it is the
 _lexicographic indexing_ which is induced from the lexicographic ordering
 of the six edges. The ordering of vertices of each face or edge will not
@@ -68,7 +74,7 @@ of vertices.
     locFacec = [2 3 4; 1 4 3; 1 2 4; 1 3 2];
     locEdge = [2 1; 3 1; 4 1; 3 2; 4 2; 4 3];
 
-Indeed any permuation of each simplex will represent the same simplex and
+Indeed any permutation of each simplex will represent the same simplex and
 will not change the indexing. The ordering of vertices will affect the
 orientation and will be discussed later.
 
@@ -78,20 +84,20 @@ schemes of its three edges.
 - Oppoiste indexing:        `[2 3; 3 1; 1 2]`
 - Lexicographic indexing:   `[1 2; 1 3; 2 3]`
 
-Each indexing scheme has its advantange and disadavantange and which one
+Each indexing scheme has its advantage and disadvantage and which one
 to chose depends on the consideration of ordering and orientation.
 
 ### Global indexing and vertex pointers
 
-Each simplex in the simplicial complex has a unqiue index. It is
-represented by vertices pointer from the local index to the globa index
+Each simplex in the simplicial complex has a unique index. It is
+represented by vertices pointer from the local index to the global index
 of vertices.
 
 The matrix `elem` is the pointer from local to global indices of vertices
 of tetrahedron, e.g. `elem(t,1)=25` means the first vertex of the
 tetrahedron t is the 25-th vertex.
 
-Similarly the `NE x 2` matrix `edge` records all edges and the `NF x 3` by 3
+Similarly, the `NE x 2` matrix `edge` records all edges and the `NF x 3` by 3
 matrix `face` records all faces of the triangulation. These are vertices
 pointers. We shall discuss the elementwise pointer from the local indices to
 the global indices for edges and faces.
@@ -117,11 +123,8 @@ display(elem);
          1     4     8     7
     
 
-
-
     
-![png](sc3doc_files/sc3doc_6_1.png)
-    
+![png]({{site.baseurl}}/assets/images/mesh/sc3doc_6_1.png)
 
 
 ### Generate index pointers for edges and faces
@@ -199,11 +202,11 @@ display(face);
     
 
 
-In iFEM, `N,NE,NF,NT` represents the number of vertices, edges, faces and tetrahedrons, resprectively.
+In iFEM, `N,NE,NF,NT` represents the number of vertices, edges, faces and tetrahedrons, respectively.
 
     N = size(node,1); NT = size(elem,1); NF = size(face,1); NE = size(edge,1);
 
-In the assembling procedure, the matrix is always computed elementwise and then assemble to a big one. A pointer from the local index of a simplex to its global index is thus indispensible.
+In the assembling procedure, the matrix is always computed elementwise and then assemble to a big one. A pointer from the local index of a simplex to its global index is thus indispensable.
 
 **Elementwise pointers**
 
@@ -253,11 +256,11 @@ display(elem2face);
 `face2edge(1:NF,1:3)` records the global indices of three edges of a
 face. This pointer depends on the ordering of vertices of faces and the
 indexing of local edges in a face. We list the following two important
-cases. Other combinations is possible but not attractive.
+cases. Other combinations are possible but not attractive.
 
 - Ascend ordering.
 
-All local faces and local edges are ascend ordered.
+All local faces and local edges are ascending ordered.
     
     locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3];
     locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];
@@ -275,7 +278,7 @@ consistent with the induced orientation.
     locFace2edge = [6 5 4; 6 2 3; 5 3 1; 4 1 2];
 
 The global one can be obtained from the composition of `elem2face` and
-`locFace2edge`. For example, for the asecnd ordering scheme,
+`locFace2edge`. For example, for the ascending ordering scheme,
 
     face2edge(elem2face(:,1),:) = elem2edge(:,[4 5 6]);
     face2edge(elem2face(:,2),:) = elem2edge(:,[2 3 6]);
@@ -285,7 +288,7 @@ The global one can be obtained from the composition of `elem2face` and
 ## Ordering of Vertices
 
 We discuss the ordering of vertices of simplexes. Again there are local
-ordering and global ordering. They may not be consistent and a sign array
+ordering and global ordering. They may not be consistent, and a sign array
 is used to record the inconsistency if any.
 
 The local ordering refers to the ordering of vertices in `locFace` or
@@ -299,7 +302,7 @@ that in either local or global ordering, permutation of vertices will
 represent the same simplex. To fix an ordering we need extra information.
 
 ### elem
-The local ordering is always [1 2 3 4]. Any permutation of four vertices of a tetrahedon still represents the same tetrahedron. Such freedom provide a room to record more information like:
+The local ordering is always [1 2 3 4]. Any permutation of four vertices of a tetrahedron still represents the same tetrahedron. Such freedom provides a room to record more information like:
 
 * global ordering of vertices
 * an orientation of element
@@ -321,7 +324,7 @@ Two types of ordering of `elem` is of particular importantance
 - Ascend ordering
 - Positive ordering
 
-In the ascend ordering, the vertices of `elem` is sorted such that 
+In the ascending ordering, the vertices of `elem` is sorted such that 
 
     elem(t,1) < elem(t,2) < elem(t,3) < elem(t,4). 
     
@@ -370,7 +373,7 @@ elem = fixorder3(node,elem)   % switchs the vertices for elements with negative 
 
 ### edge
 
-For 3-D triangulations, we chose the ascend ordering both locally and globally. Namely
+For 3-D triangulations, we chose the ascending ordering both locally and globally. Namely
 
     locEdge(:,1) < locEdge(:,2); 
        edge(:,1) < edge(:,2);
@@ -395,7 +398,7 @@ Again the local and the global ordering maynot be consisitent. That is
 
     face(elem2face(t,:),1) < face(elem2face(t,:),2) < face(elem2face(t,:),3)
     
-maynot be always true unless we use the ascend ordering in both `face` and `locFace`.
+maynot be always true unless we use the ascending ordering in both `face` and `locFace`.
 
 ## Orientation
 
@@ -403,7 +406,7 @@ The orientation of a tetrahedron is either positive or negative. The
 orientation of a face is given by a normal vector and the orientation of
 an edge is determined by a tangential vector. 
 
-The orientation of a d-simplex will induce an orientation of its d-1 boundary
+The orientation of a $d$-simplex will induce an orientation of its $(d-1)$ boundary
 subcomplex and is called the *induced orientation*. For example, a positive
 orientated tetrahedron will induce the outwards normal orientation of its
 four faces and a positive orientated triangle will induce the counter
@@ -424,10 +427,10 @@ the global ordering orientation but not always.
 Inside one tetrahedron, the local ordering of local edges and local faces
 will introduce a corresponding orientation. The orientation of the
 tetrahedron will also induce an orientation for its four faces. These are
-called the *local orientation* which may not be consisitent with the global
+called the *local orientation* which may not be consistent with the global
 orientation. The local ordering orientation is used in the local basis and the induced orientation is used when computing the differential operator locally.
 
-In general, there will be an inconsistency of different types of orientation and apporipate data structure should be constructured to record such inconsistency.
+In general, there will be an inconsistency of different types of orientation and appropriate data structure should be constructed to record such inconsistency.
 
 - a global orientation
 - the global ordering orientation
@@ -438,7 +441,7 @@ We now discuss the orientation of elem, face, and edge separately.
 
 ### elem
 
-The orientation of a tetraheron is either positive or negative.
+The orientation of a tetrahedron is either positive or negative.
 We chose the global ordering orientation, i.e., the sign of the signed
 volume computed from `elem`. 
 
@@ -456,7 +459,9 @@ Again we use the global ordering orientation determined by `face`. The normal ve
 
 The local ordering orientation is implicitly used when computing finite element basis in each element. For example, the RT0 basis on face `[i j k]` in `locFace` is defined as
 
-$$\phi_{i,j,k} = 2(\lambda_i \nabla \lambda_j \times \nabla \lambda_k+ \lambda_j \nabla \lambda_k \times \nabla \lambda_i+\lambda_k \nabla \lambda_i \times \nabla \lambda_j).$$ 
+$$
+\phi_{i,j,k} = 2(\lambda_i \nabla \lambda_j \times \nabla \lambda_k+ \lambda_j \nabla \lambda_k \times \nabla \lambda_i+\lambda_k \nabla \lambda_i \times \nabla \lambda_j).
+$$ 
 
 Odd permutation of `[i j k]` will change the sign of the basis. The direction of $\phi_{i,j,k}$ is the normal vector determined by `[i,j,k]` ordering. Note that this is defined locally, i.e., element by element. 
 
@@ -486,28 +491,28 @@ When both `elem` and `locFace` are ascend ordered, the orientation of the
 global ordering is consistent with that of the local ordering. Thus
 `elem2faceSign` is not needed for the ascending ordering in assembling the mass matrix.
 
-But for the asecond ordering system, an `elem2faceSign` will be used when assembling differential operators because the orientation for Stokes theorem is induced orientation. For example, when computing `div` operators on a positive orientated tetrahedron, the faces should be orientated by the outwards normal direction but the global faces may not be.
+But for the ascending ordering system, an `elem2faceSign` will be used when assembling differential operators because the orientation for Stokes theorem is induced orientation. For example, when computing `div` operators on a positive orientated tetrahedron, the faces should be orientated by the outwards normal direction but the global faces may not be.
 
 If `elem` is positive ordered and `locFace` is consistently ordered, then this inconsistency is already recorded in `elem2faceSign`.
 
-For the ascend ordering of `elem` and `locFace`, we use $+1$ if the
+For the ascending ordering of `elem` and `locFace`, we use $+1$ if the
 orientation of a face is the same with the induced outwords normal direction in a certain elem, and $-1$ otherwise. Then the inconsistency is given by `elem2faceSign = [1 -1 1 -1]` by comparing
 
 - The induced orientation: `locFace = [2 3 4; 1 4 3; 1 2 4; 1 3 2]`;
-- The ascend orientation:    `locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3]`.
+- the ascending orientation:    `locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3]`.
 
-Here we use the *ascend orientation* to refer to the orientation given by the ascend ordering.
+Here we use the *ascending orientation* to refer to the orientation given by the ascending ordering.
 
 In summary, 
 
 - the induced orientation is favorable for computing $d\phi$;
-- the asecond orientation is favorable for computing $(f, \phi)$ or $(\phi_i, \phi_j)$.
+- the ascending orientation is favorable for computing $(f, \phi)$ or $(\phi_i, \phi_j)$.
 
 ### edge
 
 The orientation of edges is simpler than faces. Globally we always chose the global ascend ordering orientation. Namely the orientation of an edge is from the vertex with the smaller index to the larger one.
 
-Locally the local ascend ordering may not be consistent with the global one. See Lowest Order Edge Element. For the ascend ordering of `elem` and `locEdge`, the local and the global
+Locally the local ascend ordering may not be consistent with the global one. See Lowest Order Edge Element. For the ascending ordering of `elem` and `locEdge`, the local and the global
 orientation will be consistent and no `elem2edgeSign` is needed!
 
 
@@ -536,11 +541,11 @@ elem2edgeSign = reshape(direction,NT,6)
 
 ### face to edge
 
-For the ascend ordering `edgeofFace = [1 2; 1 3; 2 3]`, the local and the global ordering is consistent and so is the ordering orientation.
+For the ascending ordering `edgeofFace = [1 2; 1 3; 2 3]`, the local and the global ordering is consistent and so is the ordering orientation.
 
-Then it is not consisitent with the induced positive (counter clockwise) orientation of edges. When the edge direction is the same with the induced direction, we use sign $+1$, otherwise $-1$. Then `face2edgeSign = [+1 -1 +1]` records the inconsistency of the ascend orientation of the induced orientation.
+Then it is not consistent with the induced positive (counter-clockwise) orientation of edges. When the edge direction is the same with the induced direction, we use sign $+1$, otherwise $-1$. Then `face2edgeSign = [+1 -1 +1]` records the inconsistency of the ascending orientation of the induced orientation.
 
-For the consistent ordering, `edgeofFace = [2 3; 3 1; 1 2]` which is consisent with the induced positive orientation but then may not be consistent with the global orientation of edges. We construct `face2edgeSign` to record such inconsistency
+For the consistent ordering, `edgeofFace = [2 3; 3 1; 1 2]` which is consistent with the induced positive orientation but then may not be consistent with the global orientation of edges. We construct `face2edgeSign` to record such inconsistency
 
 
 ```matlab
@@ -581,20 +586,20 @@ We summarize the two popular ordering and orientation schemes below.
 
 ### Ascend Odering and Orientation
 
-The asecond odering and orientation is more algebraic, determined by the indices of vertices. 
+The ascending ordering and orientation is more algebraic, determined by the indices of vertices. 
 
 #### Ascend ordering
 The array `elem` is sorted such that
 
     elem(i,1) < elem(i,2) < elem(i,3) < elem(i,4)
 
-The local face and local edges is also in the ascend ordering
+The local face and local edges is also in the ascending ordering
 
 * `locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3];`
 * `locEdge = [1 2; 1 3; 1 4; 2 3; 2 4; 3 4];`
 * `edgeofFace = [1 2; 1 3; 2 3];`
 
-Then due to the asecond ordering of `elem`, globally the `edge` and `face` also follow the ascend ordering, i.e.
+Then due to the ascending ordering of `elem`, globally the `edge` and `face` also follow the ascending ordering, i.e.
 
 * `edge(e,1) < edge(e,2);` 
 * `face(f,1) < face(f,2) < face(f,3).` 
@@ -602,14 +607,14 @@ Then due to the asecond ordering of `elem`, globally the `edge` and `face` also 
 One can easily see the benefit: the ordering of local edges and local faces is consistent with the global ones and so is their corresponding orientation.
 
 #### Orientation
-We chose the global ordering orientation for each elment. We chose the orientation corresponding to the ascend ordering for edges
+We chose the global ordering orientation for each element. We chose the orientation corresponding to the ascending ordering for edges
 and faces. That is
 
 * `elem: sign(v12,v13,v14)`
-* `face:`  the normal vector is given by `cross(v12,v13)`
-* `edge:`  from the node with the smaller global index to the bigger one
+* `face`:  the normal vector is given by `cross(v12,v13)`
+* `edge`:  from the node with the smaller global index to the bigger one
 
-For faces and edges, the orientation of the ascend ordering and the induced orientation is not consistent. The inconsistency is recorded by
+For faces and edges, the orientation of the ascending ordering and the induced orientation is not consistent. The inconsistency is recorded by
 
 * `elem2faceSign = [1 -1 1 -1];`
 * `face2edgeSign = [1 -1 1];`
@@ -636,15 +641,15 @@ Three edges of a face is ordered consistently
 
 #### Orientation
 
-The ascend ordering orientation is used for the global orientation of `edge` and `face` arrays. The inconsistency of the local and the global orientation is recorded in
+the ascending ordering orientation is used for the global orientation of `edge` and `face` arrays. The inconsistency of the local and the global orientation is recorded in
 `elem2faceSign` and `elem2edgeSign`.
 
 ### An Example 
-We show two tetrahedron with the ascend ordering.
+We show two tetrahedron with the ascending ordering.
 
 
 ```matlab
-% A mesh with two tetrahedron with the ascend ordering
+% A mesh with two tetrahedron with the ascending ordering
 elem = [1 4 5 8; 1 4 5 7];
 node = [1,0,0; 1,1,1; 1,-1,-1; 0,1,0; -2,-1,0; 1,1,-1; 0,1,1; 0,-1,-1];
 NT = size(elem,1);
@@ -680,7 +685,7 @@ elem2face = uint32(reshape(jf,NT,4))
     
     edge =
     
-      9�2 uint32 matrix
+      9x2 uint32 matrix
     
        1   4
        1   5
@@ -695,7 +700,7 @@ elem2face = uint32(reshape(jf,NT,4))
     
     face =
     
-      7�3 uint32 matrix
+      7x3 uint32 matrix
     
        1   4   5
        1   4   7
@@ -708,7 +713,7 @@ elem2face = uint32(reshape(jf,NT,4))
     
     elem2edge =
     
-      2�6 uint32 matrix
+      2x6 uint32 matrix
     
        1   2   4   5   7   9
        1   2   3   5   6   8
@@ -716,7 +721,7 @@ elem2face = uint32(reshape(jf,NT,4))
     
     elem2face =
     
-      2�4 uint32 matrix
+      2x4 uint32 matrix
     
        7   5   3   1
        6   4   2   1
@@ -737,11 +742,12 @@ elem2face = uint32(reshape(jf,NT,4))
 
 
     
-![png](sc3doc_files/sc3doc_31_1.png)
+
+![png]({{site.baseurl}}/assets/images/mesh/sc3doc_31_1.png)
     
 
 
-Since we are using the ascend ordering, the inconsistency with the induced orientation is 
+Since we are using the ascending ordering, the inconsistency with the induced orientation is 
 * `elem2faceSign = [1 -1 1 -1];`
 * `face2edgeSign = [1 -1 1];`
 
@@ -775,7 +781,7 @@ display('change to ascend ordering');
     
     bdFlag =
     
-      6�4 uint8 matrix
+      6x4 uint8 matrix
     
        1   0   0   2
        2   0   0   2
@@ -798,7 +804,7 @@ display('change to ascend ordering');
     
     bdFlag =
     
-      6�4 uint8 matrix
+      6x4 uint8 matrix
     
        1   0   0   2
        2   0   0   2
@@ -811,11 +817,11 @@ display('change to ascend ordering');
 
 
     
-![png](sc3doc_files/sc3doc_34_1.png)
-    
+
+![png]({{site.baseurl}}/assets/images/mesh/sc3doc_34_1.png)
 
 
-We can use `bdFlag` to find the boundary nodes, edges and faces. To find the outwords normal direction of the boundary face, we use `gradbasis3` to get `Dlambda(t,:,k)` which is the gradient of $\lambda_k$. The outward normal direction of the kth face can be obtained by `-Dlambda(t,:,k)` which is independent of the ordering and orientation of `elem`.
+We can use `bdFlag` to find the boundary nodes, edges and faces. To find the outward normal direction of the boundary face, we use `gradbasis3` to get `Dlambda(t,:,k)` which is the gradient of $\lambda_k$. The outward normal direction of the kth face can be obtained by `-Dlambda(t,:,k)` which is independent of the ordering and orientation of `elem`.
 
 
 ```matlab
@@ -854,7 +860,7 @@ display(bdFaceOutDirec);
     
     DirichletFace =
     
-      2�3 uint32 matrix
+      2x3 uint32 matrix
     
        2   3   7
        2   6   7
@@ -862,7 +868,7 @@ display(bdFaceOutDirec);
     
     NeumannFace =
     
-      10�3 uint32 matrix
+      10x3 uint32 matrix
     
        1   2   3
        1   2   6

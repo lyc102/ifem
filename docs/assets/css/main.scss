@@ -4,10 +4,10 @@
 
 @charset "utf-8";
 $sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
-$monospace: "Menlo", "Inconsolata", "Consolas", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+$monospace: "Fira Code Medium", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
 
 $right-sidebar-width-narrow: 150px !default;
-$right-sidebar-width: 200px !default;
+$right-sidebar-width: 220px !default;
 
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
@@ -36,7 +36,7 @@ $base0f: #dd7283;
 // This part is for code blocks
 code {
     font-family: $monospace;
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
   
   // This part is for inline code
@@ -47,7 +47,7 @@ code {
   td > code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
-    font-size: 1em;
+    font-size: 0.9em;
   }
 
   .page {

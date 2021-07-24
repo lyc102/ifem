@@ -1,4 +1,9 @@
-# Basic Data Structure Representing Meshes
+---
+permalink: /docs/mesh-basic/
+title: "Basic Data Structure Representing Meshes"
+sidebar:
+    nav: mesh
+---
 
 
 ## Data structure: node and elem
@@ -29,7 +34,7 @@ findnode(node);       % plot indices of all vertices
 
 
     
-![png](meshbasicdoc_files/meshbasicdoc_2_0.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_2_0.png)
     
 
 
@@ -45,7 +50,7 @@ showmesh(node,elem);
 
 
     
-![png](meshbasicdoc_files/meshbasicdoc_4_0.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_4_0.png)
     
 
 
@@ -64,8 +69,8 @@ findnode3(node);
 
 
     
-![png](meshbasicdoc_files/meshbasicdoc_6_0.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_6_0.png)
     
 
 
-Unlike 2-D case, to apply uniform refinement to obtain a fine mesh with good mesh quality, a different ordering of the inital mesh, which may violate the positive ordering, should be used. See [3 D Red Refinement](uniformrefine3doc.html).
+Unlike 2-D case, to apply uniform refinement to obtain a fine mesh with good mesh quality, a different ordering of the inital mesh, which may violate the positive ordering, should be used. See [3-D Red Refinement](uniformrefine3doc.html).

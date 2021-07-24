@@ -1,9 +1,15 @@
-# Simplicial Complex in Two Dimensions
+---
+permalink: /docs/mesh-sc/
+title: "Simplicial Complex in Two Dimensions"
+sidebar:
+    nav: mesh
+---
 
-We dsecribe the data structure of the simplicial complex associated to a
-two dimensional trianglulation give by `node,elem` . The `node` records
+
+We describe the data structure of the simplicial complex associated to a
+two-dimensional triangulation give by `node,elem`. The `node` records
 the coordinates of vertices and `elem` is the pointer from local to
-global incices of vertices. See [Basic mesh data structure](meshbasicdoc.html).
+global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _docs/mesh-basic.md %} ).
 
 A brief summary.
 
@@ -33,10 +39,7 @@ findelem(node,elem);
 findnode(node);
 ```
 
-
-    
-![png](scdoc_files/scdoc_3_0.png)
-    
+![png]({{ site.baseurl }}/assets/images/mesh/scdoc_3_0.png)
 
 
 The basic data structure of a mesh consists of node and elem:
@@ -451,7 +454,7 @@ display(elem2edgeSign);
 
 
     
-![png](scdoc_files/scdoc_16_1.png)
+![png]({{ site.baseurl }}/assets/images/mesh/scdoc_16_1.png)
     
 
 
@@ -506,6 +509,6 @@ display(elem2edgeSign);
 
 
     
-![png](scdoc_files/scdoc_17_1.png)
+![png]({{ site.baseurl }}/assets/images/mesh/scdoc_17_1.png)
     
 

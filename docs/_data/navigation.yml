@@ -12,26 +12,56 @@ docs:
         url: /docs/installation/
       - title: "Quick-Start: Poisson equation in 2D"
         url: /docs/fem-poisson/
-  - title: Major Functions
+
+  - title: Mesh Data Structure
+    url: /docs/mesh/
     children:
-      - title: "Basic Data Structure"
-        url: /docs/mesh/
-      - title: "Finite Element Methods"
-        url: /docs/fem/
-      - title: "Adaptive Finite Element Methods"
-        url: /docs/afem/
-      - title: "Solvers of Linear Algebraic Equations"
-        url: /docs/solvers/
-      - title: "Mesh Generator and Smoothing/Optimization"
-        url: /docs/mesh-generator/
+      - title: "Basic data structure"
+        url: /docs/mesh-basic/
+      - title: "Boundary conditions"
+        url: /docs/mesh-bd/
+      - title: "Auxiliary structures"
+        url: /docs/mesh-auxstructure/
+      - title: "Simplicial complex in 2D"
+        url: /docs/mesh-sc/
+      - title: "Simplicial complex in 3D"
+        url: /docs/mesh-sc3/
+  
+  - title: Mesh Generator and Smoothing/Optimization
+    url: /pages/mesh-opt/
+
   - title: Finite element methods
     children:
-      - title: "Weak formulation"
-        url: /docs/weak-formulation/
-  - title: Sample Projects
+      - title: "FEM for Poisson equation"
+        url: /docs/fem-poisson/
+      - title: "Projects: Linear FEM"
+        url: /docs/fem-projects/
+      - title: "List of examples"
+        url: /docs/fem-examples/
+      - title: "Workflow"
+        url: /docs/fem-workflow/
+
+  - title: Adaptive Finite element methods
     children:
-      - title: "Maxwell equation in 3D"
-        url: /pages/maxwell/
+      - title: "Introduction to AFEM"
+        url: /docs/afem/
+      - title: "Bisection in 2D"
+        url: /docs/afem-bisect/
+      - title: "Coarsen in 2D"
+        url: /docs/afem-coarsen/
+      - title: "Project: AFEM for the heat equation"
+        url: /docs/afem-project-heat/
+
+  - title: Solvers of Linear Algebraic Equations
+    children:
+      - title: "Introduction to solvers"
+        url: /docs/solver/
+      - title: "Examples of solvers"
+        url: /docs/solver-examples/
+  
+  - title: "Projects"
+    url: /docs/projects/
+
   - title: Develop
     children:
       - title: "Dev notes"
@@ -52,6 +82,20 @@ fem:
         url: /docs/fem-examples/
       - title: "FEM workflow"
         url: /docs/fem-workflow/
+
+afem:
+  - title: "Back to main"
+    url: /
+  - title: Adaptive Finite element methods
+    children:
+      - title: "Introduction to AFEM"
+        url: /docs/afem/
+      - title: "Bisection in 2D"
+        url: /docs/afem-bisect/
+      - title: "Coarsen in 2D"
+        url: /docs/afem-coarsen/
+      - title: "Project: AFEM for the heat equation"
+        url: /docs/afem-project-heat/
 
 mesh:
   - title: "Back to main"
