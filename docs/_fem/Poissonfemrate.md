@@ -1,4 +1,11 @@
-# Linear Element for Poisson Equation in 2D
+---
+permalink: /fem/Poissonfemrate/
+title: "Linear Element for Poisson Equation in 2D"
+sidebar:
+    nav: fem
+---
+
+## Intro
 
 This example is to show the rate of convergence of the linear finite element approximation of the Poisson equation on the unit square:
 
@@ -9,19 +16,19 @@ for the following boundary conditions
 - Pure Neumann boundary condition: $\nabla u\cdot n=g_N \hbox{ on } \partial \Omega$.
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
-**References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+## References
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _docs/fem-poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
-**Subroutines**:
+## Subroutines
 
-    - Poisson
-    - squarePoisson
-    - femPoisson
-    - Poissonfemrate
+- `Poisson`
+- `squarePoisson`
+- `femPoisson`
+- `Poissonfemrate`
     
-The method is implemented in `Poisson` subroutine and tested in `squarePoisson`. Together with other elements (P1, P2, P3, Q1), `femPoisson` provides a concise interface to solve Poisson equation. The P1 element is tested in `Poissonfemrate`. This doc is based on `Poissonfemrate`.    
+The method is implemented in `Poisson` subroutine and tested in `squarePoisson`. Together with other elements `(P1, P2, P3, Q1)`, `femPoisson` provides a concise interface to solve Poisson equation. The `P1` element is tested in `Poissonfemrate`. This doc is based on `Poissonfemrate`.    
 
 ## P1 Linear Element
 
@@ -29,14 +36,13 @@ For the linear element on a simplex, the local basis functions are
 barycentric coordinate of vertices. The local to global pointer is
 `elem`. This is the simplest and default element for elliptic equations.
 
-**A local basis of P1**
+### A local basis of P1
 
 For $i = 1, 2, 3$, a local basis of the linear element space is given by the barycentric coordinate
 
 $$\phi_i = \lambda_i, \quad \nabla \phi_i = \nabla \lambda_i = - \frac{|e_i|}{2|T|}\boldsymbol n_i, \quad \int_T \nabla \phi_i\nabla \phi_j = \frac{1}{4|T|}\boldsymbol l_i \cdot \boldsymbol l_j$$
 
-where $e_i$ is the edge opposite to the i-th vertex and $\boldsymbol n_i$ is the unit
-outwards normal direction, and $\boldsymbol l_i$ is the edge vector of $e_i$.  
+where $e_i$ is the edge opposite to the $i$-th vertex and $\boldsymbol n_i$ is the unit outwards normal direction, and $\boldsymbol l_i$ is the edge vector of $e_i$.  
 
 See [Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf) Section 2.1 for geometric explanation of the barycentric coordinate and [Programming of Finite Element Methods in MATLAB](http://www.math.uci.edu/~chenlong/226/Ch3FEMcode.pdf) for detailed explanation. For P1 element, the basic data structure `node,elem` is sufficient and displayed for the following coarse mesh.
 

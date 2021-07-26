@@ -1,6 +1,6 @@
 ---
-permalink: /docs/quick-start-guide/
-title: "Quickstart"
+permalink: /docs/test2/
+title: "Test page 2"
 excerpt: "A quick start guide."
 sidebar:
     nav: docs

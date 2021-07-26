@@ -154,7 +154,7 @@ display(face);
     
     edge =
     
-      19�2 uint32 matrix
+      19x2 uint32 matrix
     
        1   2
        1   3
@@ -179,7 +179,7 @@ display(face);
     
     face =
     
-      18�3 uint32 matrix
+      18x3 uint32 matrix
     
        1   2   3
        1   2   6
@@ -228,7 +228,7 @@ display(elem2face);
     
     elem2edge =
     
-      6�6 uint32 matrix
+      6x6 uint32 matrix
     
         1    2    6    8   10   12
         3    2    6   11   13   12
@@ -240,7 +240,7 @@ display(elem2face);
     
     elem2face =
     
-      6�4 uint32 matrix
+      6x4 uint32 matrix
     
        13    5    3    1
        15    5    6    4

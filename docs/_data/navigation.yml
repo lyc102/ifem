@@ -6,11 +6,12 @@ main:
 
 # documentation links
 docs:
-  - title: Getting Started
+  - title: "Getting Started"
+    url: /
     children:
       - title: "Installation"
-        url: /docs/installation/
-      - title: "Quick-Start: Poisson equation in 2D"
+        url: /
+      - title: "Quick-start: Poisson equation in 2D"
         url: /docs/fem-poisson/
 
   - title: Mesh Data Structure
@@ -31,15 +32,16 @@ docs:
     url: /docs/mesh-opt/
 
   - title: Finite element methods
+    url: /docs/fem/
     children:
       - title: "FEM for Poisson equation"
         url: /docs/fem-poisson/
       - title: "Project: Linear FEM"
         url: /docs/project-fem/
+      - title: "Workflow"
+        url: /
       - title: "List of examples"
         url: /docs/fem-examples/
-      - title: "Workflow"
-        url: /docs/fem-workflow/
 
   - title: Adaptive Finite element methods
     children:
@@ -78,10 +80,47 @@ fem:
         url: /docs/fem-poisson/
       - title: "Projects: Linear Finite Element Methods"
         url: /docs/fem-projects/
-      - title: "A List of Examples"
-        url: /docs/fem-examples/
       - title: "FEM workflow"
         url: /docs/fem-workflow/
+  - title: "A List of Examples"
+    url: /docs/fem-examples/
+  - title: "Poisson Equation 2D"
+    children:
+      - title: "P1 Linear Element"
+        url: /fem/Poissonfemrate/
+      - title: "P2 Quadratic Element"
+        url: /fem/PoissonP2femrate/
+      - title: "P3 Cubic Element"
+        url: /fem/PoissonP3femrate/
+      - title: "CR Nonconforming Linear Element"
+        url: /fem/PoissonCRfemrate/
+      - title: "WG Weak Galerkin Element"
+        url: /fem/PoissonWGfemrate/
+      - title: "Linear Virtual Element"
+        url: /fem/Poissonvemfemrate/
+  - title: "Poisson Equation 3D"
+    children:
+      - title: "3D P1 Linear Element"
+        url: /fem/Poisson3femrate/
+      - title: "3D P2 Quadratic Element"
+        url: /fem/Poisson3P2femrate/
+      - title: "3D CR Nonconforming Linear Element"
+        url: /fem/Poisson3CRfemrate/
+      - title: "3D WG Weak Galerkin Element"
+        url: /fem/Poisson3WGfemrate/
+      - title: "3D Linear Virtual Element"
+        url: /fem/Poisson3vemfemrate/
+  - title: "Poisson Equation 2D: Mixed Formulation"
+    children:
+      - title: "RT0 Element"
+        url: /fem/PoissonRT0mfemrate/
+      - title: "BDM1 Element"
+        url: /fem/PoissonRT0mfemrate/
+  
+  - title: "Poisson Equation 3D: Mixed Formulation"
+    children:
+      - title: "RT0 Element"
+        url: /fem/Poisson3RT0mfemrate/
 
 afem:
   - title: "Back to main"

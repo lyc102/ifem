@@ -10,7 +10,7 @@ toc_sticky: true
 ---
 
 ## Introduction to iFEM
-*i*FEM is a MATLAB software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods and multigrid methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency.
+*i*FEM is a [MATLAB](https://www.mathworks.com/) software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods and multigrid methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency.
 
 <!-- - [Basic Data Structure](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshdoc.html)
 - [Finite Element Methods](https://www.math.uci.edu/~chenlong/ifemdoc/fem/femcontent.html)
@@ -28,11 +28,13 @@ You can download the repository at [https://github.com/lyc102/ifem](https://gith
 git clone https://github.com/lyc102/ifem.git
 ```
 
-Then use MATLAB to run the `setpath.m` script in the root folder to add all the sub-folders to your MATLAB path.
+Then use MATLAB to run the `setpath.m` script in the root folder to add all the sub-folders to your MATLAB path. 
+
+An [Octave](www.octave.org) version is also available at [https://github.com/lyc102/ifemOctave](https://github.com/lyc102/ifemOctave).
 
 ## Help and Guides
 
-This documentation website will be constantly updated. If you have any questions, please feel free to [contact us](mailto:lyc102@gmail.com).
+This documentation website will be constantly updated. If you have any questions, please feel free to [contact us](mailto:lyc102@gmail.com). If you like to suggest an additional equation to be implemented in iFEM, please go to the [GitHub repo submit an issue](https://github.com/lyc102/ifem/issues). 
 
 ### Use MATLAB help/doc
 1. `help funexample` displays a description of and syntax for the function `funexample`. For example, `help mg` will show basic usage for `mg` function in the plain text.  
@@ -40,17 +42,17 @@ This documentation website will be constantly updated. If you have any questions
 
 ## References
 
-If you like to suggestion an additional equation to be implemented in iFEM, please go to the GitHub repo submit a feature request issue. If you feel it is helpful for your research, please acknowledge your use by citing:
+If you feel iFEM is helpful for your research, please acknowledge your use by citing:
 
 > L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical Report, University of California at Irvine, 2009.
 
 ```bibtex
 @techreport{Chen:2008ifem,
-	author = {Long Chen},
-	journal = {Technical Report, University of California at Irvine},
-	title = {$i$FEM: an integrated finite element methods package in {MATLAB}},
-	url = {https://github.com/lyc102/ifem},
-	year = {2009}}
+author = {Long Chen},
+journal = {Technical Report, University of California at Irvine},
+title = {$i$FEM: an integrated finite element methods package in {MATLAB}},
+url = {https://github.com/lyc102/ifem},
+year = {2009}}
 ```
 
 
@@ -65,15 +67,18 @@ The author is also grateful to the NSF for the partial support over the years.
 
 
 
-
+<div style="width:400px" onclick="myhref('http://math.uci.edu/~chenlong/');"><hr/>
 Long Chen
-
---
-
+<br>
 Professor                 
-
+<br>
 Department of Mathematics
+<br>
 University of California at Irvine
-[http://math.uci.edu/~chenlong/](http://math.uci.edu/~chenlong/)
+http://math.uci.edu/~chenlong/
+</div>
 
---
+<script type="text/javascript">
+    function myhref(web){
+      window.location.href = web;}
+</script>

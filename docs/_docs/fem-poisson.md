@@ -14,13 +14,13 @@ We use the linear finite element method for solving the Poisson equation as an e
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
 and do the following project
-- [Projects: Linear Finite Element Methods](../project/projectFEM.html)
+- [Projects: Linear Finite Element Methods]({{ site.baseurl }}{% link _docs/project-fem.md %})
 
 The numerical example using the linear element is in
 - [Linear Element for Poisson Equation in 2D](Poissonfemrate.html)
 
 and more elements and equations can be found
-- [List of Examples](femexamplelist.html)
+- [List of Examples]({{ site.baseurl }}{% link _docs/fem-examples.md %})
 
 
 ## Variational formulation
@@ -30,8 +30,9 @@ The classic formulation of the Poisson equation reads as
 $$ - \Delta u = f  \text{ in }  \Omega, \qquad u  = g_D  \text{ on }
 \Gamma _D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma _N, $$
 
-where $\partial \Omega = \Gamma _D\cup \Gamma _N$ and $\Gamma _D\cap \Gamma _N=\emptyset$. 
-We assume $\Gamma _D$ is closed and $\Gamma _N$ open.
+where $\partial \Omega = \Gamma_D\cup \Gamma _N$ and 
+$\Gamma_D\cap \Gamma_N=\emptyset$. 
+We assume $\Gamma_D$ is closed and $\Gamma_N$ open.
 
 Denoted by 
 
