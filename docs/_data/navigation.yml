@@ -41,7 +41,7 @@ docs:
       - title: "Project: Linear FEM"
         url: /docs/project-fem/
       - title: "Workflow"
-        url: /
+        url: /docs/fem-workflow/
       - title: "List of examples"
         url: /docs/fem-examples/
 
@@ -213,6 +213,6 @@ community:
   - title: "Community Research"
     url: /community/
     children:
-      - title: "A"
-        url: /research/A/
+      - title: "test"
+        url: /research/test/
   

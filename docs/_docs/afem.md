@@ -1,10 +1,15 @@
-# Adaptive Finite Element Methods
+---
+permalink: /docs/afem/
+title: "Introduction to Adaptive Finite Element Methods"
+sidebar:
+    nav: afem
+---
 
-Adaptive methods are now widely used in the scientific computation to achieve better accuracy with minimum degree of freedom. We present an example here and refer to the lecture notes [Adaptive Finite Element Methods](https://www.math.uci.edu/~chenlong/226/Ch4AFEM.pdf) for convergence analysis.
+Adaptive methods are now widely used in the scientific computation to achieve better accuracy with minimum degree of freedom. We present an example here and refer to the lecture notes [Adaptive Finite Element Methods](https://www.math.uci.edu/~chenlong/226/Ch4AFEM.pdf) for a convergence analysis.
 
 Documentation on bisection and coarsening for 2D triangulation can be found below:
-- [Bisection in Two Dimensions](bisectdoc.html)
-- [Coarsen in Two Dimensions](coarsendoc.html)
+- [Bisection in Two Dimensions]({{ site.baseurl }}{% link _docs/afem-bisect.md %})
+- [Coarsen in Two Dimensions]({{ site.baseurl }}{% link _docs/afem-coarsen.md %})
 
 ## Singularity
 
@@ -14,9 +19,9 @@ $$
 -\Delta u = f \quad \text{in } \Omega, \qquad u=0 \quad \text{ on } \partial \Omega,
 $$
 
-provided the solution $u\in H^2(\Omega)$. Here is an example such regularity result does not hold. 
+provided that the solution $u\in H^2(\Omega)$. Here is an example such regularity result does not hold. 
 
-Let $\Omega:= (-1,1)^2 \backslash \{[0,1)\times(-1,0]\}$ be an L-shaped domain with a reentrant corner. Consider the equation
+Let $\Omega:= (-1,1)^2 \backslash \{[0,1)\times(-1,0]\}$ be an L-shaped domain with a re-entrant corner. Consider the equation
 
 $$
 -\Delta u = 0, \text{ in } \Omega  \quad \text{ and } \; 
@@ -41,8 +46,7 @@ pde = Lshapedata;
 ```
 
 
-    
-![png](afemdoc_files/afemdoc_3_0.png)
+![Initial mesh]({{ site.baseurl }}/assets/images/afem/afemdoc_3_0.png )
     
 
 
@@ -76,13 +80,13 @@ femPoisson(mesh,pde);
 
 
     
-![png](afemdoc_files/afemdoc_4_1.png)
+![png]({{ site.baseurl }}/assets/images/afem/afemdoc_4_1.png )
     
 
 
 
     
-![png](afemdoc_files/afemdoc_4_2.png)
+![png]({{ site.baseurl }}/assets/images/afem/afemdoc_4_2.png )
     
 
 
@@ -93,7 +97,7 @@ approximation rate $\|\nabla (u-u_h)\|$ better than $h^{\epsilon}$ if we insist 
 
 Standard adaptive finite element methods (AFEM) based on the local mesh refinement can be written as loops of the form
 
-**SOLVE -> ESTIMATE -> MARK -> REFINE**
+> **SOLVE -> ESTIMATE -> MARK -> REFINE**
 
 Starting from an initial triangulation $\mathcal  T_0$, to get $\mathcal T_{k+1}$ from $\mathcal T_k$ we first solve the equation to get $u_k$ based on $\mathcal T_k$. The error is estimated using $u_k$ and $\mathcal  T_k$ and used to mark a set of of triangles in $\mathcal T_k$. Marked triangles and possible more neighboring triangles are refined in such a way that the triangulation is still shape regular and conforming. 
 
@@ -176,13 +180,13 @@ showrate3(N(1:k),errH1(1:k),10,'-*','||Du-Du_h||',...
 
 
     
-![png](afemdoc_files/afemdoc_7_1.png)
+![png]({{ site.baseurl }}/assets/images/afem/afemdoc_7_1.png )
     
 
 
 
     
-![png](afemdoc_files/afemdoc_7_2.png)
+![png]({{ site.baseurl }}/assets/images/afem/afemdoc_7_2.png )
     
 
 
@@ -194,30 +198,41 @@ is observed. For quasi-uniform meshes in 2D, $N^{-0.5} \approx h$ is first order
 
 ## Details of Each Step
 
-- **SOLVE**. We use direct solver `A\b` or multigrid solvers to solve the linear system `Au=b`. For meshes generated in `ifem`, `mg(A,b,elem)` is faster than `amg(A,b)`.
+### SOLVE
+We use direct solver `A\b` or multigrid solvers to solve the linear system `Au=b`. For meshes generated in `ifem`, `mg(A,b,elem)` is faster than `amg(A,b)`.
 
-- **ESTIMATE**. We use the residual-type a posterior error estimator `estimateresidual` which returns 
+### ESTIMATE
+We use the residual-type a posterior error estimator `estimateresidual` which returns 
 $$
 \eta(\tau,u_{\mathcal T})^2 = \|h f\|_{0,\tau}^2 + \sum _{e\in \partial \tau} \|h^{1/2}[\nabla u_{\mathcal T}\cdot n_e]\|_{0,e}^2.
 $$
 Other option is `estimaterecovery(node,elem,u)` which only requres the mesh and a finite element function. Recovery type estimator is more flexiable but residual-type is more theoretical sound. 
 
-- **MARK**. Let $\theta \in (0,1)$. We use the bulk marking strategy 
+
+### MARK
+Let $\theta \in (0,1)$. We use the bulk marking strategy 
 
 $$
 \eta ^2(u_{\mathcal T},\mathcal M_{\mathcal T})\geq \theta \, \eta ^2(u_{\mathcal T},\mathcal T).
 $$
 
 Use `markedElem = mark(elem,eta,theta,'max')` for the maximum marking strategy
+
 $$
 \eta (u_{\mathcal T},\tau ^*)\geq \theta \max _{\tau\in \mathcal T}\eta (u_{\mathcal T},\tau ).
 $$
 
-- **REFINE**. We implement the newest vertex bisection and refer to [Bisection in Two Dimensions](bisectdoc.html) for detailed description.In short, the bisection method will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. The subtlity is to keep both thehape regularity and conformity of the mesh. 
+### REFINE 
+We implement the newest vertex bisection and refer to [Bisection in Two Dimensions](bisectdoc.html) for detailed description.In short, the bisection method will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. The subtlity is to keep both thehape regularity and conformity of the mesh. 
 
-- **COARSEN**. For some problems, e.g., evolution problems, coarsening (de-refinement) is needed as the singularity could move. Then use
+### COARSEN 
+For some problems, e.g., evolution problems, coarsening (de-refinement) is needed as the singularity could move. Then use
+    - ```matlab
         eta = eleminterpolate(eta,tree);
         markedElem = mark(elem,eta,0.5*theta,'COARSEN');
         [node,elem,bdFlag] = coarsen(node,elem,markedElem,bdFlag);
-        
+      ```
+
 See [Coarsen in two dimensions](coarsendoc.html) for the coarsening algorithm.
+
+

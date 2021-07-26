@@ -1,8 +1,24 @@
-# Coarsen in Two Dimensions
+---
+permalink: /docs/afem-coarsen/
+title: "Coarsen in Two Dimensions"
+sidebar:
+    nav: afem
+---
 
 We describe the coarsening algorithm implemented in `coarsen.m` for two dimensional bisection grids. We assume when bisecting a triangle, the left child is stored in a prori of the right child. More details can be found in the paper,
 
 - L. Chen and C-S. Zhang. [A coarsening algorithm on adaptive grids by newest vertex bisection and its applications](http://math.uci.edu/~chenlong/CZ2007.html). *Journal of Computational Mathematics*, 28(6):767-789, 2010.
+
+```bibtex
+@article{ChenZhang2010,
+  title={A coarsening algorithm on adaptive grids by newest vertex bisection and its applications},
+  author={Chen, Long and Zhang, Chensong},
+  journal={Journal of Computational Mathematics},
+  pages={767--789},
+  year={2010},
+  publisher={JSTOR}
+}
+```
 
 ## Compatible Bisection
 Every bisection grids can be obtained from an initial grid with a
@@ -24,7 +40,7 @@ findnode(node,5,'noindex');
 
 
     
-![png](coarsendoc_files/coarsendoc_2_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_2_0.png)
     
 
 
@@ -44,7 +60,7 @@ findnode(node,5,'noindex');
 
 
     
-![png](coarsendoc_files/coarsendoc_4_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_4_0.png)
     
 
 
@@ -63,9 +79,7 @@ for k = 1:3
 end
 ```
 
-
-    
-![png](coarsendoc_files/coarsendoc_6_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_6_0.png)
     
 
 
@@ -90,9 +104,7 @@ findnode(node,intGoodNode,'noindex');
 findnode(node,bdGoodNode,'noindex');
 ```
 
-
-    
-![png](coarsendoc_files/coarsendoc_8_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_8_0.png)
     
 
 
@@ -132,8 +144,7 @@ findnode(node1,5,'noindex')
 ```
 
 
-    
-![png](coarsendoc_files/coarsendoc_12_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_12_0.png)
     
 
 
@@ -155,8 +166,7 @@ showmesh(node1,elem1); findelem(node1,elem1); findnode(node1);
 ```
 
 
-    
-![png](coarsendoc_files/coarsendoc_13_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_13_0.png)
     
 
 
@@ -201,15 +211,14 @@ elem(t2,1) = 0;
 ```
 
 
-    
-![png](coarsendoc_files/coarsendoc_17_0.png)
+![png]({{ site.baseurl }}/assets/images/afem/coarsendoc_17_0.png)
     
 
 
 ## Clean and Shift Node and Elem Matrices
 
-The empty rows in node and elem matrices should be relased for the
-efficent usage of meomory. 
+The empty rows in node and elem matrices should be released for the
+efficient usage of memory. 
 
 
 ```matlab
@@ -237,11 +246,11 @@ In the application to adaptive finite element methods, we will remove
  good-to-coraen nodes whose star are marked for coarsening. 
 
 In the application to multigrid methods, we will record all neighboring
-nodes in the nodal star of good nodes; see the functoin: `uniformcoarsen`.
+nodes in the nodal star of good nodes; see the function: `uniformcoarsen`.
 
 The 3-D coarsening algorithm is slightly complicated than the 2-D case.
 
-## Aditional data structure
+## Additional data structure
 
 - `bdFlag` stores information on boundary conditions. It is updated as
 

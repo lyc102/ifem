@@ -1,7 +1,12 @@
-## Bisection in Two Dimensions
+---
+permalink: /docs/afem-bisect/
+title: "Bisection in Two Dimensions"
+sidebar:
+    nav: afem
+---
 
 We describe basic idea of the newest vertex and the longest edge bisection
-algorithm for two dimensional triangular grids. In short, a bisection refinement will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. Another class of mesh refinement method, known as regular refinement, which divide one triangle into 4 similar small triangles, is implemented in `uniformrefine.m`.
+algorithm for two-dimensional triangular grids. In short, a bisection refinement will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. Another class of mesh refinement method, known as regular refinement, which divide one triangle into 4 similar small triangles, is implemented in `uniformrefine.m`.
 
 There are two main issues in designing a good bisection method.
 
@@ -10,7 +15,7 @@ There are two main issues in designing a good bisection method.
 
 ## Newest vertex bisection
 
-If keep cutting one edge, the smallest angle will decrease and approach
+If one keeps cutting one edge, the smallest angle will decrease and approach
 to zero. To keep the shape regularity, we can switch the edge to be
 cutted. 
 
@@ -25,7 +30,7 @@ It can be shown that all the descendants of a triangle in $\mathcal T_0$
 fall into four similarity classes and hence (B1) holds. See the following
 figure for an illustration
 
-<img src="./figures/similarclass.png" width="120%">
+<img src="{{ site.baseurl }}/assets/images/similarclass.png" width="120%">
 
 ### Refinement edge
 How to represent a labeled triangulation? Recall that our representation
@@ -45,7 +50,7 @@ Neighboring triangles should be bisected (again following the newest
 vertex rule) to eliminate hangning nodes. This procedure is called
 completion.
 
-<img src="./figures/completion.png" width="75%">
+<img src="{{ site.baseurl }}/assets/images/completion.png" width="100%">
 
 We now describe an efficient completion algorithm for 2-D triangulations.
 A key observation is that if we cut all edges of the current
@@ -76,14 +81,15 @@ edge2newNode = zeros(NE,1,'uint32');
 edge2newNode(isCutEdge) = N+1:N+sum(isCutEdge);
 node(edge2newNode(isCutEdge),:) = (node(edge(isCutEdge,1),:) + ...
                                    node(edge(isCutEdge,2),:))/2;
-                                   ```                                  
+```                                  
 
 ### Bisections of marked triangles
 We only need to bisect the triangle whose refinement edge is bisected.
 The local numbering is shown in the following figure. We only need to bisect the triangle whose refinement edge is bisected. The local numbering is shown in the following figure. Note that we repeat the bisection only twice. No loop over all triangles. We also need to
 update the boundary condition i.e. `bdFlag`. 
 
-<img src="./figures/bisectrefinement.pdf" width="85%">
+<!-- <img src="./figures/bisectrefinement.pdf" width="85%"> -->
+<img src="{{ site.baseurl }}/assets/images/afem/bisectrefinement.png">
 
 ```
 %% Refine marked elements

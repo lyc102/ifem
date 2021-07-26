@@ -26,6 +26,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   iFEM is a MATLAB software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency. In this novel coding style, the sparse matrix and its operations are used extensively in the data structure and algorithms.
 baseurl: "/ifem" # the subpath of your site, e.g. /blog
 url: "https://lyc102.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+atom_feed:
+  hide: true
 
 repository: lyc102/ifem
 repository_tree: master
@@ -47,10 +49,18 @@ markdown    : kramdown
 highlighter : rouge
 permalink   : date
 
+comments:
+  provider : "facebook"
+  facebook:
+    appid : 349839066775394
+    num_posts : 5
+    colorscheme : "light"
+
 include:
   - _pages
   - _docs
   - _fem
+  - _research
 
 exclude:
   - .sass-cache/
@@ -122,9 +132,23 @@ defaults:
       layout: single
       author_profile: false
       share: false
-      comments: false
+      comments: true
       sidebar:
         nav: "fem"
+      mathjax: true
+      toc: true
+      toc_sticky: true
+  # _fem
+  - scope:
+      path: "_research"
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+      share: true
+      comments: true
+      sidebar:
+        nav: "community"
       mathjax: true
       toc: true
       toc_sticky: true
