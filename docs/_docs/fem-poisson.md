@@ -17,7 +17,7 @@ and do the following project
 - [Projects: Linear Finite Element Methods]({{ site.baseurl }}{% link _docs/project-fem.md %})
 
 The numerical example using the linear element is in
-- [Linear Element for Poisson Equation in 2D](Poissonfemrate.html)
+- [Linear Element for Poisson Equation in 2D]({{ site.baseurl }}{% link _fem/Poissonfemrate.md %})
 
 and more elements and equations can be found
 - [List of Examples]({{ site.baseurl }}{% link _docs/fem-examples.md %})
@@ -28,11 +28,11 @@ and more elements and equations can be found
 The classic formulation of the Poisson equation reads as
 
 $$ - \Delta u = f  \text{ in }  \Omega, \qquad u  = g_D  \text{ on }
-\Gamma _D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma _N, $$
+\Gamma _D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma _N, 
+\tag{1}\label{eq:poisson}$$
 
 where $\partial \Omega = \Gamma_D\cup \Gamma _N$ and 
-$\Gamma_D\cap \Gamma_N=\emptyset$. 
-We assume $\Gamma_D$ is closed and $\Gamma_N$ open.
+$\Gamma_D\cap \Gamma_N=\emptyset$. We assume $\Gamma_D$ is closed and $\Gamma_N$ open.
 
 Denoted by 
 
@@ -41,7 +41,7 @@ H_{g_D}^1(\Omega)=\{v\in L^2(\Omega), \nabla v\in L^2(\Omega)
 \text{ and } v|_{\Gamma _D} = g_D\}.
 $$ 
 
-Multiplying the Poisson equation by a test function $ v\in H_{0\_D}^1 $ and using integration by parts, we obtain the weak formulation of the Poisson equation: find $u\in H_{g\_D}^1(\Omega)$ such that for all $v\in H_{0\_D}^1$:
+Multiplying the Poisson equation \eqref{eq:poisson} by a test function $ v\in H_{0\_D}^1 $ and using integration by parts, we obtain the weak formulation of the Poisson equation: find $u\in H_{g\_D}^1(\Omega)$ such that for all $v\in H_{0\_D}^1$:
 
 $$ 
 a(u,v) := \int _{\Omega} \nabla u\cdot \nabla v\, {\rm dxdy} = \int _{\Omega} fv \, {\rm dxdy} + \int _{\Gamma _N} g_N v \,{\rm d}S.
@@ -62,6 +62,7 @@ such that for all $v\in \mathcal V_{\mathcal T}\cap H_{0_D}^1(\Omega)$:
 
 $$
 a(u,v) = \int _{\Omega} fv \, {\rm dxdy} + \int _{\Gamma _N} g_N v \,{\rm d}S.
+\tag{2}\label{eq:poisson-weak}
 $$
 
 ## Finite element space
@@ -118,13 +119,13 @@ $$
 v=\sum _{i=1}^Nv_i\phi _i \longleftrightarrow \boldsymbol  v=(v_1, \cdots, v_N)^{\intercal},
 $$
 
-and call $\boldsymbol  v$ the coordinate vector of $v$ relative to the basis $\{\phi _i\}_{i=1}^{N}$. Following the terminology in elasticity, we introduce the *stiffness matrix*
+and call $\boldsymbol  v$ the coordinate vector of $v$ relative to the basis $\\{\phi\_i\\}_{i=1}^{N}$. Following the terminology in elasticity, we introduce the *stiffness matrix*
 
 $$
 \boldsymbol  A=(a_{ij})_{N\times N}, \, \text{ with } \quad a_{ij}=a(\phi _j,\phi _i),
 $$
 
-and the load vector $\boldsymbol  f=\{\langle f, \phi_k \rangle\}_{k=1}^{N}\in \mathbb{R}^{N}$. Then the coefficient vector can be obtained by solving the following linear algebraic system
+for $a(\cdot,\cdot)$ from \eqref{eq:poisson-weak} and the load vector $\boldsymbol  f=\{\langle f, \phi_k \rangle\}_{k=1}^{N}\in \mathbb{R}^{N}$. Then the coefficient vector can be obtained by solving the following linear algebraic system
 
 $$
 \boldsymbol  A\boldsymbol  u = \boldsymbol  f.

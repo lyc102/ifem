@@ -8,7 +8,7 @@ sidebar:
 
 
 ## Adding new pages in docs
-- Un-deployed `.md` converted from the old `.ipynb` are in `_todo`.
+- Un-deployed `.md` converted from the old `/ifemdoc/*/*.ipynb` are in `_todo`.
 - To put it under a certain category:
     - Copy the markdown file together with its image folder (under the same name) to either `_docs` (documents for iFEM usage) or `_pages` (community research, update, logs, etc). Directly copying `_todo` folders `fem`, `afem`, `solver` to `_fem`, `_afem`, `_solver` is easier but we need to add those folders to `include:` in `_config.yml`. 
     - Adding the following preamble to the markdown file:
@@ -24,7 +24,7 @@ sidebar:
 
 ## Testing pages
 - To test building the site locally, install `ruby` and `jekyll` (see [below](#july-25-2021) for details).
-- To add a test page, we can add `test_something.md` in `_pages`, then the page can be accessed directly without being shown up in the site using the `permalink` in the markdown file's preamble.
+- To add a test page, we can add `test_something.md` in `_pages`, then the page can be accessed directly without being shown up in the site using the `permalink` in the markdown file's preamble. If `permalink: /test/test_something/` is added, then `http://localhost:4000/ifem/test/test_something/` should work in the local served version and `http://lyc1012.github.io/ifem/test/test_something/` when deployed.
 
 
 ## CHANGELOG
@@ -46,6 +46,8 @@ After Ruby is installed, install Jekyll using `gem install --user-install bundle
 
 ### July 23, 2021
 - Set up the doc site.
-- [Navigation](../_data/navigation.yml) controls the navigation bar.
-- [Main scss](../assets/css/main.scss) controls the main CSS styles. Global var is defined before `@import`, syntax highlighting and colors can be defined in the same file after `@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"`, adjustment to others or customized CSS can be added after `@import "minimal-mistakes"`.
-- In MathJax, `\{\}` needs to be rewritten to `\\{\\}` to escape the backslash interpreter for HTML; also for nested subscripts or subscripts in superscripts, the underscore `_` needs a backslash `\` before it, for example, `$u_{g_D}$` needs to be `$u_{g\_D}$`.
+- Navigation `/_data/navigation.yml` controls all the navigation bars.
+- Main scss is `assets/css/main.scss` controls the main CSS styles. Global var is defined before `@import`, syntax highlighting and colors can be defined in the same file after `@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"`, adjustment to others or customized CSS can be added after `@import "minimal-mistakes"`.
+- $\LaTeX$ can be added using the usual `$ $` or `$$ $$`. 
+    - Kramdown supports `\eqref` as well. For an example, please refer to `_docs/fem-poisson.md`. Inside the mathmode, at the end of an equation, add `\tag{num}\label{label_name}`, then `\eqref{}` can be directly called in the main text.
+    - In MathJax, `\{\}` needs to be rewritten to `\\{\\}` to escape the backslash interpreter for HTML; also for nested subscripts or subscripts in superscripts, the underscore `_` needs a backslash `\` before it, for example, `$u_{g_D}$` needs to be `$u_{g\_D}$`.
