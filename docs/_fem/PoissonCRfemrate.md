@@ -1,4 +1,9 @@
-# CR Nonconforming Element for Poisson Equation in 2D
+---
+permalink: /fem/PoissonCRfemrate/
+title: "CR Nonconforming Element for Poisson Equation in 2D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the rate of convergence of the CR Nonconforming finite element approximation of the Poisson equation on the unit square:
 
@@ -9,17 +14,17 @@ for the following boundary conditions
 - Pure Neumann boundary condition: $\nabla u\cdot n=g_N \hbox{ on } \partial \Omega$.
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
-**References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+### References
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _docs/fem-poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
-**Subroutines**:
+### Subroutines
 
-    - PoissonCR
-    - squarePoisson
-    - femPoisson
-    - PoissonCRfemrate
+- `PoissonCR`
+- `squarePoisson`
+- `femPoisson`
+- `PoissonCRfemrate`
     
 The method is implemented in `PoissonCR` subroutine and can be tested in `squarePoisson`. Together with other elements (P1, P2, P3, Q1, CR), `femPoisson` provides a concise interface to solve Poisson equation. The CR element is tested in `PoissonCRfemrate`. This doc is based on `PoissonCRfemrate`.
 

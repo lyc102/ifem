@@ -1,4 +1,9 @@
-# Weak Galerkin Methods for Poisson Equation in 2D
+---
+permalink: /fem/PoissonWGfemrate/
+title: "Weak Galerkin Methods for Poisson Equation in 2D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the rate of convergence of the lowest order Weak Galerkin finite element
 approximation of the Poisson equation on the unit square:
@@ -11,16 +16,17 @@ for the following boundary conditions
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
 **References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _docs/fem-poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Weak Galerkin Methods](http://www.math.uci.edu/~chenlong/ifemdoc/fem/WGprogramming.pdf)
 
-**Subroutines**:
 
-    - PoissonWG
-    - squarePoissonWG
-    - femPoisson
-    - PoissonWGfemrate
+### Subroutines
+
+- `PoissonWG`
+- `squarePoissonWG`
+- `femPoisson`
+- `PoissonWGfemrate`
     
 The method is implemented in `PoissonWG` subroutine and can be tested in `squarePoissonWG`. Together with other elements (P1, P2, P3, Q1), `femPoisson` provides a concise interface to solve Poisson equation. The P2 element is tested in `PoissonWGfemrate`. This doc is based on `PoissonWGfemrate`.
 

@@ -15,17 +15,17 @@ for the following boundary conditions
 - Pure Neumann boundary condition: $\nabla u\cdot n=g_N \hbox{ on } \partial \Omega$.
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
-**References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+### References
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _docs/fem-poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
-**Subroutines**:
+### Subroutines
 
-    - PoissonP2
-    - squarePoisson
-    - femPoisson
-    - Poissonfemrate
+- `PoissonP2`
+- `squarePoisson`
+- `femPoisson`
+- `Poissonfemrate`
     
 The method is implemented in `PoissonP2` subroutine and can be tested in `squarePoisson`. Together with other elements (P1, P2, P3, Q1), `femPoisson` provides a concise interface to solve Poisson equation. The P2 element is tested in `PoissonP2femrate`. This doc is based on `PoissonP2femrate`.
 

@@ -18,9 +18,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title                    : "iFEM"
-title_separator          : "-"
-subtitle                 : "an Integrated Finite Element Methods Package in MATLAB"
+title                    : "iFEM: an Integrated Finite Element Methods Package in MATLAB"
+# title_separator          : "-"
+# subtitle                 : "an Integrated Finite Element Methods Package in MATLAB"
 email: chenlong@math.uci.edu
 description: >- # this means to ignore newlines until "baseurl:"
   iFEM is a MATLAB software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency. In this novel coding style, the sparse matrix and its operations are used extensively in the data structure and algorithms.

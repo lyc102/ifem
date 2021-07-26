@@ -14,14 +14,14 @@ for the following boundary conditions
 - Pure Neumann boundary condition: $\nabla u\cdot n=g_N \hbox{ on } \partial \Omega$.
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
-**References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+### References
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _docs/fem-poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
 ## P3 Cubic Element
 
-We explain degree of freedoms and Lagrange basis for the cubic element on a triangle. There are three types of dofs: vertex type, edge type and element type. Given a mesh, the required data structure can be constructured by
+We explain degrees of freedom and Lagrange basis for the cubic element on a triangle. There are three types of dofs: vertex type, edge type and element type. Given a mesh, the required data structure can be constructed by
 
       [elem2dof,elem2edge,edge,bdDof,freeDof] = dofP3(elem)
 
