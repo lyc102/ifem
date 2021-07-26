@@ -27,15 +27,15 @@ docs:
       - title: "Simplicial complex in 3D"
         url: /docs/mesh-sc3/
   
-  - title: Mesh Generator and Smoothing/Optimization
-    url: /pages/mesh-opt/
+  - title: Mesh Smoothing and Optimization
+    url: /docs/mesh-opt/
 
   - title: Finite element methods
     children:
       - title: "FEM for Poisson equation"
         url: /docs/fem-poisson/
-      - title: "Projects: Linear FEM"
-        url: /docs/fem-projects/
+      - title: "Project: Linear FEM"
+        url: /docs/project-fem/
       - title: "List of examples"
         url: /docs/fem-examples/
       - title: "Workflow"
@@ -112,48 +112,49 @@ mesh:
         url: /docs/mesh-sc/
       - title: "Simplicial complex in three dimensions"
         url: /docs/mesh-sc3/
+  - title: Mesh Smoothing and Optimization
+    url: /docs/mesh-opt/
 
 
 
 # sidebar navigation list sample
-sidebar-sample:
-  - title: "Parent Page A"
+project:
+  - title: "Back to main"
+    url: /
+  - title: "Finite Element"
     children:
-      - title: "Child Page A1"
+      - title: "Linear Finite Element Method"
         url: /
-      - title: "Child Page A2"
+      - title: "Nonlinear Poisson Boltzmann Equation"
         url: /
-      - title: "Child Page A3"
+      - title: "Finite Element Methods for Stokes equations"
         url: /
-      - title: "Child Page A4"
+      - title: "Transient Navier-Stokes Equations"
         url: /
-  - title: "Parent Page B"
+      - title: "Edge element for Maxwell Equations"
+        url: /
+      - title: "Wave equations"
+        url: /
+  - title: "Adaptive Finite Element"
     children:
-      - title: "Child Page B1"
+      - title: "Adaptive FEM for PBE"
         url: /
-      - title: "Child Page B2"
+      - title: "Adaptive FEM for Heat Equation"
         url: /
-      - title: "Child Page B3"
-        url: /
-      - title: "Child Page B4"
-        url: /
-      - title: "Child Page B5"
-        url: /
-  - title: "Parent Page C"
+  - title: "Solvers"
     children:
-      - title: "Child Page C1"
+      - title: "Multigrid Methods"
         url: /
-      - title: "Child Page C2"
+      - title: "Fast Solvers for Stokes equations"
         url: /
-      - title: "Child Page C3"
-        url: /
-      - title: "Child Page C4"
-        url: /
-      - title: "Child Page C5"
-        url: /
-  - title: "Parent Page D"
+  - title: "Misc"
     children:
-      - title: "Child Page D1"
+      - title: "Finite Difference Methods in 1-D"
         url: /
-      - title: "Child Page D2"
+      - title: "Finite Difference Methods"
         url: /
+      - title: "Fast Multipole Methods"
+        url: /
+      - title: "MAC Scheme for Stokes equations"
+        url: /
+      

@@ -1,4 +1,9 @@
-# Mesh Smoothing and Optimization
+---
+permalink: /docs/mesh-opt/
+title: "Mesh Smoothing and Optimization"
+sidebar:
+    nav: mesh
+---
 
 ## Improve geometric mesh quality
 
@@ -39,14 +44,11 @@ showmeshquality(node,elem); axis([0 1 0 2700]);
 
 
 
-    
-![png](meshoptdoc_files/meshoptdoc_2_1.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_2_1.png)
     
 
 
-
-    
-![png](meshoptdoc_files/meshoptdoc_2_2.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_2_2.png)
     
 
 
@@ -78,7 +80,7 @@ showmesh(node,elem); findnode(node,'all','noindex');
 
 
     
-![png](meshoptdoc_files/meshoptdoc_4_0.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_4_0.png)
     
 
 
@@ -101,6 +103,18 @@ subplot(1,2,2); showmesh(node,elem);
 
 
     
-![png](meshoptdoc_files/meshoptdoc_7_0.png)
+![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_7_0.png)
     
 
+## Reference
+
+```bibtex
+@article{ChenXu2004,
+  title={Optimal delaunay triangulations},
+  author={Chen, Long and Xu, Jinchao},
+  journal={Journal of Computational Mathematics},
+  pages={299--308},
+  year={2004},
+  publisher={JSTOR}
+}
+```

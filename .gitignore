@@ -5,3 +5,4 @@
 __pycache__/
 *.code-workspace
 docs/.jekyll-cache/
+docs/Gemfile.lock

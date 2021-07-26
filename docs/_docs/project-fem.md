@@ -1,18 +1,21 @@
-# Project: Linear Finite Element Methods
+---
+permalink: /docs/project-fem/
+title: "Project: Linear Finite Element Methods"
+sidebar:
+    nav: project
+---
 
- The purpose of this project is to implement the finite element method for
- solving the Poisson equation in a general polygonal domain using
- the piecewise linear finite element. 
+The purpose of this project is to implement the finite element method for
+solving the Poisson equation in a general polygonal domain using the piecewise linear finite element. 
 
-## Step 1: Download and Install iFEM
+## Step 1: Download and install iFEM
 
-- Download [iFEM](https://bitbucket.org/ifem/ifem/get/tip.zip).
-- Unzip the file to where you like.
+- Clone or download the zip file of [iFEM from GitHub](https://github.com/lyc102/ifem).
+- If a zip folder is dowloaded, unzip the file to where you like.
 - In MATLAB, go to the iFEM folder . 
 - Run `setpath.m`.
 
 ## Step 2: Mesh
-
 
 ```matlab
 % Generate mesh for the unit square
@@ -20,12 +23,7 @@
 showmesh(node,elem);
 ```
 
-
-    
-![png](projectFEM_files/projectFEM_3_0.png)
-    
-
-
+![png]({{ site.baseurl }}/assets/images/project/projectFEM_3_0.png)
 
 ```matlab
 % Generate mesh for the unit disk
@@ -38,7 +36,7 @@ showmesh(node,elem);
 
 
     
-![png](projectFEM_files/projectFEM_4_1.png)
+![png]({{ site.baseurl }}/assets/images/project/projectFEM_4_1.png)
     
 
 
@@ -51,8 +49,7 @@ showmesh(node,elem);
 
 
     
-![png](projectFEM_files/projectFEM_5_0.png)
-    
+![png]({{ site.baseurl }}/assets/images/project/projectFEM_5_0.png)
 
 
 ## Step 3: Assembling the matrix
@@ -87,17 +84,17 @@ compute the right hand side vector.
 
 - Use `uniformrefine` to refine the mesh and compute a sequence of solutions.
 
-- Compute the error in H1 norm and L2 norm using `getH1error` and
+- Compute the error in $H^1$-norm and $L^2$-norm using `getH1error` and
 `getL2error`.
 
-- Using the stiffness matrix to compute the error $\|\nabla(u_I - u_h)\|$, where $u_I$ is the nodal interpolation.
+- Use the stiffness matrix to compute the error $\|\nabla(u_I - u_h)\|$, where $u_I$ is the nodal interpolation.
 
 - Use `showrateh` to plot the rate of convergence of these error.
 
-- Test both Dirchlet and Neumann problems.
+- Test both Dirichlet and Neumann problems.
 
 ## Step 7: A challenging problem
 
 Code your subroutine in a general way such that you can solve the Poisson equation on a different mesh by changing the input arguments. 
 
-After you get the desireable results for the unit square, try to solve $-\Delta u = 1$ with constant Neumann boundary conditions on the unit disk. The exact solution can be found using the polar coordinate.
+After you get the desireable results for the unit square, try to solve $-\Delta u = 1$ with constant Neumann boundary conditions on the unit disk. The exact solution can be found using a separation of variable in the polar coordinate.
