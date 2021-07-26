@@ -16,7 +16,7 @@ $$
 
 provided the solution $u\in H^2(\Omega)$. Here is an example such regularity result does not hold. 
 
-Let $\Omega:= (-1,1)^2 \backslash \{[0,1)\times(-1,0]\}$ be a L-shaped domain with a reentrant corner. Consider the equation
+Let $\Omega:= (-1,1)^2 \backslash \{[0,1)\times(-1,0]\}$ be an L-shaped domain with a reentrant corner. Consider the equation
 
 $$
 -\Delta u = 0, \text{ in } \Omega  \quad \text{ and } \; 

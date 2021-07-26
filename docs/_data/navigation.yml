@@ -1,6 +1,8 @@
 main:
   - title: "Quick-Start Guide"
     url: /docs/fem-poisson/
+  - title: "Community"
+    url: /community/
   - title: "GitHub"
     url: https://github.com/lyc102/ifem
 
@@ -61,15 +63,19 @@ docs:
       - title: "Examples of solvers"
         url: /docs/solver-examples/
   
-  - title: "Projects"
-    url: /docs/projects/
+  - title: Research and Projects
+    children:
+      - title: "Math 226 Projects"
+        url: /docs/projects/
+      - title: "Community Research"
+        url: /community/
 
   - title: Develop
     children:
-      - title: "Dev notes"
-        url: /docs/dev-logs/
+      - title: "Development notes"
+        url: /logs/dev/
       - title: "Site logs"
-        url: /docs/site-logs/
+        url: /logs/site/
 
 fem:
   - title: "Back to main"
@@ -196,4 +202,17 @@ project:
         url: /
       - title: "MAC Scheme for Stokes equations"
         url: /
+  - title: "Community"
+    url: /community/
       
+community:
+  - title: "Back to main"
+    url: /
+  - title: "Math 226 Projects"
+    url: /docs/projects/
+  - title: "Community Research"
+    url: /community/
+    children:
+      - title: "A"
+        url: /research/A/
+  

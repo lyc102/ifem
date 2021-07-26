@@ -65,8 +65,7 @@ findedge(node,edge);
     
 
 
-The six Lagrange-type bases functions are denoted by $\phi_i, i=1:6$, i.e. $\phi_i(x_j)=\delta _{ij},i,j=1:6$. In
-barycentric coordinates, they are 
+The six Lagrange-type bases functions are denoted by $\phi_i, i=1:6$, i.e. $\phi_i(x_j)=\delta _{ij},i,j=1:6$. In barycentric coordinates, they are 
 
 $$ \phi_1 = \lambda_1(2\lambda_1 -1),\quad \nabla \phi_1 = \nabla \lambda_1(4\lambda_1-1),$$
 

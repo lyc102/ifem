@@ -117,4 +117,15 @@ subplot(1,2,2); showmesh(node,elem);
   year={2004},
   publisher={JSTOR}
 }
+
+@article{PerssonStrang2004,
+  title={A simple mesh generator in MATLAB},
+  author={Persson, Per-Olof and Strang, Gilbert},
+  journal={SIAM review},
+  volume={46},
+  number={2},
+  pages={329--345},
+  year={2004},
+  publisher={SIAM}
+}
 ```

@@ -1,5 +1,5 @@
 ---
-permalink: /docs/weak-formulation/
+permalink: /test/weak-formulation/
 title: "Weak formulation"
 excerpt: "FEM 101"
 sidebar:

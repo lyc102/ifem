@@ -1,5 +1,5 @@
 ---
-permalink: /docs/dev-logs/
+permalink: /logs/dev/
 title: "iFEM development notes"
 sidebar:
     nav: docs

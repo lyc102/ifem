@@ -40,9 +40,9 @@ This documentation website will be constantly updated. If you have any questions
 1. `help funexample` displays a description of and syntax for the function `funexample`. For example, `help mg` will show basic usage for `mg` function in the plain text.  
 2. `ifem funexampledoc` show detailed description. For example, `ifem mgdoc` will explain the `mg` function step by step in `html` format. But not every function has a html documentation.
 
-## References
+## License and References
 
-If you feel iFEM is helpful for your research, please acknowledge your use by citing:
+iFEM can be freely distributed under GPL 3.0. If you feel iFEM is helpful for your research, please acknowledge your use by citing:
 
 > L. Chen. iFEM: an integrated finite element method package in MATLAB. Technical Report, University of California at Irvine, 2009.
 
