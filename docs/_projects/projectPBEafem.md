@@ -1,4 +1,9 @@
-# Project: AFEM for Nonlinear Poisson Boltzmann Equation
+---
+permalink: /projects/PBEafem/
+title: "Project: AFEM for Nonlinear Poisson Boltzmann Equation"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to test Newton's method combined with
 adaptivity for solving the nonlinear elliptic equation. The example is

@@ -1,4 +1,10 @@
-# Project: Multigrid Methods
+---
+permalink: /projects/multigrid/
+title: "Project: Multigrid Methods"
+sidebar:
+    nav: project
+---
+
 
 In this project we will learn three ways of implementating multigrid
 methods: from matrix-free to matrix-only depending on how

@@ -1,4 +1,9 @@
-## Project: AFEM for the Heat Equation
+---
+permalink: /projects/heat/
+title: "Project: AFEM for the Heat Equation"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement explict and implicit
 numerical methods for solving the parabolic equation. The example is the heat equation 

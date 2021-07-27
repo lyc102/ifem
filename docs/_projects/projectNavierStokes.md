@@ -1,4 +1,9 @@
-# Project: Transient Navier-Stokes Equations
+---
+permalink: /projects/NavierStokes/
+title: "Project: Transient Navier-Stokes Equations"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement numerical methods for solving
 time-dependent Navier-Stokes equations in two dimensions.

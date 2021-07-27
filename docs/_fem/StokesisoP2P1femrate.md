@@ -1,4 +1,9 @@
-# isoP2P1 Finite Elements for Stokes Equations
+---
+permalink: /fem/StokesisoP2P1femrate/
+title: "isoP2P1 Finite Elements for Stokes Equations"
+sidebar:
+    nav: fem
+---
 
 This example is to show the convergence of isoP2-P1 finite elements for the Stokes equation on the unit square:
 

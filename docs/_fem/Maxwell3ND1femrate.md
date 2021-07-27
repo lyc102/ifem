@@ -1,4 +1,9 @@
-# Linear Edge Element for Maxwell Equations in 3D
+---
+permalink: /fem/Maxwell3ND1femrate/
+title: "Linear Edge Element for Maxwell Equations in 3D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the linear edge element approximation of the electric field of the time harmonic Maxwell equation.
   

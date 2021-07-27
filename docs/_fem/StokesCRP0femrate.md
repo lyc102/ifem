@@ -1,4 +1,10 @@
-# CR-P0 Finite Elements for Stokes Equations
+---
+permalink: /fem/StokesCRP0femrate/
+title: "CR-P0 Finite Elements for Stokes Equations"
+sidebar:
+    nav: fem
+---
+
 
 This example is to show the convergence of CR-P0 finite elements for the Stokes equation on the unit square:
 

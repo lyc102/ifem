@@ -1,4 +1,9 @@
-# CR Nonconforming Element for Poisson Equation in 3D
+---
+permalink: /fem/Poisson3CRfemrate/
+title: "CR Nonconforming Element for Poisson Equation in 3D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the rate of convergence of the CR Nonconforming finite element approximation of the Poisson equation on the unit cube:
 

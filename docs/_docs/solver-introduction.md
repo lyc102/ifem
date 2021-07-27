@@ -1,4 +1,9 @@
-# Solvers for Linear Algebraic Equations
+---
+permalink: /docs/solver-introduction/
+title: "Solvers for Linear Algebraic Equations"
+sidebar:
+    nav: docs
+---
 
 We have implemented multigrid solvers for linear algebraic systems arising from various finite element methods. Here we briefly present the usage for a symmetric and positive definite matrix equation `Ax = b`.
 
@@ -49,9 +54,7 @@ fprintf('Difference between direct and mg, amg solvers %0.2g, %0.2g \n',...
     Difference between direct and mg, amg solvers 1.4e-09, 7.8e-08 
 
 
-
-    
-![png](solverintroduction_files/solverintroduction_3_1.png)
+![png]({{site.baseurl}}/assets/images/solver/solverintroduction_3_1.png)
     
 
 
@@ -94,7 +97,7 @@ fprintf('Difference between direct and mg, amg solvers %0.2g, %0.2g \n',...
 
 
     
-![png](solverintroduction_files/solverintroduction_6_1.png)
+![png]({{site.baseurl}}/assets/images/solver/solverintroduction_6_1.png)
     
 
 
@@ -137,7 +140,7 @@ fprintf('Difference between direct and mg, amg solvers %0.2g, %0.2g \n',...
 
 
     
-![png](solverintroduction_files/solverintroduction_9_1.png)
+![png]({{site.baseurl}}/assets/images/solver/solverintroduction_9_1.png)
     
 
 

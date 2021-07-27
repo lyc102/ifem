@@ -1,4 +1,9 @@
-# Project: Finite Difference Methods
+---
+permalink: /projects/fdm/
+title: "Project: Finite Difference Methods"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement the finite difference method (5-point stencil) for
 solving the Poisson equation in a rectangular domain using matrix-free or tensor product matrix. 

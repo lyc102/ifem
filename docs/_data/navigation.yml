@@ -29,6 +29,8 @@ docs:
         url: /docs/mesh-sc/
       - title: "Simplicial complex in 3D"
         url: /docs/mesh-sc3/
+      - title: "Uniform refinement in 3D"
+        url: /docs/mesh-uniformrefine3/
   
   - title: Mesh Smoothing and Optimization
     url: /docs/mesh-opt/
@@ -42,8 +44,8 @@ docs:
         url: /docs/project-fem/
       - title: "Workflow"
         url: /docs/fem-workflow/
-      - title: "List of examples"
-        url: /docs/fem-examples/
+      - title: "FEM examples"
+        url: /fem/examples/
 
   - title: Adaptive Finite element methods
     children:
@@ -57,16 +59,17 @@ docs:
         url: /docs/afem-project-heat/
 
   - title: Solvers of Linear Algebraic Equations
+    url: /docs/solver/
     children:
       - title: "Introduction to solvers"
-        url: /docs/solver/
-      - title: "Examples of solvers"
-        url: /docs/solver-examples/
+        url: /docs/solver-introduction/
+      - title: "Solvers for Poisson-type equations"
+        url: /docs/solver-mgPoisson/
   
   - title: Research and Projects
     children:
       - title: "Math 226 Projects"
-        url: /docs/projects/
+        url: /projects/
       - title: "Community Research"
         url: /community/
 
@@ -85,11 +88,11 @@ fem:
       - title: "Finite Element Methods for Poisson Equation"
         url: /docs/fem-poisson/
       - title: "Projects: Linear Finite Element Methods"
-        url: /docs/fem-projects/
+        url: /projects/fem/
       - title: "FEM workflow"
         url: /docs/fem-workflow/
   - title: "A List of Examples"
-    url: /docs/fem-examples/
+    url: /fem/examples/
   - title: "Poisson Equation 2D"
     children:
       - title: "P1 Linear Element"
@@ -128,6 +131,30 @@ fem:
       - title: "RT0 Element"
         url: /fem/Poisson3RT0mfemrate/
 
+  - title: "Stokes Equations 2D"
+    children:
+      - title: "CR-P0 Element"
+        url: /fem/StokesCRP0femrate/
+      - title: "P2-P0 Element"
+        url: /fem/StokesP2P0femrate/
+      - title: "P2-P1 Taylor-Hood Element"
+        url: /fem/StokesP2P1femrate/
+      - title: "isoP2-P0 Element"
+        url: /fem/StokesisoP2P0femrate/
+      - title: "isoP2-P1 Element"
+        url: /fem/StokesisoP2P1femrate/
+      - title: "P1b-P1 Element"
+        url: /fem/StokesP1bP1femrate/
+  
+  - title: "Maxwell Equations"
+    children:
+      - title: "Lowest Order Edge Element"
+        url: /fem/Maxwell3ND0femrate/
+      - title: "Linear Edge Element"
+        url: /fem/Maxwell3ND1femrate/
+      - title: "Quadratic Edge Element"
+        url: /fem/Maxwell3ND2femrate/
+
 afem:
   - title: "Back to main"
     url: /
@@ -157,6 +184,8 @@ mesh:
         url: /docs/mesh-sc/
       - title: "Simplicial complex in three dimensions"
         url: /docs/mesh-sc3/
+      - title: "Uniform refinement in 3D"
+        url: /docs/mesh-uniformrefine3/
   - title: Mesh Smoothing and Optimization
     url: /docs/mesh-opt/
 
@@ -169,39 +198,39 @@ project:
   - title: "Finite Element"
     children:
       - title: "Linear Finite Element Method"
-        url: /
+        url: /projects/fem/
       - title: "Nonlinear Poisson Boltzmann Equation"
-        url: /
+        url: /projects/PBE/
       - title: "Finite Element Methods for Stokes equations"
-        url: /
+        url: /projects/Stokes/
       - title: "Transient Navier-Stokes Equations"
-        url: /
+        url: /projects/NavierStokes/
       - title: "Edge element for Maxwell Equations"
-        url: /
+        url: /projects/Maxwell/
       - title: "Wave equations"
-        url: /
+        url: /projects/wave/
   - title: "Adaptive Finite Element"
     children:
       - title: "Adaptive FEM for PBE"
-        url: /
+        url: /projects/PBEafem/
       - title: "Adaptive FEM for Heat Equation"
-        url: /
+        url: /projects/heat/
   - title: "Solvers"
     children:
       - title: "Multigrid Methods"
-        url: /
+        url: /projects/multigrid/
       - title: "Fast Solvers for Stokes equations"
-        url: /
+        url: /projects/StokesSolver/
   - title: "Misc"
     children:
       - title: "Finite Difference Methods in 1-D"
-        url: /
+        url: /projects/FDM1d/
       - title: "Finite Difference Methods"
-        url: /
+        url: /projects/fdm/
       - title: "Fast Multipole Methods"
-        url: /
+        url: /projects/fmm/
       - title: "MAC Scheme for Stokes equations"
-        url: /
+        url: /projects/StokesMAC/
   - title: "Community"
     url: /community/
       

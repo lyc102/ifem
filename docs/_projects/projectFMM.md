@@ -1,4 +1,9 @@
-# Project: Fast Multipole Methods
+---
+permalink: /projects/fmm/
+title: "Project: Fast Multipole Methods"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement the tree code and fast multipole
 methods for the N-body summation problem. Given $\boldsymbol x = (x_j)\in \mathbb R^N, \boldsymbol y = (y_i)\in \mathbb R^N$, let 

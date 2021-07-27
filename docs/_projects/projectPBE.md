@@ -1,4 +1,9 @@
-# Project: Nonlinear Poisson Boltzmann Equation
+---
+permalink: /projects/PBE/
+title: "Project: Nonlinear Poisson Boltzmann Equation"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement Newton's method, two-grid and nonlinear multigrid method (FAS) for solving the nonlinear elliptic equation. The example is the nonlinear
 Poisson-Boltzmann equation for the potential $u$ corresponding to a given

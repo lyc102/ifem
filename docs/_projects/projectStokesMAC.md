@@ -1,4 +1,10 @@
-# Project: MAC Scheme for Stokes Equations
+---
+permalink: /projects/StokesMAC/
+title: "Project: MAC Scheme for Stokes Equations"
+sidebar:
+    nav: project
+---
+
 
 The purpose of this project is to implement the simple and popular MAC scheme for solving Stokes equations in two dimensions. 
 

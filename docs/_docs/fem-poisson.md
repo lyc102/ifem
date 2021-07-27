@@ -14,13 +14,13 @@ We use the linear finite element method for solving the Poisson equation as an e
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
 and do the following project
-- [Projects: Linear Finite Element Methods]({{ site.baseurl }}{% link _docs/project-fem.md %})
+- [Projects: Linear Finite Element Methods]({{ site.baseurl }}{% link _projects/projectFEM.md %})
 
 The numerical example using the linear element is in
 - [Linear Element for Poisson Equation in 2D]({{ site.baseurl }}{% link _fem/Poissonfemrate.md %})
 
 and more elements and equations can be found
-- [List of Examples]({{ site.baseurl }}{% link _docs/fem-examples.md %})
+- [List of Examples]({{ site.baseurl }}{% link _fem/fem-examples.md %})
 
 
 ## Variational formulation
@@ -28,7 +28,7 @@ and more elements and equations can be found
 The classic formulation of the Poisson equation reads as
 
 $$ - \Delta u = f  \text{ in }  \Omega, \qquad u  = g_D  \text{ on }
-\Gamma _D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma _N, 
+\Gamma_D,  \qquad  \nabla u\cdot n = g_N  \text{ on } \Gamma_N, 
 \tag{1}\label{eq:poisson}$$
 
 where $\partial \Omega = \Gamma_D\cup \Gamma _N$ and 

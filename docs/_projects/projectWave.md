@@ -1,4 +1,9 @@
-# Project: Wave Equation
+---
+permalink: /projects/wave/
+title: "Project: Wave Equation"
+sidebar:
+    nav: project
+---
 
 In this project we will implement finite element and finite difference methods for solving the wave equation. 
 

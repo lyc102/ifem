@@ -1,4 +1,9 @@
-# P1bP1 Finite Elements for Stokes Equations
+---
+permalink: /fem/StokesP1bP1femrate/
+title: "P1bP1 Finite Elements for Stokes Equations"
+sidebar:
+    nav: fem
+---
 
 This example is to show the convergence of P1b-P1 finite elements for the Stokes equation on the unit square:
 

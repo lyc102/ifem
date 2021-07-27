@@ -1,4 +1,10 @@
-# Project: 1-D Finite Difference Method
+---
+permalink: /projects/FDM1d/
+title: "Project: 1-D Finite Difference Method"
+sidebar:
+    nav: project
+---
+
 
 The purpose of this project is to introduce the finite difference method for solving differential equations in 1-D. Consider 1-D Poisson equation in $(0,1)$ with Dirichlet boundary condition
 

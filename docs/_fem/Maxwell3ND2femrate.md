@@ -1,4 +1,9 @@
-# Quadratic Edge Element for Maxwell Equations in 3D
+---
+permalink: /fem/Maxwell3ND2femrate/
+title: "Quadratic Edge Element for Maxwell Equations in 3D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the quadratic edge element approximation of the electric field of the time harmonic Maxwell equation.
 

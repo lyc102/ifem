@@ -1,4 +1,9 @@
-# Poisson-type Equations
+---
+permalink: /docs/solver-mgPoisson/
+title: "Solvers for Poisson-type Equations"
+sidebar:
+    nav: docs
+---
 
 `x = mg(A,b,elem)` attempts to solve the system of linear equations `Ax = b` for `x` using geometric multigrid solvers. Inside mg, a coarsening algorithm is applied. The method is designed for the system from several finite element descritzations of elliptic equations on a grid whose topology is given by the array `elem`.
 

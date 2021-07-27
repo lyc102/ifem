@@ -1,5 +1,5 @@
 ---
-permalink: /docs/project-fem/
+permalink: /projects/fem/
 title: "Project: Linear Finite Element Methods"
 sidebar:
     nav: project

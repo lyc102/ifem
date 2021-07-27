@@ -1,4 +1,9 @@
-# Project: Edge Finite Element Methods for Maxwell Equations
+---
+permalink: /projects/Maxwell/
+title: "Project: Edge Finite Element Methods for Maxwell Equations"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement the lowest order edge element
 for solving the following Maxwell equations in three dimensions

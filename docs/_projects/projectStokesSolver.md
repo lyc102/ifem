@@ -1,4 +1,10 @@
-# Project: Fast Solvers for Stokes Equations
+---
+permalink: /projects/StokesSolver/
+title: "Project: Fast Solvers for Stokes Equations"
+sidebar:
+    nav: project
+---
+
 
 The purpose of this project is to implement fast solvers for solving
 finite element and finite difference discretization of Stokes equations.

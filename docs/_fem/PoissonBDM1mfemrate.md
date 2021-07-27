@@ -1,4 +1,10 @@
-# BDM1-P0 Element for Poisson Equation in 2D
+---
+permalink: /fem/PoissonBDM1mfemrate/
+title: "BDM1-P0 Element for Poisson Equation in 2D"
+sidebar:
+    nav: fem
+---
+
 
 This example is to show the rate of convergence of the BDM1-P0 mixed finite element approximation of the Poisson equation on the unit square:
 

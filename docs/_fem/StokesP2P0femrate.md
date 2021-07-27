@@ -1,4 +1,10 @@
-# P2P0 Finite Elements for Stokes Equations
+---
+permalink: /fem/StokesP2P0femrate/
+title: "P2P0 Finite Elements for Stokes Equations"
+sidebar:
+    nav: fem
+---
+
 
 This example is to show the convergence of P2-P0 finite elements for the Stokes equation on the unit square:
 

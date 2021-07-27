@@ -1,4 +1,9 @@
-# Project: Finite Element Methods for Stokes Equations
+---
+permalink: /projects/Stokes/
+title: "Project: Finite Element Methods for Stokes Equations"
+sidebar:
+    nav: project
+---
 
 The purpose of this project is to implement some simple and popular finite
 element pairs for solving the Stokes equations in two dimensions.

@@ -1,4 +1,9 @@
-# Lowest Order Edge Element for Maxwell Equations in 3D
+---
+permalink: /fem/Maxwell3ND0femrate/
+title: "Lowest Order Edge Element for Maxwell Equations in 3D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the lowest order edge element approximation of the electric field of the time harmonic Maxwell equation.
   

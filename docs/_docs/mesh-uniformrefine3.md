@@ -1,8 +1,12 @@
-# 3-D Red Refinement
+---
+permalink: /docs/mesh-uniformrefine3/
+title: "Uniform Red Refinement in 3D"
+sidebar:
+    nav: mesh
+---
 
 It subdivides each tetrahedron in a triangulation into eight
-subtetrahedra of equal volume. The ordering of sub-tetrahedron is choosen so that recursive application to any initial tetrahedron yields elements of at most three congruence classes. Starting from a suitable ordered initial mesh (dividing one cube into six tetrahedron), `uniformrefine3` is used in `cubemesh.m` to produce a
-uniform mesh of a cube.
+subtetrahedra of equal volume. The ordering of sub-tetrahedron is chosen so that recursive application to any initial tetrahedron yields elements of at most three congruence classes. Starting from a suitable ordered initial mesh (dividing one cube into six tetrahedron), `uniformrefine3` is used in `cubemesh.m` to produce a uniform mesh of a cube.
 
 > Note that sub-tetrahedron may not be always positive ordered. 
 
@@ -23,12 +27,11 @@ findnode3(node);
 ```
 
 
-    
-![png](uniformrefine3doc_files/uniformrefine3doc_2_0.png)
+![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_2_0.png)
     
 
 
-After cutting the four corner, the remaining octahedron should be divided into four tetrahedron by using one of three diagonals. Here follow Bey we always use diagonal 6-9. The ordering of sub-tetrahedron is choosen so that recursive application to any initial tetrahedron yields elements of at most three congruence classes and may not be positive ordered. To get positive ordering, use `fixorder3`.
+After cutting the four corner, the remaining octahedron should be divided into four tetrahedra by using one of three diagonals. Here follow Bey we always use diagonal 6-9. The ordering of sub-tetrahedron is chosen so that recursive application to any initial tetrahedron yields elements of at most three congruence classes and may not be positive ordered. To get positive ordering, use `fixorder3`.
 
 
 ```matlab
@@ -62,9 +65,7 @@ showmesh3(node,elem,[],'FaceAlpha',0.15); view([34 12]);
 findnode3(node);
 ```
 
-
-    
-![png](uniformrefine3doc_files/uniformrefine3doc_7_0.png)
+![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_7_0.png)
     
 
 
@@ -137,9 +138,7 @@ meshquality(node,elem);
      - Min quality 0.7174 - Mean quality 0.7174 
 
 
-
-    
-![png](uniformrefine3doc_files/uniformrefine3doc_14_1.png)
+![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_14_1.png)
     
 
 
@@ -179,5 +178,29 @@ end
 - J. Bey. Simplicial grid refinement: on Freudenthal's algorithm and the
 optimal number of congruence classes. *Numer. Math.* 85(1):1--29, 2000.
 p11 Algorithm: RedRefinement3D. 
+```bibtex
+@article{Bey2000,
+  title={Simplicial grid refinement: on Freudenthal's algorithm and the optimal number of congruence classes},
+  author={Bey, J{\"u}rgen},
+  journal={Numerische Mathematik},
+  volume={85},
+  number={1},
+  pages={1--29},
+  year={2000},
+  publisher={Springer}
+}
+```
+
 - S. Zhang. Successive subdivisions of tetrahedra and multigrid methods
 on tetrahedral meshes. *Houston J. Math.* 21, 541-556, 1995.
+```bibtex
+@article{Zhang1995,
+  title={Successive subdivisions of tetrahedra and multigrid methods on tetrahedral meshes},
+  author={Zhang, Shangyou and others},
+  journal={Houston J. Math},
+  volume={21},
+  number={3},
+  pages={541--556},
+  year={1995}
+}
+```

@@ -1,4 +1,9 @@
-# Quadratic Element for Poisson Equation in 3D
+---
+permalink: /fem/Poisson3P2femrate/
+title: "Quadratic Element for Poisson Equation in 3D"
+sidebar:
+    nav: fem
+---
 
 This example is to show the rate of convergence of the linear finite element approximation of the Poisson equation on the unit square:
 
