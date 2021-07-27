@@ -20,7 +20,7 @@ We collect a list of finite element methods implemented in iFEM for solving vari
 - [Poisson 3D: P2 Quadratic Element](Poisson3P2femrate.md) 
 - [Poisson 3D: CR Non-conforming Linear Element](Poisson3CRfemrate.md)
 - [Poisson 3D: WG Weak Galerkin Element](Poisson3WGfemrate.md)
-- [Poisson 3D: Linear Virtual Element](Poisson3vemrate.md)
+<!-- - [Poisson 3D: Linear Virtual Element](Poisson3vemrate.md) -->
 
 ## Poisson Equation 2D: Mixed Formulation
 - [Poisson 2D: RT0 Element](PoissonRT0mfemrate.md)

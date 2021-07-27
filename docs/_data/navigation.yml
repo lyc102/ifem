@@ -14,64 +14,64 @@ docs:
       - title: "Installation"
         url: /
       - title: "Quick-start: Poisson equation in 2D"
-        url: /docs/fem-poisson/
+        url: /fem/Poisson/
 
   - title: Mesh Data Structure
-    url: /docs/mesh/
+    url: /mesh/
     children:
       - title: "Basic data structure"
-        url: /docs/mesh-basic/
+        url: /mesh/basic/
       - title: "Boundary conditions"
-        url: /docs/mesh-bd/
+        url: /mesh/bd/
       - title: "Auxiliary structures"
-        url: /docs/mesh-auxstructure/
+        url: /mesh/auxstructure/
       - title: "Simplicial complex in 2D"
-        url: /docs/mesh-sc/
+        url: /mesh/sc/
       - title: "Simplicial complex in 3D"
-        url: /docs/mesh-sc3/
+        url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
-        url: /docs/mesh-uniformrefine3/
+        url: /mesh/uniformrefine3/
   
   - title: Mesh Smoothing and Optimization
-    url: /docs/mesh-opt/
+    url: /mesh/opt/
 
   - title: Finite element methods
-    url: /docs/fem/
+    url: /fem/
     children:
       - title: "FEM for Poisson equation"
-        url: /docs/fem-poisson/
+        url: /fem/Poisson/
       - title: "Project: Linear FEM"
-        url: /docs/project-fem/
-      - title: "Workflow"
-        url: /docs/fem-workflow/
+        url: /projects/fem/
+      - title: "FEM Workflow"
+        url: /fem/workflow/
       - title: "FEM examples"
         url: /fem/examples/
 
   - title: Adaptive Finite element methods
     children:
       - title: "Introduction to AFEM"
-        url: /docs/afem/
+        url: /afem/
       - title: "Bisection in 2D"
-        url: /docs/afem-bisect/
+        url: /afem/bisect/
       - title: "Coarsen in 2D"
-        url: /docs/afem-coarsen/
+        url: /afem/coarsen/
       - title: "Project: AFEM for the heat equation"
-        url: /docs/afem-project-heat/
+        url: /projects/heat/
 
   - title: Solvers of Linear Algebraic Equations
-    url: /docs/solver/
+    url: /solver/
     children:
       - title: "Introduction to solvers"
-        url: /docs/solver-introduction/
+        url: /solver/introduction/
       - title: "Solvers for Poisson-type equations"
-        url: /docs/solver-mgPoisson/
+        url: /solver/mgPoisson/
   
   - title: Research and Projects
     children:
       - title: "Math 226 Projects"
         url: /projects/
       - title: "Community Research"
-        url: /community/
+        url: /research/
 
   - title: Develop
     children:
@@ -86,11 +86,11 @@ fem:
   - title: "Finite Element Methods"
     children:
       - title: "Finite Element Methods for Poisson Equation"
-        url: /docs/fem-poisson/
+        url: /fem/Poisson/
       - title: "Projects: Linear Finite Element Methods"
         url: /projects/fem/
       - title: "FEM workflow"
-        url: /docs/fem-workflow/
+        url: /fem/workflow/
   - title: "A List of Examples"
     url: /fem/examples/
   - title: "Poisson Equation 2D"
@@ -124,7 +124,7 @@ fem:
       - title: "RT0 Element"
         url: /fem/PoissonRT0mfemrate/
       - title: "BDM1 Element"
-        url: /fem/PoissonRT0mfemrate/
+        url: /fem/PoissonBDM1mfemrate/
   
   - title: "Poisson Equation 3D: Mixed Formulation"
     children:
@@ -161,13 +161,13 @@ afem:
   - title: Adaptive Finite element methods
     children:
       - title: "Introduction to AFEM"
-        url: /docs/afem/
+        url: /afem/
       - title: "Bisection in 2D"
-        url: /docs/afem-bisect/
+        url: /afem/bisect/
       - title: "Coarsen in 2D"
-        url: /docs/afem-coarsen/
+        url: /afem/coarsen/
       - title: "Project: AFEM for the heat equation"
-        url: /docs/afem-project-heat/
+        url: /project/heat/
 
 mesh:
   - title: "Back to main"
@@ -175,19 +175,19 @@ mesh:
   - title: "Basic mesh data structure"
     children:
       - title: "Basic mesh data structure"
-        url: /docs/mesh-basic/
+        url: /mesh/basic/
       - title: "Boundary conditions"
-        url: /docs/mesh-bd/
+        url: /mesh/bd/
       - title: "Auxiliary mesh data structures"
-        url: /docs/mesh-auxstructure/
+        url: /mesh/auxstructure/
       - title: "Simplicial complex in two dimensions"
-        url: /docs/mesh-sc/
+        url: /mesh/sc/
       - title: "Simplicial complex in three dimensions"
-        url: /docs/mesh-sc3/
+        url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
-        url: /docs/mesh-uniformrefine3/
+        url: /mesh/uniformrefine3/
   - title: Mesh Smoothing and Optimization
-    url: /docs/mesh-opt/
+    url: /mesh/opt/
 
 
 
@@ -195,7 +195,7 @@ mesh:
 project:
   - title: "Back to main"
     url: /
-  - title: "Finite Element"
+  - title: "Finite Element Projects"
     children:
       - title: "Linear Finite Element Method"
         url: /projects/fem/
@@ -231,16 +231,16 @@ project:
         url: /projects/fmm/
       - title: "MAC Scheme for Stokes equations"
         url: /projects/StokesMAC/
-  - title: "Community"
-    url: /community/
+  - title: "Community Research"
+    url: /research/
       
-community:
+research:
   - title: "Back to main"
     url: /
   - title: "Math 226 Projects"
     url: /docs/projects/
   - title: "Community Research"
-    url: /community/
+    url: /research/
     children:
       - title: "test"
         url: /research/test/

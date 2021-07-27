@@ -1,5 +1,5 @@
 ---
-permalink: /docs/afem/
+permalink: /afem/
 title: "Introduction to Adaptive Finite Element Methods"
 sidebar:
     nav: afem
@@ -8,8 +8,8 @@ sidebar:
 Adaptive methods are now widely used in the scientific computation to achieve better accuracy with minimum degree of freedom. We present an example here and refer to the lecture notes [Adaptive Finite Element Methods](https://www.math.uci.edu/~chenlong/226/Ch4AFEM.pdf) for a convergence analysis.
 
 Documentation on bisection and coarsening for 2D triangulation can be found below:
-- [Bisection in Two Dimensions]({{ site.baseurl }}{% link _docs/afem-bisect.md %})
-- [Coarsen in Two Dimensions]({{ site.baseurl }}{% link _docs/afem-coarsen.md %})
+- [Bisection in Two Dimensions]({{ site.baseurl }}{% link _afem/bisect.md %})
+- [Coarsen in Two Dimensions]({{ site.baseurl }}{% link _afem/coarsen.md %})
 
 ## Singularity
 

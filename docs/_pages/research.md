@@ -1,9 +1,9 @@
 ---
-permalink: /community/
+permalink: /research/
 title: "Community Research"
 excerpt: "Contributing to iFEM and show your research"
 sidebar:
-    nav: community
+    nav: research
 ---
 
 ## Contributing

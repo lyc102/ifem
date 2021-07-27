@@ -60,6 +60,9 @@ include:
   - _pages
   - _docs
   - _fem
+  - _afem
+  - _mesh
+  - _solver
   - _research
   - _projects
 
@@ -139,6 +142,48 @@ defaults:
       mathjax: true
       toc: true
       toc_sticky: true
+  # _afem: for adaptive finite element documents
+  - scope:
+      path: "_afem"
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+      share: false
+      comments: true
+      sidebar:
+        nav: "afem"
+      mathjax: true
+      toc: true
+      toc_sticky: true
+  # _mesh: for mesh documents
+  - scope:
+      path: "_mesh"
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+      share: false
+      comments: true
+      sidebar:
+        nav: "mesh"
+      mathjax: true
+      toc: true
+      toc_sticky: true
+  # _solver: for solver docs
+  - scope:
+      path: "_solver"
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+      share: false
+      comments: true
+      sidebar:
+        nav: "docs"
+      mathjax: true
+      toc: true
+      toc_sticky: true
   # _projects: project pages
   - scope:
       path: "_projects"
@@ -163,7 +208,7 @@ defaults:
       share: true
       comments: true
       sidebar:
-        nav: "community"
+        nav: "research"
       mathjax: true
       toc: true
       toc_sticky: true

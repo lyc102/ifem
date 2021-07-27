@@ -1,5 +1,5 @@
 ---
-permalink: /docs/afem-bisect/
+permalink: /afem/bisect/
 title: "Bisection in Two Dimensions"
 sidebar:
     nav: afem

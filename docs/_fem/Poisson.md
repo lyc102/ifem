@@ -1,5 +1,5 @@
 ---
-permalink: /docs/fem-poisson/
+permalink: /fem/Poisson/
 title: "Finite Element Methods for 2D Poisson equations"
 sidebar:
     nav: fem
@@ -20,7 +20,7 @@ The numerical example using the linear element is in
 - [Linear Element for Poisson Equation in 2D]({{ site.baseurl }}{% link _fem/Poissonfemrate.md %})
 
 and more elements and equations can be found
-- [List of Examples]({{ site.baseurl }}{% link _fem/fem-examples.md %})
+- [List of Examples]({{ site.baseurl }}{% link _fem/examples.md %})
 
 
 ## Variational formulation

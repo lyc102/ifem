@@ -1,5 +1,5 @@
 ---
-permalink: /docs/solver-introduction/
+permalink: /solver/introduction/
 title: "Solvers for Linear Algebraic Equations"
 sidebar:
     nav: docs

@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-sc/
+permalink: /mesh/sc/
 title: "Simplicial Complex in Two Dimensions"
 sidebar:
     nav: mesh
@@ -9,7 +9,7 @@ sidebar:
 We describe the data structure of the simplicial complex associated to a
 two-dimensional triangulation give by `node,elem`. The `node` records
 the coordinates of vertices and `elem` is the pointer from local to
-global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _docs/mesh-basic.md %} ).
+global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _mesh/basic.md %} ).
 
 A brief summary.
 

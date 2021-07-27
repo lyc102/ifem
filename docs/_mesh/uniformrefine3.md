@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-uniformrefine3/
+permalink: /mesh/uniformrefine3/
 title: "Uniform Red Refinement in 3D"
 sidebar:
     nav: mesh

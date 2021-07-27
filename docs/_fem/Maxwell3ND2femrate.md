@@ -7,12 +7,15 @@ sidebar:
 
 This example is to show the quadratic edge element approximation of the electric field of the time harmonic Maxwell equation.
 
-\begin{align}
-\nabla \times (\mu^{-1}\nabla \times  u) - \omega^2 \varepsilon \, u &= J  \quad  \text{ in } \quad \Omega,  \\
-                                  n \times u &= n \times g_D  \quad  \text{ on } \quad \Gamma_D,\\
-                    n \times (\mu^{-1}\nabla \times  u) &= n \times g_N  \quad  \text{ on } \quad \Gamma_N.
-\end{align}
-
+$$
+\begin{aligned}
+\nabla \times (\mu^{-1}\nabla \times  u) - \omega^2 \varepsilon \, u &= J  \quad  \text{ in } \quad \Omega,  
+\\
+n \times u &= n \times g_D  \quad  \text{ on } \quad \Gamma_D,
+\\
+n \times (\mu^{-1}\nabla \times  u) &= n \times g_N  \quad  \text{ on } \quad \Gamma_N.
+\end{aligned}
+$$
 
 based on the weak formulation
 
@@ -24,16 +27,16 @@ $$(\mu^{-1}\nabla \times  u, \nabla \times  v) - (\omega^2\varepsilon u,v) = (J,
 
 **Subroutines**:
 
-    - Maxwell2
-    - cubeMaxwell2
-    - femMaxwell3
-    - Maxwell2femrate
-    
+- `Maxwell2`
+- `cubeMaxwell2`
+- `femMaxwell3`
+- `Maxwell2femrate`
+
 The method is implemented in `Maxwell2` subroutine and tested in `cubeMaxwell2`. Together with other elements (ND0,ND1,ND2), `femMaxwell3` provides a concise interface to solve Maxwell equation. The ND1 element is tested in `Maxwell2femrate`. This doc is based on `Maxwell2femrate`.    
 
 ## Data Structure
 
-Locally we construct `locBasesIdx` to record the local index used in the bases. Globally we use ascend ordering for each element and thus the orientation of the edge is consistent. No need of `elem2edgeSign`. Read [Simplicial complex in three dimensions](../mesh/sc3doc.html) for more discussion of indexing, ordering and orientation.
+Locally we construct `locBasesIdx` to record the local index used in the bases. Globally we use ascend ordering for each element and thus the orientation of the edge is consistent. No need of `elem2edgeSign`. Read [Simplicial complex in three dimensions]({{ site.baseurl }}{% link _mesh/sc3.md %}) for more discussion of indexing, ordering and orientation.
 
 In addition to the edge structure, we need face and the corresponding pointers.
 

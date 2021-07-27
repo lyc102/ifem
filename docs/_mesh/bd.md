@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-bd/
+permalink: /mesh/bd/
 title: "Data Structure: Boundary Conditions"
 sidebar:
     nav: mesh

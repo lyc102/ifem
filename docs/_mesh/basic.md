@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-basic/
+permalink: /mesh/basic/
 title: "Basic Data Structure Representing Meshes"
 sidebar:
     nav: mesh

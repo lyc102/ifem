@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-auxstructure/
+permalink: /mesh/auxstructure/
 title: "Auxiliary Mesh Data Structure"
 sidebar:
     nav: mesh

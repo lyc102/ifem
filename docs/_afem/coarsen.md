@@ -1,5 +1,5 @@
 ---
-permalink: /docs/afem-coarsen/
+permalink: /afem/coarsen/
 title: "Coarsen in Two Dimensions"
 sidebar:
     nav: afem

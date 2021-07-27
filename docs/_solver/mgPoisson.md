@@ -1,5 +1,5 @@
 ---
-permalink: /docs/solver-mgPoisson/
+permalink: /solver/mgPoisson/
 title: "Solvers for Poisson-type Equations"
 sidebar:
     nav: docs

@@ -1,5 +1,5 @@
 ---
-permalink: /docs/mesh-opt/
+permalink: /mesh/opt/
 title: "Mesh Smoothing and Optimization"
 sidebar:
     nav: mesh

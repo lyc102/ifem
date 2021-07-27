@@ -7,11 +7,15 @@ sidebar:
 
 This example is to show the lowest order edge element approximation of the electric field of the time harmonic Maxwell equation.
   
-\begin{align}
-\nabla \times (\mu^{-1}\nabla \times  u) - \omega^2 \varepsilon \, u &= J  \quad  \text{ in } \quad \Omega,  \\
-                                  n \times u &= n \times g_D  \quad  \text{ on } \quad \Gamma_D,\\
-                    n \times (\mu^{-1}\nabla \times  u) &= n \times g_N  \quad  \text{ on } \quad \Gamma_N.
-\end{align}
+$$
+\begin{aligned}
+\nabla \times (\mu^{-1}\nabla \times  u) - \omega^2 \varepsilon \, u &= J  \quad  \text{ in } \quad \Omega,  
+\\
+n \times u &= n \times g_D  \quad  \text{ on } \quad \Gamma_D,
+\\
+n \times (\mu^{-1}\nabla \times  u) &= n \times g_N  \quad  \text{ on } \quad \Gamma_N.
+\end{aligned}
+$$
 
 
 based on the weak formulation
@@ -62,7 +66,7 @@ findedge(node,localEdge,'all','vec');
 
 The six dofs associated to edges in a tetrahedron is sorted in the ordering `[1 2; 1 3; 1 4; 2 3; 2 4; 3 4]`. Here `[1 2 3 4]` are local indices of vertices.
 
-Globally we use ascend ordering for each element and thus the orientation of the edge is consistent. No need of `elem2edgeSign`. Read [Simplicial complex in three dimensions](../mesh/sc3doc.html) for more discussion of indexing, ordering and orientation.
+Globally we use ascend ordering for each element and thus the orientation of the edge is consistent. No need of `elem2edgeSign`. Read [Simplicial complex in three dimensions]({{ site.baseurl }}{% link _mesh/sc3.md %}) for more discussion of indexing, ordering and orientation.
 
 ## Local Bases
 Suppose `[i,j]` is the kth edge and `i<j`. The basis is given by 
