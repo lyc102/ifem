@@ -1,5 +1,5 @@
 # Authors
-
+# Bill Rick and Cornelius Fiddlebone are template author.
 Billy Rick:
   name        : "Billy Rick"
   bio         : "What do you want, jewels? I am a very extravagant man."
@@ -26,3 +26,28 @@ Cornelius Fiddlebone:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/rhymeswithsackit"
+
+
+Long Chen:
+  name        : "Long Chen"
+  bio         : "Professor of Mathematics at University of California, Irvine"
+  avatar      : "https://www.math.uci.edu/sites/default/files/Math%20Faculty-008.jpg"
+  links:
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "mailto:chenlong@math.uci.edu"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://www.math.uci.edu/~chenlong/"
+
+
+Shuhao Cao:
+  name        : "Shuhao Cao"
+  # avatar      : "/assets/images/bio-photo-2.jpg"
+  links:
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "mailto:scaomath@gmail.com"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://scaomath.github.io/"

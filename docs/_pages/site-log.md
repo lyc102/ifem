@@ -7,20 +7,19 @@ sidebar:
 
 
 
-## Adding new pages in docs
-- Un-deployed `.md` converted from the old `/ifemdoc/*/*.ipynb` are in `_todo`.
-- To put it under a certain category:
-    - Copy the markdown file together with its image folder (under the same name) to either `_docs` (documents for iFEM usage) or `_pages` (community research, update, logs, etc). Directly copying `_todo` folders `fem`, `afem`, `solver` to `_fem`, `_afem`, `_solver` is easier but we need to add those folders to `include:` in `_config.yml`. 
-    - Adding the following preamble to the markdown file:
-        ```html
-        ---
-        permalink: /docs/page-name/
-        title: "Page Title"
-        sidebar:
-            nav: docs
-        ---
-        ```
-    - The default left sidebar navigation is `docs`, there are other navigation links in `_data/navigation.yml`.
+## Adding new pages in documentation site
+- Writing in markdown.
+- To put it under a certain category, copy the markdown file together with its image folder (under the same name) to `_pages` (documents for iFEM usage, community research, update, logs, etc). Directly copying `_todo` folders `fem`, `afem`, `solver` to `_fem`, `_afem`, `_solver` is easier but we need to add those folders to `include:` in `_config.yml`. 
+- Adding the following preamble to the markdown file: where `category` is either `fem`, `afem`, `solver`, etc.
+    ```html
+    ---
+    permalink: /category/page-name/
+    title: "Page Title"
+    sidebar:
+        nav: docs
+    ---
+    ```
+- The default left sidebar navigation is `docs`, there are other navigation links in `_data/navigation.yml`.
 
 ## Testing pages
 - To test building the site locally, install `ruby` and `jekyll` (see [below](#july-25-2021) for details).
@@ -28,6 +27,11 @@ sidebar:
 
 
 ## CHANGELOG
+
+### July 27, 2021
+- [x] Adding Jekyll preambles to un-deployed `.md` converted from the old `/ifemdoc/*/*.ipynb` are in `_todo`.
+- [x] re-organizing `_todo` folders to their corresponding iFEM main repo folders.
+- [x] manually checked the links in nav.
 
 ### July 25, 2021
 Manually verified building on MacOS. Installation guide on MacOS: [https://jekyllrb.com/docs/installation/macos/](https://jekyllrb.com/docs/installation/macos/). The easiest way is to use `brew` to install `ruby` and `jekyll`.

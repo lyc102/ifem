@@ -58,7 +58,6 @@ comments:
 
 include:
   - _pages
-  - _docs
   - _fem
   - _afem
   - _mesh
@@ -102,21 +101,9 @@ defaults:
       sidebar:
         nav: "docs"
       mathjax: true
-  # _pages
+  # _pages: general pages in iFEM
   - scope:
       path: "_pages"
-      type: pages
-    values:
-      layout: single
-      author_profile: false
-      sidebar:
-        nav: "docs"
-      mathjax: true
-      toc: true
-      toc_sticky: true
-  # _docs: general docs about functions in iFEM
-  - scope:
-      path: "_docs"
       type: pages
     values:
       layout: single

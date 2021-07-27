@@ -242,6 +242,6 @@ research:
   - title: "Community Research"
     url: /research/
     children:
-      - title: "test"
-        url: /research/test/
+      - title: "Template"
+        url: /research/template/
   
