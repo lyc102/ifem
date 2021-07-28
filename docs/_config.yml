@@ -48,7 +48,8 @@ remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 markdown: kramdown
 kramdown:
   input: GFM
-  syntax_highlighter: rouge
+  highlighter: rouge
+  # syntax_highlighter: rouge // new version, github pages need the old one
 permalink   : date
 
 comments:

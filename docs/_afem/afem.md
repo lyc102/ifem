@@ -223,7 +223,7 @@ $$
 $$
 
 ### REFINE 
-We implement the newest vertex bisection and refer to [Bisection in Two Dimensions](bisectdoc.html) for detailed description.In short, the bisection method will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. The subtlity is to keep both thehape regularity and conformity of the mesh. 
+We implement the newest vertex bisection and refer to [Bisection in Two Dimensions]({{site.baseurl}}{% link _afem/bisect.md %}) for detailed description. In short, the bisection method will divide one triangle into two children triangles by connecting one vertex to the middle point of its opposite edge. The subtlety is to keep both the shape regularity and conformity of the mesh. 
 
 ### COARSEN 
 For some problems, e.g., evolution problems, coarsening (de-refinement) is needed as the singularity could move. Then use
@@ -233,6 +233,6 @@ For some problems, e.g., evolution problems, coarsening (de-refinement) is neede
         [node,elem,bdFlag] = coarsen(node,elem,markedElem,bdFlag);
       ```
 
-See [Coarsen in two dimensions](coarsendoc.html) for the coarsening algorithm.
+See [Coarsen in two dimensions]({{site.baseurl}}{% link _afem/coarsen.md %}) for the coarsening algorithm.
 
 

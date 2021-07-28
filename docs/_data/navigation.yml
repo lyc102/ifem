@@ -180,7 +180,7 @@ afem:
       - title: "Coarsen in 2D"
         url: /afem/coarsen/
       - title: "Project: AFEM for the heat equation"
-        url: /project/heat/
+        url: /projects/heat/
 
 mesh:
   - title: "Back to main"

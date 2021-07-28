@@ -13,11 +13,12 @@ $sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "
 $monospace: "Fira Code Medium", "Roboto Mono", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
 
 // site font and global color
+// uncomment these to make changes
 $global-font-family : $sans-serif;
 $header-font-family : $sans-serif;
-$background-color: #FFFFFF !default;
-$text-color: rgb(65, 65, 65) !default;
-$link-color: rgb(120, 120, 120);
+// $background-color: #FFFFFF !default;
+// $text-color: rgb(65, 65, 65) !default;
+// $link-color: rgb(120, 120, 120);
 
 
 // this part controls the left and right bar width
@@ -99,6 +100,7 @@ code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
     font-size: 0.9em;
+    background-color: #eeeeee;
   }
 
 // makes middle column wider

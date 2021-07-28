@@ -46,7 +46,7 @@ Adaptive FEM is further applied to capture the singularity of the solution.
 
 ## Step 4: Adaptive Finite Element Methods
 
-- Run 2D examples: `Lshape` in iFEM and read the code to learn the usage of AFEM; see also [Adaptive Finite Element Methods](../afem/afemdoc.html)
+- Run 2D examples: `Lshape` in iFEM and read the code to learn the usage of AFEM; see also [Adaptive Finite Element Methods]({{site.baseurl}}{% link _afem/afem.md %})
 
 - In one time step involution, repeat the refinement and coarsen several steps to get a better approximation of the solution. You can control the max iteration steps for AFEM or the maximal number of elements. 
 
