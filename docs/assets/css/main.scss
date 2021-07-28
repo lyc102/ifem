@@ -3,8 +3,22 @@
 ---
 
 @charset "utf-8";
+// global fonts
+// serif: fonts like "Times New Roman" or LaTeX default "computer modern"
+// sans-serif: fonts like Arial
+// monospace: fonts for code
+// custom Google fonts is loaded at _include/head/custom.html
+$serif: -apple-system, serif; 
 $sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
-$monospace: "Fira Code Medium", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+$monospace: "Fira Code Medium", "Roboto Mono", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+
+// site font and global color
+$global-font-family : $sans-serif;
+$header-font-family : $sans-serif;
+$background-color: #FFFFFF !default;
+$text-color: rgb(65, 65, 65) !default;
+$link-color: rgb(120, 120, 120);
+
 
 // this part controls the left and right bar width
 $right-sidebar-width-narrow: 140px !default;
@@ -17,8 +31,8 @@ $right-sidebar-width: 215px !default;
 // base00 - Default Background
 // base01 - Lighter Background (Used for status bars, line number and folding marks)
 // base02 - Selection Background
-// base03 - Comments, Invisibles, Line Highlighting
-// base04 - Dark Foreground (Used for status bars)
+// base03 - Comments (except matlab %), Invisibles, Line Highlighting
+// base04 - Dark Foreground (Used for status bars, matlab comments)
 // base05 - Default Foreground, Caret, Delimiters, Operators
 // base06 - Light Foreground (Not often used)
 // base07 - Light Background (Not often used)
@@ -34,9 +48,9 @@ $right-sidebar-width: 215px !default;
 
 $base00: #eeeeee !default;
 $base01: #e0e0e0 !default;
-$base02: #d0d0d0 !default;
-$base03: #b0b0b0 !default;
-$base04: #1b1b1b !default;
+$base02: #bdbdbd !default;
+$base03: #9b9b9b !default;
+$base04: #777777 !default;
 $base05: #272727 !default;
 $base06: #151515 !default;
 $base07: #202020 !default;

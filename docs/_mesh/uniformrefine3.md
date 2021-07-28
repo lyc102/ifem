@@ -196,7 +196,7 @@ on tetrahedral meshes. *Houston J. Math.* 21, 541-556, 1995.
 ```bibtex
 @article{Zhang1995,
   title={Successive subdivisions of tetrahedra and multigrid methods on tetrahedral meshes},
-  author={Zhang, Shangyou and others},
+  author={Zhang, Shangyou},
   journal={Houston J. Math},
   volume={21},
   number={3},

@@ -112,7 +112,7 @@ findnode(node,2:6);                             % plot node indices
 text(node(6,1),node(6,2)+0.075,int2str(1),'FontSize',16,'FontWeight','bold');
 hold on;
 plot([node(1,1),node(5,1)], [node(1,2),node(5,2)],'r-', 'LineWidth',3);
-bdFlag = setboundary(node,elem,'Dirichlet');                % Dirichlet boundary condition
+bdFlag = setboundary(node,elem,'Dirichlet'); % Dirichlet boundary condition
 display(elem)
 display(bdFlag)
 ```

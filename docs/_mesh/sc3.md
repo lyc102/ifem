@@ -309,10 +309,10 @@ The local ordering is always [1 2 3 4]. Any permutation of four vertices of a te
 * refinement rules (uniform refinement or bisection)
 
 For 2-D triangulations, three vertices of a triangle in 2-D is sorted counter-cloclwise and the first vertex is chosen as the newest vertex. Such ordering enables the efficient implementation of local refinement
-and coarsening in 2-D; see [Bisection in Two Dimensions](../afem/bisectdoc.html)
-and [Coarsening in Two Dimensions](../afem/coarsendoc.html).
+and coarsening in 2-D; see [Bisection in Two Dimensions]({{ site.baseurl }}{% link _afem/bisect.md %})
+and [Coarsening in Two Dimensions]({{ site.baseurl }}{% link _afem/coarsen.md %}).
 
-In 3-D, for the longest edge bisection, the newest vertex (with the highest generation) is stored as the last (4-th) vertex of a tetrahedron. For [3-D Red Refinement](uniformrefine3doc.html), the ordering determines the shape regularity of refined triangulation. Permuation of vertices in `elem` could deterioriate the angle condition after the refinement.
+In 3-D, for the longest edge bisection, the newest vertex (with the highest generation) is stored as the last (4-th) vertex of a tetrahedron. For [3-D Red Refinement]({{ site.baseurl }}{% link _mesh/uniformrefine3.md %}).), the ordering determines the shape regularity of refined triangulation. Permutation of vertices in `elem` could deteriorate the angle condition after the refinement.
 
 We shall reserve the ordering of `elem` from the mesh refinement and
 coarsening since they are more subtle. We switch the ordering when
@@ -394,11 +394,11 @@ For 3-D triangulations, the `face` produced by `unique` function is already sort
     locFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3]; % Ascend ordering
     locFace = [2 3 4; 1 4 3; 1 2 4; 1 3 2]; % Consistent ordering
 
-Again the local and the global ordering maynot be consisitent. That is
+Again the local and the global ordering may not be consistent. That is
 
     face(elem2face(t,:),1) < face(elem2face(t,:),2) < face(elem2face(t,:),3)
     
-maynot be always true unless we use the ascending ordering in both `face` and `locFace`.
+may not be always true unless we use the ascending ordering in both `face` and `locFace`.
 
 ## Orientation
 
@@ -451,7 +451,7 @@ In the output of `gradbasis3`, `volume` is always positive and an
 additional array `elemSign` is used to record the sign of the signed
 volume.
 
-`Dlambda(t,:,k)` is the gradient of $\lambda_k$ associated to vertex $k$. Therefore the outward normal direction of the kth face is `-Dlambda(t,:,k)` which is independent of the ordering and orientation of the element.
+`Dlambda(t,:,k)` is the gradient of $\lambda_k$ associated to vertex $k$. Therefore the outward normal direction of the $k$-th face is `-Dlambda(t,:,k)` which is independent of the ordering and orientation of the element.
 
 ### face
 
@@ -753,7 +753,7 @@ Since we are using the ascending ordering, the inconsistency with the induced or
 
 ## Boundary Faces and Boundary Conditions
 
-We use `bdFlag` to record the boundary condition; see [Data Structure: Boundary Conditions](bddoc.html) for details. For short, `bdFlag` has the same size with `elem`, and records the boundary type of each local faces. If we change the ordering of `elem`, the corresponding local faces are changed. Threfore when we sort the `elem`, we should sort the `bdFlag` respectively. We use `sortelem3` to sort `elem` and `bdFlag` at the same time. Note that `sort(elem,2)` sorts the `elem` only, and leave
+We use `bdFlag` to record the boundary condition; see [Data Structure: Boundary Conditions]({{ site.baseurl }}{% link _mesh/bd.md %}).) for details. For short, `bdFlag` has the same size with `elem`, and records the boundary type of each local faces. If we change the ordering of `elem`, the corresponding local faces are changed. Therefore when we sort the `elem`, we should sort the `bdFlag` respectively. We use `sortelem3` to sort `elem` and `bdFlag` at the same time. Note that `sort(elem,2)` sorts the `elem` only, and leave
 `bdFlag` unchanged.
 
 

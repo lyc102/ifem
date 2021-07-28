@@ -102,7 +102,7 @@ In `locEdgel`, the indexing is induced from the lexicographic ordering of
 the three edges.
 
 For 2-D triangulations, **we shall always chose opposite indexing**. The lexicographic indexing is mainly used in the construction of `face2edge` of 3-D triangulations; see [Simplicial Complex in Three
-Dimensions](sc3doc.html). Note that the ordering of vertices of each edge will not change the indexing. For example, `locEdge = [2,3; 1,3; 1,2]` use the same opposite indexing but different ordering. Choosing `[1 3]` or `[3 1]` for the second edge will depend on the consideration of orientation and ordering.
+Dimensions]({{ site.baseurl }}{% link _mesh/sc3.md %}). Note that the ordering of vertices of each edge will not change the indexing. For example, `locEdge = [2,3; 1,3; 1,2]` use the same opposite indexing but different ordering. Choosing `[1 3]` or `[3 1]` for the second edge will depend on the consideration of orientation and ordering.
 
 ### Global indexing of edges
 
@@ -167,19 +167,18 @@ ordered, `elem = fixorder(node,elem)` will compute the signed area by
 negative areas.
 
 For 2-D triangulations, three vertices of a triangle in 2-D is sorted
-counter-cloclwise and the first vertex is chosen as the newest vertex.
+counter-clockwise and the first vertex is chosen as the newest vertex.
 Such ordering enables the efficient implementation of local refinement
-and coarsening in 2-D; see [Bisection in Two Dimensions](bisectdoc.html)
-and [Coarsening in Two Dimensions](coarsendoc.html). **Such ordering scheme
+and coarsening in 2-D; see [Bisection in Two Dimensions]({{ site.baseurl }}{% link _afem/bisect.md %})
+and [Coarsening in Two Dimensions]({{ site.baseurl }}{% link _afem/coarsen.md %}). **Such ordering scheme
 is the default choice and used in most places**.
 
 
 In ascend ordering, the vertices of `elem` is sorted such that
 
-    elem(t,1)<elem(t,2)<elem(t,3)
+    elem(t,1) < elem(t,2) < elem(t,3)
 
-This can be easily achieved by `elem = sort(elem,2)`. Howevery, one has to rotate the boundary flag
-accordingly using `sortelem`.
+This can be easily achieved by `elem = sort(elem,2)`. However, one has to rotate the boundary flag accordingly using `sortelem`.
 
 
 ```matlab
@@ -238,7 +237,7 @@ ascend ordering such that `unique` can be applied to eliminate the duplication.
 
 Recall that we always use the opposite indexing of edges. For the ordering
 
-  - asecond ordering    `[2 3; 1 3; 1 2];` 
+  - ascend ordering  `[2 3; 1 3; 1 2];` 
   - (orientation) consistent ordering `[2 3; 3 1; 1 2];`
 
 It is consistent since the local ordering orientation of edges is
@@ -255,13 +254,13 @@ the corresponding orientation.
 The orientation of a triangle is either positive or negative. The
 orientation of an edge is given by a tangential or normal vector. A
 normal vector is obtained by rotate a given tangential vector by 90
-degree clockwise. For example, when edges are given counter clockwise
+degree clockwise. For example, when edges are given counter-clockwise
 orientation, the corresponding normal vector is the outwards normal
 vector.
 
 The orientation of a d-simplex will induce an orientation of its d-1
 subcomplex on the boundary and is called _the induced orientation_. For example, a positive
-orientated triangle will induce the counter clockwise orientation of its
+orientated triangle will induce the counter-clockwise orientation of its
 three edges.
 
 The ordering of vertices will naturally introduce an orientation and will
@@ -280,11 +279,11 @@ involved. The local ordering of edges will introduce a local ordering
 orientation. The orientation of the triangle will also induce an induced
 orientation. The local ordering-orientation is used in the computation of
 local bases and the induced orientation is used when computing the
-differential operator locally. They may or may not be consisitent with
+differential operator locally. They may or may not be consistent with
 the global orientation of edges.
 
 In general, there will be an inconsistency of the following types of
-orientation and apporipate data structure should be constructured to
+orientation and appropriate data structure should be constructed to
 record such inconsistency.
 
 * a global orientation
@@ -351,13 +350,13 @@ The second sign is -1 because the local edge in the ascend ordering is `[1
 The `elem2edgeSign` will be used when assembling differential operators.
 For example, when computing `div` operators on a positive orientated
 triangle, the edge should have outwards normal direction or equivalently
-the counter clockwise orientation.
+the counter-clockwise orientation.
 
 We summarize the two popular ordering and orientation schemes below.
 
 ## Positive Ordering and Orientation
 
-The vertice of the `eleme` is sorted such that the area is always
+The vertices of the `elem` are sorted such that the area is always
 positive. i.e. the three vertices of the elem are ordered
 counter-clockwisely. Furthermore the first vertex is always the newest
 vertex of the triangle for the easy of local mesh refinement and
@@ -380,7 +379,7 @@ The inconsistency of the orientation is recorded in `elem2edgeSign`.
 
 For H(curl) and H(div) elements and high order (cubic and above) H(grad) elements, we use the ascend Ordering and Orientation.
 
-*Ascend ordering*. The vertices of `elem` is sorted such that
+*Ascend ordering*. The vertices of `elem` are sorted such that
 
     elem(t,1)<elem(t,2)<elem(t,3)
 
@@ -396,8 +395,8 @@ It is easy to see the benefit of the ascend ordering: the ordering of local edge
 
 *Orientation*. We choose the ordering-orientation.
 
-- elem: sign(det(v12,v13))
-- edge: from the node with the smaller global index to the bigger one
+- `elem`: `sign(det(v12,v13))`
+- `edge`: from the node with the smaller global index to the bigger one
 
 For `edge`, the local and the global ordering-orientation is consistent. But they are not consistent with the induced orientation inside one triangle. Such inconsistency is recorded in 
 
