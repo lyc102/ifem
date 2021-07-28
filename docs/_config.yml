@@ -45,8 +45,10 @@ remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 # their entries' file path in the `include:` list.
 #
 
-markdown    : kramdown
-highlighter : rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 permalink   : date
 
 comments:
@@ -199,15 +201,6 @@ defaults:
       mathjax: true
       toc: true
       toc_sticky: true
-  # _recipes
-  - scope:
-      path: ""
-      type: recipes
-    values:
-      layout: single
-      author_profile: true
-      share: true
-      comments: true
 
 # Outputting
 permalink: /:categories/:title/

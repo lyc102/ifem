@@ -6,31 +6,68 @@
 $sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
 $monospace: "Fira Code Medium", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
 
+// this part controls the left and right bar width
 $right-sidebar-width-narrow: 140px !default;
 $right-sidebar-width: 215px !default;
 
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 
-// syntax highlight: material theme modified from Apple default
-$base00: #2f3d44fb;
-$base01: #2c393fd5;
-$base02: #37474F;
-$base03: #707880;
-$base04: #C9CCD3;
-$base05: #d3d9e6;
-$base06: #D5DBE5;
-$base07: #ffffff;
-$base08: #EC5F67;
-$base09: #EA9560;
-$base0a: #ffcb6b;
-$base0b: #8BD649;
-$base0c: #80CBC4;
-$base0d: #7abdd8;
-$base0e: #7c99d8;
-$base0f: #c0656a;
+// syntax highlight
+// base00 - Default Background
+// base01 - Lighter Background (Used for status bars, line number and folding marks)
+// base02 - Selection Background
+// base03 - Comments, Invisibles, Line Highlighting
+// base04 - Dark Foreground (Used for status bars)
+// base05 - Default Foreground, Caret, Delimiters, Operators
+// base06 - Light Foreground (Not often used)
+// base07 - Light Background (Not often used)
+// base08 - Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
+// base09 - Integers, Boolean, Constants, XML Attributes, Markup Link Url
+// base0A - Classes, Markup Bold, Search Text Background
+// base0B - Strings, Inherited Class, Markup Code, Diff Inserted
+// base0C - Support, Regular Expressions, Escape Characters, Markup Quotes
+// base0D - Functions, Methods, Attribute IDs, Headings
+// base0E - Keywords, Storage, Selector, Markup Italic, Diff Changed
+// base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+// scheme: modified from "material Light"
+
+$base00: #eeeeee !default;
+$base01: #e0e0e0 !default;
+$base02: #d0d0d0 !default;
+$base03: #b0b0b0 !default;
+$base04: #1b1b1b !default;
+$base05: #272727 !default;
+$base06: #151515 !default;
+$base07: #202020 !default;
+$base08: #c00066 !default;
+$base09: #d17000 !default;
+$base0a: #aba800 !default;
+$base0b: #009e12 !default;
+$base0c: #039090 !default;
+$base0d: #2e67c8 !default;
+$base0e: #ad00a1 !default;
+$base0f: #d4662f !default;
 
 @import "minimal-mistakes"; // main partials
+
+
+// this part controls the font size
+html {
+  font-size: 16px; // change to whatever
+
+  @include breakpoint($medium) {
+    font-size: 17px; // change to whatever
+  }
+
+  @include breakpoint($large) {
+    font-size: 18px; // change to whatever
+  }
+
+  @include breakpoint($x-large) {
+    font-size: 19px; // change to whatever
+  }
+}
 
 
 // This part is for code blocks
@@ -50,7 +87,7 @@ code {
     font-size: 0.9em;
   }
 
-  // makes middle column wider
+// makes middle column wider
   .page {
     @include breakpoint($large) {
       float: right;

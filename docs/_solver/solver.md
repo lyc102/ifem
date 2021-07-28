@@ -2,7 +2,7 @@
 permalink: /solver/
 title: "Fast Solvers"
 sidebar:
-    nav: docs
+    nav: solver
 ---
 
 We collect a list of fast solvers for solving linear algebraic systems arising from finite element methods discretization of various PDEs.

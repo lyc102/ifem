@@ -80,6 +80,19 @@ docs:
       - title: "Site logs"
         url: /logs/site/
 
+solver:
+  - title: "Linear solver"
+    url: /solver/
+    children:
+      - title: "Linear solver"
+        url: /solver/linear/
+      - title: "Nonlinear solver"
+        url: /solver/nonlinear/
+      - title: "Solver for Poisson equation"
+        url: /solver/Poisson/
+      - title: "Solver for heat equation"
+        url: /solver/heat/
+
 fem:
   - title: "Back to main"
     url: /
