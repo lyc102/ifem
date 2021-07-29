@@ -51,6 +51,8 @@ where $\mathcal P_k$ is the polynomial space with degree $\leq k$.
 
 The finite element method for solving the Poisson equation is to find $u_{\mathcal T}\in \mathcal V_{\mathcal T}\cap H_{g_D,\Gamma_D}^1(\Omega)$ 
 such that for any $v\in \mathcal V_{\mathcal T}\cap H_{0,\Gamma_D}^1(\Omega)$:
+
+
 $$
 a(u_{\mathcal T},v) = \int _{\Omega} fv \, {\rm dxdy} + \int _{\Gamma _N} g_N v \,{\rm d}S.
 \tag{2}\label{eq:poisson-weak}
@@ -62,7 +64,7 @@ $$
 
 We take linear finite element spaces as an example. For each vertex $v_i$ of $\mathcal T$, let $\phi _i$ be the piecewise linear function such that $\phi _i(v_i)=1$ and $\phi _i(v_j)=0$ when $j\neq i$. The basis function in 1-D and 2-D is illustrated below. It is also called hat function named after the shape of its graph.
 
-Then it is easy to see $\mathcal V_{\mathcal T}$ is spanned by $\{\phi_i \}_{i=1}^{N}$ and  for a finite element function $v\in \mathcal V_{\mathcal T}$, there exists a unique expansion $v=\sum
+Then it is easy to see $\mathcal V_{\mathcal T}$ is spanned by $\\{ \phi_i \\}_{i=1}^{N}$ and  for a finite element function $v\in \mathcal V_{\mathcal T}$, there exists a unique expansion $v=\sum
 _{i=1}^Nv_i\phi _i$.
 
 
@@ -111,17 +113,17 @@ $$
 v=\sum _{i=1}^Nv_i\phi _i \longleftrightarrow \boldsymbol  v=(v_1, \cdots, v_N)^{\intercal},
 $$
 
-and call $\boldsymbol  v$ the coordinate vector of $v$ relative to the basis $\{\phi_i\}_{i=1}^{N}$. Following the terminology in the elasticity theory, we introduce the *stiffness matrix*
+and call $\boldsymbol  v$ the coordinate vector of $v$ relative to the basis $\\{ \phi_i \\}_{i=1}^{N}$. Following the terminology in the elasticity theory, we introduce the *stiffness matrix*
 
 $$
 \boldsymbol  A=(a_{ij})_{N\times N}, \, \text{ with } \quad a_{ij}=a(\phi _j,\phi _i),
 $$
 
-for $a(\cdot,\cdot)$ from \eqref{eq:poisson-weak} and the load vector $\boldsymbol  f=\{\langle f, \phi_k \rangle\}_{k=1}^{N}\in \mathbb{R}^{N}$. Then the coefficient vector $\boldsymbol u$ of $u$ can be obtained by solving the following linear algebraic system
+for $a(\cdot,\cdot)$ from \eqref{eq:poisson-weak} and the load vector $\boldsymbol  f=\\{\langle f, \phi_k \rangle \\}_{k=1}^{N}\in \mathbb{R}^{N}$. Then the coefficient vector $\boldsymbol u$ of $u$ can be obtained by solving the following linear algebraic system
 
 $$
 \boldsymbol  A\boldsymbol  u = \boldsymbol  f. 
-\tag{1}\label{eq:system}
+\tag{2}\label{eq:system}
 $$
 
 It is straightforward to verify $\boldsymbol  A$ is a symmetric and positive definite (SPD) matrix and thus the solution $\boldsymbol  u$ exists and unique.
