@@ -23,7 +23,7 @@ $header-font-family : $sans-serif;
 
 // this part controls the left and right bar width
 $right-sidebar-width-narrow: 180px !default;
-$right-sidebar-width: 215px !default;
+$right-sidebar-width: 250px !default;
 
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
@@ -57,7 +57,7 @@ $base06: #151515 !default;
 $base07: #202020 !default;
 $base08: #c00066 !default;
 $base09: #8f5202 !default;
-$base0a: #aba800 !default;
+$base0a: #ab1a00 !default;
 $base0b: #3a8aaf !default;
 $base0c: #027777 !default;
 $base0d: #2e67c8 !default;
@@ -69,18 +69,18 @@ $base0f: #d4662f !default;
 
 // this part controls the font size
 html {
-  font-size: 16px; // change to whatever
+  font-size: 14px; // change to whatever
 
   @include breakpoint($medium) {
-    font-size: 17px; // change to whatever
+    font-size: 16px; // change to whatever
   }
 
   @include breakpoint($large) {
-    font-size: 18px; // change to whatever
+    font-size: 17px; // change to whatever
   }
 
   @include breakpoint($x-large) {
-    font-size: 19px; // change to whatever
+    font-size: 18px; // change to whatever
   }
 }
 
@@ -88,7 +88,7 @@ html {
 // This part is for code blocks
 code {
     font-family: $monospace;
-    font-size: 0.96em;
+    font-size: 1em;
   }
 
   // This part is for inline code
@@ -107,12 +107,12 @@ code {
   .page {
     @include breakpoint($medium) {
       float: right;
-      width: calc(92% - #{$right-sidebar-width-narrow});
+      width: calc(94% - #{$right-sidebar-width-narrow});
       padding-right: $right-sidebar-width-narrow;
     }
 
     @include breakpoint($medium) {
-      width: calc(92% - #{$right-sidebar-width});
+      width: calc(94% - #{$right-sidebar-width});
       padding-right: $right-sidebar-width-narrow;
     }
   }

@@ -39,12 +39,12 @@ After cutting the four corner, the remaining octahedron should be divided into f
 display(idx);
 ```
 
-    
+
     idx =
     
          6
          8
-    
+
 
 
 The orientation of the 6-th and 8-th children has been changed by `fixorder3` which means `uniformrefine3` will produces tetrahedrons with negagives volume.
@@ -66,8 +66,6 @@ findnode3(node);
 ```
 
 ![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_7_0.png)
-    
-
 
 The initial mesh is still positive but after one uniform refinement the diagonal 6-9 is longer than 5-10. Therefore the refined mesh is less shape regular although
 still three congruence classes are possible. To have a better mesh quality, one may want to use the shorter one (implemented in `uniformrefine3l`). The subroutine `uniformrefine3`
@@ -159,16 +157,17 @@ for k = 1:2
 end
 ```
 
-    
+
     ans =
     
          0
-    
-    
+
+
+​    
     ans =
     
          0
-    
+
 
 
 `bdFlag` obtained by `uniformrefine3` is the same as `bdFlagnew` by finding boundary faces of the triangulation.

@@ -64,8 +64,7 @@ $$
 
 We take linear finite element spaces as an example. For each vertex $v_i$ of $\mathcal T$, let $\phi _i$ be the piecewise linear function such that $\phi _i(v_i)=1$ and $\phi _i(v_j)=0$ when $j\neq i$. The basis function in 1-D and 2-D is illustrated below. It is also called hat function named after the shape of its graph.
 
-Then it is easy to see $\mathcal V_{\mathcal T}$ is spanned by a $\\{ \phi_i \\}_{i=1}^{N}$.  Therefore for a finite element function $v\in \mathcal V_{\mathcal T}$, there exists a unique expansion $v=\sum
-_{i=1}^Nv_i\phi _i$.
+Then it is easy to see $\mathcal V_{\mathcal T}$​ is spanned by the basis  $\\{ \phi_i \\}_{i=1}^{N}$​.      
 
 
 ```matlab
@@ -123,7 +122,7 @@ for $a(\cdot,\cdot)$ from \eqref{eq:poisson-weak} and the load vector $\boldsymb
 
 $$
 \boldsymbol  A\boldsymbol  u = \boldsymbol  f. 
-\tag{2}\label{eq:system}
+\tag{3}\label{eq:system}
 $$
 
 It is straightforward to verify $\boldsymbol  A$ is a symmetric and positive definite (SPD) matrix and thus the solution $\boldsymbol  u$ exists and unique.
