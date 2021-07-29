@@ -22,7 +22,7 @@ $header-font-family : $sans-serif;
 
 
 // this part controls the left and right bar width
-$right-sidebar-width-narrow: 140px !default;
+$right-sidebar-width-narrow: 180px !default;
 $right-sidebar-width: 215px !default;
 
 
@@ -47,7 +47,7 @@ $right-sidebar-width: 215px !default;
 // base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
 // scheme: modified from "material Light"
 
-$base00: #fefefe !default;
+$base00: #feffef !default;
 $base01: #e0e0e0 !default;
 $base02: #bdbdbd !default;
 $base03: #9b9b9b !default;
@@ -100,19 +100,19 @@ code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
     font-size: 0.9em;
-    background-color: #fefefe;
+    background-color: #efefef;
   }
 
 // makes middle column narrow
   .page {
     @include breakpoint($medium) {
       float: right;
-      width: calc(90% - #{$right-sidebar-width-narrow});
+      width: calc(92% - #{$right-sidebar-width-narrow});
       padding-right: $right-sidebar-width-narrow;
     }
 
     @include breakpoint($medium) {
-      width: calc(90% - #{$right-sidebar-width});
+      width: calc(92% - #{$right-sidebar-width});
       padding-right: $right-sidebar-width-narrow;
     }
   }
