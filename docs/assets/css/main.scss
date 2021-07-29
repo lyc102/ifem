@@ -50,7 +50,7 @@ $right-sidebar-width: 215px !default;
 $base00: #feffef !default;
 $base01: #e0e0e0 !default;
 $base02: #bdbdbd !default;
-$base03: #009e12 !default;
+$base03: #9b9b9b !default;
 $base04: #777777 !default;
 $base05: #272727 !default;
 $base06: #151515 !default;
@@ -58,7 +58,7 @@ $base07: #202020 !default;
 $base08: #c00066 !default;
 $base09: #d17000 !default;
 $base0a: #aba800 !default;
-$base0b: #9b9b9b !default;
+$base0b: #009e12 !default;
 $base0c: #039090 !default;
 $base0d: #2e67c8 !default;
 $base0e: #ad00a1 !default;
@@ -88,7 +88,7 @@ html {
 // This part is for code blocks
 code {
     font-family: $monospace;
-    font-size: 1.1em;
+    font-size: 0.9em;
   }
 
   // This part is for inline code
