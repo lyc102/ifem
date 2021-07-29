@@ -1,4 +1,6 @@
 ---
+
+
 permalink: /mesh/bd/
 title: "Data Structure: Boundary Conditions"
 sidebar:
@@ -16,8 +18,7 @@ condition.
 - 2: second type, i.e., a Neumann boundary edge or face. 
 - 3: third type, i.e., a Robin boundary edge or face.
 
-For a boundary edge/face, the type is 0 means homogenous Neumann boundary condition (zero
-flux).
+For a boundary edge/face, the type is 0 means homogenous Neumann boundary condition (zero flux).
 
 The function `setboundary` is to set up the bdFlag matrix for a 2-D
 triangulation and `setboundary3` for a 3-D triangulation. Examples
@@ -30,11 +31,11 @@ bdFlag = setboundary(node,elem,'Dirichlet','abs(x) + abs(y) == 1','Neumann','y==
 bdFlag = setboundary3(node,elem,'Dirichlet','(z==1) | (z==-1)');
 ```
 
-## Local labeling of edges and faces
+## Local Labeling of Edges and Faces
 
 We label three edges of a triangle such that `bdFlag(t,i)` is the edge
 opposite to the i-th vertex. Similarly `bdFlag(t,i)` is the face opposite
-to the i-th vertex.
+to the i-th vertex for a tetrahedron.
 
 
 ```matlab
@@ -47,38 +48,18 @@ findedge(node,locEdge,'all','vec');
 ```
 
 
-    
+​    
 ![png]({{site.baseurl}}/assets/images/mesh/bddoc_4_0.png)
-    
+​    
 
 
 The ordering of edges is specified by `locEdge`. If we use `locEdge = [2 3; 1 3; 1 2]`, we get asecond orientation of edges.
 
+
+
 ## Extract Boundary Edges and Faces
 
 We may extract boundary edges for a 2-D triangulation from `bdFlag` from the following code. If `elem` is sorted counterclockwise, the boundary edges inherits the orientation. See also `findboundary` and `findboundary3`.
-
-
-```matlab
-help findboundary;
-```
-
-      FINDBOUNDARY finds the boundary of a mesh
-     
-      [bdNode,bdEdge,isBdNode] = FINDBOUNDARY(elem) finds boundary nodes and
-      edges for a 2-dimensional mesh. Only the topological structure of the
-      mesh is needed. Note that the boundary edges may not be orientated
-      counterclockwise.
-      
-      [bdNode,bdEdge,isBdNode] = FINDBOUNDARY(elem,bdFlag) finds Dirichlet
-      boundary nodes and Neumann edges. The boundary edges found using bdFlag
-      is counterclockwise.
-      
-      See also findboundary3, setboundary
-     
-      Copyright (C) Long Chen. See COPYRIGHT.txt for details.
-    
-
 
 
 ```matlab
@@ -92,10 +73,16 @@ Neumann = totalEdge(bdFlag(:) == 2,:);
 findedge(node,totalEdge,bdFlag(:) == 2,'MarkerFaceColor','y');
 ```
 
-
-    
 ![png]({{site.baseurl}}/assets/images/mesh/bddoc_9_0.png)
     
+
+Or simply call
+
+```matlab
+[bdNode,bdEdge,isBdNode] = findboundary(elem,bdFlag);
+```
+
+
 
 
 ## Example: Crack Domain
@@ -117,26 +104,26 @@ display(elem)
 display(bdFlag)
 ```
 
-    
+
     elem =
     
          5     1     2
          5     2     3
          5     3     4
          5     4     6
-    
-    
+
+
+​    
     bdFlag =
     
         1    0    1
         1    0    0
         1    0    0
         1    1    0
-    
 
 
 
-    
+
 ![png]({{site.baseurl}}/assets/images/mesh/bddoc_11_1.png)
     
 
@@ -147,14 +134,14 @@ bdFlag = setboundary(node,elem,'Dirichlet','abs(x) + abs(y) == 1','Neumann','y==
 display(bdFlag)
 ```
 
-    
+
     bdFlag =
     
         1    0    2
         1    0    0
         1    0    0
         1    2    0
-    
+
 
 
 The red line represents a crack. Although node 1 and node 6 have the same coordinate (1,0), they are different nodes and used in different triangles. An array `u` with `u(1)~=u(6)` represents a discontinous function. Think about a paper cut through the red line. 
@@ -176,30 +163,32 @@ display(elem)
 display(bdFlag)
 ```
 
-    
+
     elem =
     
          1     7     2     3
          1     7     6     2
          1     7     5     6
-    
-    
+
+
+​    
     bdFlag =
     
         0    1    0    0
         0    0    0    0
         1    0    0    0
-    
 
 
 
-    
+
+​    
 ![png]({{site.baseurl}}/assets/images/mesh/bddoc_15_1.png)
-    
-
+​    
 
 The top and bottom of the prism is set as Dirichlet boundary condition and other faces are zero flux boundary condition. Note that if the i-th face of t is on the boundary but `bdFlag(t,i)=0`, it is equivalent to use homogenous Neumann boundary condition (zero
 flux).
+
+
 
 ## Remark
 
