@@ -23,7 +23,7 @@ $header-font-family : $sans-serif;
 
 // this part controls the left and right bar width
 $right-sidebar-width-narrow: 140px !default;
-$right-sidebar-width: 215px !default;
+$right-sidebar-width: 280px !default;
 
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
@@ -47,7 +47,7 @@ $right-sidebar-width: 215px !default;
 // base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
 // scheme: modified from "material Light"
 
-$base00: #eee0e0 !default;
+$base00: #e0e0e0 !default;
 $base01: #e0e0e0 !default;
 $base02: #bdbdbd !default;
 $base03: #9b9b9b !default;
@@ -100,7 +100,7 @@ code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
     font-size: 0.9em;
-    background-color: #eee0e0;
+    background-color: #e000e0;
   }
 
 // makes middle column wider
