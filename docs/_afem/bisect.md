@@ -69,8 +69,9 @@ conformity, it suffices to satisfy the rule
 
 See `bisect.m` adding new nodes section.
 
-```
+```matlab
 %% Add new nodes
+
 isCutEdge = false(NE,1);
 while sum(markedElem)>0
     isCutEdge(elem2edge(markedElem,1)) = true;
@@ -81,7 +82,7 @@ edge2newNode = zeros(NE,1,'uint32');
 edge2newNode(isCutEdge) = N+1:N+sum(isCutEdge);
 node(edge2newNode(isCutEdge),:) = (node(edge(isCutEdge,1),:) + ...
                                    node(edge(isCutEdge,2),:))/2;
-```                                  
+```
 
 ### Bisections of marked triangles
 We only need to bisect the triangle whose refinement edge is bisected.
