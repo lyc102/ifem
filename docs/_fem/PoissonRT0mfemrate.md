@@ -32,10 +32,10 @@ $$ (\mathrm{div}\, \sigma, v)                =  -(f,v) \quad \forall v \in L^2(\
 
 **Subroutines**:
 
-    - PoissonRT0
-    - squarePoissonRT0
-    - mfemPoisson
-    - PoissonRT0mfemrate
+- `PoissonRT0`
+- `squarePoissonRT0`
+- `mfemPoisson`
+- `PoissonRT0mfemrate`
     
 The method is implemented in `PoissonRT0` subroutine and tested in `squarePoissonRT0`. Together with other elements (BDM1), `mfemPoisson` provides a concise interface to solve Poisson equation in mixed formulation. The RT0-P0 element is tested in `PoissonRT0mfemrate`. This doc is based on `PoissonRT0mfemrate`.    
 
@@ -44,13 +44,14 @@ The method is implemented in `PoissonRT0` subroutine and tested in `squarePoisso
 We explain degree of freedoms and basis functions for Raviart-Thomas element on a triangle. 
 
 ### Asecond orientation
-The dofs and basis depends on the orientation of the mesh. We shall use the asecond orientation, i.e., `elem(t,1)< elem(t,2)< elem(t,3)` not the positive orientation. Given an `elem`, the asecond orientation can be constructed by 
+The dofs and basis depends on the orientation of the mesh. We shall use the ascending orientation, i.e., `elem(t,1)< elem(t,2)< elem(t,3)` not the positive orientation. Given an `elem`, the ascending orientation can be constructed by 
 
-        [elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering
-        
+```matlab
+[elem,bdFlag] = sortelem(elem,bdFlag);  % ascending ordering
+```        
 Note that `bdFlag` should be sorted as well. 
 
-The local edge is also asecond `[2 3; 1 3; 1 2]` so that the local orientation is consistent with the global one and thus no need to deal with the sign difference when the positive oritentation is used. Read [Simplicial complex in two dimensions](../mesh/scdoc.html) for more discussion of indexing, ordering and orientation.
+The local edge is also ascending `[2 3; 1 3; 1 2]` so that the local orientation is consistent with the global one and thus no need to deal with the sign difference when the positive oritentation is used. Read [Simplicial complex in two dimensions]({{site.baseurl}}{% link _mesh/sc.md %}) for more discussion of indexing, ordering and orientation.
 
 
 ```matlab
@@ -147,9 +148,9 @@ The mass matrix can be computed by
 
 ### divergence matrix
 
-The ascend ordering orientation is not consistent with the induced orientation. The second edge would be `[3 1]` for the consistent orientation. So `[1 -1 1]` is used in the construction of div operator.
+The ascending ordering orientation is not consistent with the induced orientation. The second edge would be `[3 1]` for the consistent orientation. So `[1 -1 1]` is used in the construction of div operator.
 
-For triangle t, the basis for the constant function space is $p = 1$, the characteristic function. So in the computation of divergence operator, `elemSign` should be used to correct the sign. In the output of `gradbasis`, `-Dlambda` is always the outwards normal direction. The signed area could be negative but in the ouput, `area` is the absolute value (for the easy of integration on elements) and `elemSign` is used to record elements with negative area.
+For triangle t, the basis for the constant function space is $p = 1$, the characteristic function. So in the computation of divergence operator, `elemSign` should be used to correct the sign. In the output of `gradbasis`, `-Dlambda` is always the outwards normal direction. The signed area could be negative but in the output, `area` is the absolute value (for the easy of integration on elements) and `elemSign` is used to record elements with negative area.
 
 
 ```matlab
@@ -183,7 +184,7 @@ display(full(B))
 
 
 ### Boundary edges
-Direction of boundary edges may not be the outwards normal direction of the domain since now `elem` is ascend orientation. `edgeSign` is introduced to record this inconsistency.
+Direction of boundary edges may not be the outwards normal direction of the domain since now `elem` is ascending orientation. `edgeSign` is introduced to record this inconsistency.
 
         edgeSign = ones(NE,1);
         idx = (bdFlag(:,1) ~= 0) & (elemSign == -1); % first edge is on boundary
@@ -343,4 +344,4 @@ mfemPoisson(mesh,pde,option);
 
 The optimal rates of convergence for $u$ and $\sigma$ are observed, namely, 1st order for L2 norm of u, L2 norm of $\sigma$ and H(div) norm of $\sigma$. The 2nd order convergent rates between two discrete functions $\|u_I - u_h\|$ and $\|\sigma_I - \sigma_h\|$ are known as superconvergence.
 
-Triangular preconditioned GMRES (the default solver) and Uzawa preconditioned CG converges uniformly in all cases. Traingular preconditioner is two times faster than PCG although GMRES is used.
+Triangular preconditioned GMRES (the default solver) and Uzawa preconditioned CG converges uniformly in all cases. Triangular preconditioner is two times faster than PCG although GMRES is used.

@@ -15,7 +15,7 @@ for the following boundary conditions
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
 **References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _fem/Poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 

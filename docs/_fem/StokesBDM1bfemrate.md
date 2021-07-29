@@ -39,7 +39,7 @@ See also
 
 The velocity is BDM1b element and the pressure is still P0 element. The vorticity is enriched to P2 element. 
 
-We list the basis for RT0 below and refer to [PoissonBDM1femrate](PoissonBDM1femrate.html) for data structure. 
+We list the basis for RT0 below and refer to [PoissonBDM1femrate](PoissonBDM1femrate.md) for data structure. 
 
 ### Local bases of BDM1 element
 
@@ -161,7 +161,7 @@ femStokesHdiv(mesh,pde,option);
 
 When BDM element is used for velocity, the approximation is robust to the grid. Optimal order of velocity (1st order in H1 norm and 2nd in L2 norm) is observed. But for vorticity, the approximation order is only 1.5. The optimal order is 2 as quadratic element is used for vorticity. For pressure, optimal order is 1st and half order superconvergence between pI and ph. Based on that, a recovered pressure is 1.5 order. 
 
-Compare [StokesRT0femrate](StokesRT0mfemrate.html) and the improvement is visiable especially no oscillation of vorticity near boundary. 
+Compare [StokesRT0femrate](StokesRT0mfemrate.md) and the improvement is visiable especially no oscillation of vorticity near boundary. 
 
 ## Example 2: Unit square with regular grids
 

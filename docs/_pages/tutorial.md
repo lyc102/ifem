@@ -11,7 +11,7 @@ This tutorial gives a quick introduction to essentials of iFEM. Read [Introducti
 
 ## Finite Element Methods
 
-- [Finite Element Method for Poisson Equation](femdoc.html)
+- [Finite Element Method for Poisson Equation]({{ site.baseurl }}{% link _fem/Poisson.md %})
 - [Projects: Linear Finite Element Methods](projectFEM.html)
 
 ## Adaptive Finite Element Methods

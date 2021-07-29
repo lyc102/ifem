@@ -53,7 +53,7 @@ parent, where `NTc` is the number of triangles in the coarse grid.
 
 ### Step 2: Form the matrix equation for Laplacian
 
-Call your code on the linear finite element method for Poisson equation to get the discrete Laplacian matrix. See [Project: Linear Finite Element Methods](projectFEM.html). Merge two copies of the Laplacian matrix using `blkdiag`.
+Call your code on the linear finite element method for Poisson equation to get the discrete Laplacian matrix. See [Project: Linear Finite Element Methods](projectFEM.md). Merge two copies of the Laplacian matrix using `blkdiag`.
 
 ### Step 3: Form the matrix for the divergence operator
 

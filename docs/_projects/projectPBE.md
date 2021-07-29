@@ -49,7 +49,7 @@ $$u(\boldsymbol x) = \bar u(0.1+\boldsymbol a\cdot\boldsymbol x).$$
 
 * Apply Newton's method in Step 2 to $H = 1/4$ to obtain a solution $u_H$
 
-* Prolongate $u_H$ to a fine space with $h = H^2$ by using the prolongation matrix or subroutine [Project: Multigrid Methods](projectMG.html)
+* Prolongate $u_H$ to a fine space with $h = H^2$ by using the prolongation matrix or subroutine [Project: Multigrid Methods](projectMG.md)
 
 * Solve one fixed iteration or one Newton's iteration in the fine grid to obtain $u_h$
 

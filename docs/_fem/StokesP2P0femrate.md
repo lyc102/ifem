@@ -14,7 +14,7 @@ with the pure Dirichlet boundary condition. The solver is based on a DGS type sm
 
 **References**:
 - [Finite Element Methods For Stokes Equations](http://www.math.uci.edu/~chenlong/226/FEMStokes.pdf)
-- [Project: Finite Element Methods for Stokes Equations](../project/projectFEM.html)
+- [Project: Finite Element Methods for Stokes Equations]({{site.baseurl}}{% link _projects/projectFEM.md %})
 
 **Subroutines**:
 
@@ -29,7 +29,7 @@ The method is implemented in `StokesP2P0` subroutine and can be tested in `squar
 
 The velocity is P2 Lagrange element and the pressure is P0 piecewise constant element. 
 
-We plot the dof below and refer to [PoissonP2femrate](PoissonP2femrate.html) for basis and data structure for P2 element on triangles.
+We plot the dof below and refer to [PoissonP2femrate](PoissonP2femrate.md) for basis and data structure for P2 element on triangles.
 
 
 ```matlab
