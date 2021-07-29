@@ -1,6 +1,6 @@
 main:
   - title: "Quick-Start Guide"
-    url: /docs/fem-poisson/
+    url: /fem/Poisson/
   - title: "Community"
     url: /community/
   - title: "GitHub"
@@ -8,12 +8,12 @@ main:
 
 # documentation links
 docs:
-  - title: "Getting Started"
-    url: /
+  - title: "Tutorial"
+    url: /index
     children:
       - title: "Installation"
-        url: /
-      - title: "Quick-start: Poisson equation in 2D"
+        url: /index
+      - title: "Quick-start: Poisson equation"
         url: /fem/Poisson/
 
   - title: Mesh Data Structure
@@ -31,7 +31,7 @@ docs:
         url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
         url: /mesh/uniformrefine3/
-  
+
   - title: Mesh Smoothing and Optimization
     url: /mesh/opt/
 
@@ -65,7 +65,7 @@ docs:
         url: /solver/introduction/
       - title: "Solvers for Poisson-type equations"
         url: /solver/mgPoisson/
-  
+
   - title: Research and Projects
     children:
       - title: "Math 226 Projects"
@@ -138,7 +138,7 @@ fem:
         url: /fem/PoissonRT0mfemrate/
       - title: "BDM1 Element"
         url: /fem/PoissonBDM1mfemrate/
-  
+
   - title: "Poisson Equation 3D: Mixed Formulation"
     children:
       - title: "RT0 Element"
@@ -158,7 +158,7 @@ fem:
         url: /fem/StokesisoP2P1femrate/
       - title: "P1b-P1 Element"
         url: /fem/StokesP1bP1femrate/
-  
+
   - title: "Maxwell Equations"
     children:
       - title: "Lowest Order Edge Element"
@@ -246,7 +246,7 @@ project:
         url: /projects/StokesMAC/
   - title: "Community Research"
     url: /research/
-      
+
 research:
   - title: "Back to main"
     url: /
@@ -257,4 +257,3 @@ research:
     children:
       - title: "Template"
         url: /research/template/
-  
