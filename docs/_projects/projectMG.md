@@ -23,7 +23,7 @@ condition.
 
 ### Step 1. Smoother
 
-* Code the weighted Jacobi and the Gauss-Seidel smoother using the matrix-free style; see [Project: Finite Difference Methods](projectFDM.html)
+* Code the weighted Jacobi and the Gauss-Seidel smoother using the matrix-free style; see [Project: Finite Difference Methods](projectFDM.md)
 
 * Check convergence of the Gauss-Seidel smoother by solving $-\Delta u = 1$
   in $(0,1)^2$ with zero Dirichlet boundary condition. Plot the error in a suitable norm vs the iteration step for a fixed `h = 1/16`.

@@ -16,7 +16,7 @@ for the following boundary conditions
 - Robin boundary condition: $g_R u + \nabla u\cdot n=g_N \hbox{ on }\partial \Omega$.
 
 **References**:
-- [Quick Introduction to Finite Element Methods](femdoc.html)
+- [Quick Introduction to Finite Element Methods]({{ site.baseurl }}{% link _fem/Poisson.md %})
 - [Introduction to Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch2FEM.pdf)
 - [Progamming of Finite Element Methods](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf)
 
@@ -76,7 +76,7 @@ disp(elem);
     
 
 
-Unlike 2-D case, to apply uniform refinement to obtain a fine mesh with good mesh quality, a different ordering of the inital mesh, which may violate the positive ordering, should be used. See [3 D Red Refinement](uniformrefine3doc.html).
+Unlike 2-D case, to apply uniform refinement to obtain a fine mesh with good mesh quality, a different ordering of the inital mesh, which may violate the positive ordering, should be used. See [3 D Red Refinement]({{site.baseurl}}{% link _mesh/uniformrefine3.md %}).
 
 ## Mixed boundary condition
 

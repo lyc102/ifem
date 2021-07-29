@@ -24,7 +24,7 @@ $$ \{ y=1; -1 <= x <= 1 | u = 1, v = 0 \}.$$
 
 ## Step 1: Gauss-Seidel smoothing of velocity
 
-Given a pressure approximation, relax the momentum equation to update velocity. See [Project: Multigrid Methods](projectMG.html) on the matrix free implemenation of G-S relaxation.
+Given a pressure approximation, relax the momentum equation to update velocity. See [Project: Multigrid Methods](projectMG.md) on the matrix free implemenation of G-S relaxation.
 
 Note that the boundary or near boundary dof should be updated diffeently. The stencil should be changed according to different boundary conditions.
 

@@ -13,7 +13,7 @@ with the pure Dirichlet boundary condition. The solver is based on a DGS type sm
 
 **References**:
 - [Finite Element Methods For Stokes Equations](http://www.math.uci.edu/~chenlong/226/FEMStokes.pdf)
-- [Project: Finite Element Methods for Stokes Equations](../project/projectFEM.html)
+- [Project: Finite Element Methods for Stokes Equations]({{site.baseurl}}{% link _projects/projectFEM.md %})
 
 **Subroutines**:
 

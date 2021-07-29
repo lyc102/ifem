@@ -50,7 +50,7 @@ The dofs and basis depends on the orientation of the mesh. We shall use the asec
         
 Note that `bdFlag` should be sorted as well. 
 
-The local edge is also asecond `[2 3; 1 3; 1 2]` so that the local orientation is consistent with the global one and thus no need to deal with the sign difference when the positive oritentation is used. Read [Simplicial complex in two dimensions](../mesh/scdoc.html) for more discussion of indexing, ordering and orientation.
+The local edge is also asecond `[2 3; 1 3; 1 2]` so that the local orientation is consistent with the global one and thus no need to deal with the sign difference when the positive oritentation is used. Read [Simplicial complex in two dimensions]({{site.baseurl}}{% link _mesh/sc.md %}) for more discussion of indexing, ordering and orientation.
 
 
 ```matlab

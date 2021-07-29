@@ -11,7 +11,7 @@ finite element and finite difference discretization of Stokes equations.
 
 ## Part I: Block Preconditioner
 
-Given a triangulation, use codes in [Project: Finite Element Methods for Stokes Equation](projectStokes.html) to generate matrices for isoP2-P0 and P1CR-P0 for Stokes equations. 
+Given a triangulation, use codes in [Project: Finite Element Methods for Stokes Equation](projectStokes.md) to generate matrices for isoP2-P0 and P1CR-P0 for Stokes equations. 
 
 ### Step 1: Direct solvers in preconditioner 
 

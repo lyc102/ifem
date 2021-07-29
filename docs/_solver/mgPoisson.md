@@ -23,7 +23,7 @@ Variable diffusion coefficient is allowed, i.e. the operator $-\nabla \cdot( d \
 
 `x = mg(A,b,elem)` works for linear finite element and mesh `elem` is obtained by `uniformrefine`, `bisect`, or `uniformrefine3` by default. For other finite elements, more mesh structure, e.g., `edge` can be provided as `varargin`. If no extra input information, `mg` will try to guess the type of element by comparing the size of the system with the number of nodes and elements and construct needed data structure.
 
-For 3-D adaptive grids obtained by `bisect3`, `HB` is needed for the coarsening, and should be listed as the first parameter in varargin. Interesting enugh, for 2-D adaptive grids obtained by `bisect`, only `elem` is enough for the auotmatical coarsening. See [coarsen](../afem/coarsendoc.html).
+For 3-D adaptive grids obtained by `bisect3`, `HB` is needed for the coarsening, and should be listed as the first parameter in varargin. Interesting enough, for 2-D adaptive grids obtained by `bisect`, only `elem` is enough for the automatic coarsening. See [coarsen]({{site.baseurl}}{% link _afem/coarsen.md %}).
 
 Here is a list of possible elements.
 
@@ -84,7 +84,7 @@ Here is a list of possible elements.
 
 ## Examples: Jump Coefficients
 
-In [Introduction to Fast Solvers](solverintroduction.html), several examples has been presented for linear and quadratic elements. Here we present a harder example on a 3-D elliptic equation with jump coefficients. This documentation is based on `example/solver/Poisson3jumpmgrate.m`. Run this example to get more information.
+In [Introduction to Fast Solvers](introduction.md), several examples has been presented for linear and quadratic elements. Here we present a harder example on a 3-D elliptic equation with jump coefficients. This documentation is based on `example/solver/Poisson3jumpmgrate.m`. Run this example to get more information.
 
 $$ -\nabla \cdot (\omega\nabla u) = f\quad  \text{ in } \Omega=(-1,1)^3$$ 
 $$u = 1 \text{ on } x=1, \qquad u=0  \text{ on } x=-1$$ 
@@ -94,7 +94,7 @@ The diffusion coefficent $\omega$ is piecewise constant with large jump:
 - $\omega(x) = 1$ if $x\in (-0.5, 0)^3$ or $x\in (0,0.5)^3$ and 
 - $\omega = \epsilon$ otherwise.  
 
-![Domain](jump3d.pdf)
+![Domain]({{ site.baseurl }}/assets/images/jump3d.png)}})
 
 **Reference**
 

@@ -5,7 +5,7 @@ sidebar:
     nav: project
 ---
 
-The purpose of this project is to implement explict and implicit
+The purpose of this project is to implement explicit and implicit
 numerical methods for solving the parabolic equation. The example is the heat equation 
 
 $$ u_t -\Delta u  = f \quad \text{ with }u |_{\partial \Omega} = g, u(\cdot,0) = u_0.$$

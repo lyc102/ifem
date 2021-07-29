@@ -1,4 +1,10 @@
-## TMAC for Stokes Equations
+---
+permalink: /fem/StokesRT0femrate/
+title: "TMAC for Stokes Equations"
+sidebar:
+    nav: fem
+---
+
 
 This example is to show the rate of convergence of RT0-P0 finite element approximation of the Stokes equations
 
@@ -39,7 +45,7 @@ See also
 
 The velocity is RT0 element and the pressure is P0 element. The vorticity is P1 element. 
 
-We list the basis for RT0 below and refer to [PoissonRT0femrate](PoissonRT0mfemrate.html) for data structure. 
+We list the basis for RT0 below and refer to [PoissonRT0femrate](PoissonRT0mfemrate.md) for data structure. 
 
 
 ### Local bases of RT0 element
@@ -237,7 +243,7 @@ the grids. For general unstructured grids, only half order for vorticity
 the approximately parallegram property, optimal first order is recovered.
 
 Change the method to BDM1b-P0 will lead to optimal order of
-convergence on general unstructured grids. See [StokesBDM1bfemrate](StokesBDM1bfemrate.html).
+convergence on general unstructured grids. See [StokesBDM1bfemrate](StokesBDM1bfemrate.md).
 
 Multigrid solver based on DGS smoother converges uniformly. 
 

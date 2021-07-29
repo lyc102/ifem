@@ -2,7 +2,7 @@ main:
   - title: "Quick-Start Guide"
     url: /fem/Poisson/
   - title: "Community"
-    url: /community/
+    url: /research/
   - title: "GitHub"
     url: https://github.com/lyc102/ifem
 
@@ -81,6 +81,8 @@ docs:
         url: /logs/site/
 
 solver:
+  - title: "Back to main"
+    url: /
   - title: "Linear solver"
     url: /solver/
     children:
@@ -138,7 +140,9 @@ fem:
         url: /fem/PoissonRT0mfemrate/
       - title: "BDM1 Element"
         url: /fem/PoissonBDM1mfemrate/
-
+      - title: "RT1 Element"
+        url: /fem/PoissonRT1mfemrate/
+  
   - title: "Poisson Equation 3D: Mixed Formulation"
     children:
       - title: "RT0 Element"
@@ -150,6 +154,8 @@ fem:
         url: /fem/StokesCRP0femrate/
       - title: "P2-P0 Element"
         url: /fem/StokesP2P0femrate/
+      - title: "RT0-P0 Element"
+        url: /fem/StokesRT0femrate/
       - title: "P2-P1 Taylor-Hood Element"
         url: /fem/StokesP2P1femrate/
       - title: "isoP2-P0 Element"

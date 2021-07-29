@@ -16,7 +16,7 @@ Backslash `\` is the build-in direct solver of MATLAB. It is suitable for small 
 More options is allowed in `mg` and `amg`. Try `help mg` and `help amg` for possible options including tolerance, V or W-cycles, number of smoothings steps, and print level etc.
 
 Here we include several examples for discrete Poisson matrices. Solvers for other finite element methods and other equations can be found
-- [List of Examples](solverlist.html)
+- [List of Examples](solver.md)
 
 ## Example: 2-D Linear Element 
 
