@@ -12,13 +12,12 @@ toc_sticky: true
 ## Introduction to iFEM
 *i*FEM is a [MATLAB](https://www.mathworks.com/) software package containing robust, efficient, and easy-following codes for the main building blocks of adaptive finite element methods and multigrid methods on unstructured simplicial grids in both two and three dimensions. Besides the simplicity and readability, sparse matrixlization, an innovative programming style for MATLAB, is introduced to improve the efficiency.
 
-<!-- - [Basic Data Structure](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshdoc.html)
+- [Basic Data Structure](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshdoc.html)
 - [Finite Element Methods](https://www.math.uci.edu/~chenlong/ifemdoc/fem/femcontent.html)
 - [Adaptive Finite Element Methods](https://www.math.uci.edu/~chenlong/ifemdoc/afem/afemdoc.html)
 - [Solvers of Linear Algebraic Equations](https://www.math.uci.edu/~chenlong/ifemdoc/solver/solverintroduction.html)
 - [Mesh Generator and Smoothing/Optimization](https://www.math.uci.edu/~chenlong/ifemdoc/mesh/meshoptdoc.html)
-- [Projects](https://www.math.uci.edu/~chenlong/ifemdoc/project/projectcontent.html) -->
-
+- [Projects](https://www.math.uci.edu/~chenlong/ifemdoc/project/projectcontent.html) 
 
 ## Installation
 
@@ -38,7 +37,7 @@ This documentation website will be constantly updated. If you have any questions
 
 ### Use MATLAB help/doc
 1. `help funexample` displays a description of and syntax for the function `funexample`. For example, `help mg` will show basic usage for `mg` function in the plain text.  
-2. `ifem funexampledoc` show detailed description. For example, `ifem mgdoc` will explain the `mg` function step by step in `html` format. But not every function has a html documentation.
+2. `ifem funexampledoc` show detailed description. For example, `ifem mgdoc` will explain the `mg` function step by step in `html` format. But not every function has a html documentation. Contribution to a documentation page is also welcome.
 
 ## License and References
 
@@ -62,6 +61,8 @@ year = {2009}}
 The author would like to thank [Professor Michael Holst](http://cam.ucsd.edu/~mholst/) in University of California at San Diego and [Professor Ludmil Zikatanov](http://www.personal.psu.edu/ltz1/) in Pennsylvania State University for many insightful discussion, and also Professor [Chensong Zhang](http://lsec.cc.ac.cn/~zhangcs/) in Chinese Academy of Sciences for the effort in the development of AFEM@matlab, an early version of iFEM.
 
 The author thanks students or postdocs: [Shuhao Cao](https://scaomath.github.io/), [Huayi Wei](weihuayi.github.io), Ming Wang, Lin Zhong, and Jie Zhou for their contribution to iFEM in one way or another. Detailed credits can be found in the M-lint of several `.m` files.
+
+The documentation website https://lyc102.github.io/ifem/ is set up by [Shuhao Cao](https://scaomath.github.io/) and his effort is greatly appreciated.
 
 The author is also grateful to the NSF for the partial support over the years. 
 

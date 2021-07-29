@@ -8,7 +8,7 @@
 // sans-serif: fonts like Arial
 // monospace: fonts for code
 // custom Google fonts is loaded at _include/head/custom.html
-$serif: -apple-system, serif; 
+$serif: -apple-system, serif;
 $sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
 $monospace: "Fira Code Medium", "Roboto Mono", "Menlo", "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
 
@@ -47,7 +47,7 @@ $right-sidebar-width: 215px !default;
 // base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
 // scheme: modified from "material Light"
 
-$base00: #eeeeee !default;
+$base00: #eee0e0 !default;
 $base01: #e0e0e0 !default;
 $base02: #bdbdbd !default;
 $base03: #9b9b9b !default;
@@ -90,7 +90,7 @@ code {
     font-family: $monospace;
     font-size: 1.1em;
   }
-  
+
   // This part is for inline code
   p > code,
   a > code,
@@ -100,7 +100,7 @@ code {
     padding-top: 0.02rem;
     padding-bottom: 0.02rem;
     font-size: 0.9em;
-    background-color: #eeeeee;
+    background-color: #eee0e0;
   }
 
 // makes middle column wider
@@ -110,7 +110,7 @@ code {
       width: calc(100% - #{$right-sidebar-width-narrow});
       padding-right: $right-sidebar-width-narrow;
     }
-  
+
     @include breakpoint($x-large) {
       width: calc(100% - #{$right-sidebar-width});
       padding-right: $right-sidebar-width-narrow;
