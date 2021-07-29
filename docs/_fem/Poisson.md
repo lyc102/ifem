@@ -64,7 +64,7 @@ $$
 
 We take linear finite element spaces as an example. For each vertex $v_i$ of $\mathcal T$, let $\phi _i$ be the piecewise linear function such that $\phi _i(v_i)=1$ and $\phi _i(v_j)=0$ when $j\neq i$. The basis function in 1-D and 2-D is illustrated below. It is also called hat function named after the shape of its graph.
 
-Then it is easy to see $\mathcal V_{\mathcal T}$ is spanned by $\\{ \phi_i \\}_{i=1}^{N}$ and  for a finite element function $v\in \mathcal V_{\mathcal T}$, there exists a unique expansion $v=\sum
+Then it is easy to see $\mathcal V_{\mathcal T}$ is spanned by a $\\{ \phi_i \\}_{i=1}^{N}$.  Therefore for a finite element function $v\in \mathcal V_{\mathcal T}$, there exists a unique expansion $v=\sum
 _{i=1}^Nv_i\phi _i$.
 
 
