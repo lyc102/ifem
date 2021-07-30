@@ -31,6 +31,8 @@ docs:
         url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
         url: /mesh/uniformrefine3/
+      - title: "Dof on Edges in 3D"
+        url: /mesh/dof3edge/
 
   - title: Mesh Smoothing and Optimization
     url: /mesh/opt/
@@ -205,6 +207,8 @@ mesh:
         url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
         url: /mesh/uniformrefine3/
+      - title: "Dof on Edges in 3D"
+        url: /mesh/dof3edge/
   - title: Mesh Smoothing and Optimization
     url: /mesh/opt/
 

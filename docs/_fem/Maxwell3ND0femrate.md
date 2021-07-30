@@ -42,7 +42,7 @@ Use the function
     [elem2dof,edge,elem2edgeSign] = dof3edge(elem);
 
 to construct the pointer from element index to edge index. Read
-<dof3edgedoc.html Dof on Edges in Three Dimensions> for details.
+[Dof on Edges in Three Dimensions]({{site.baseurl}}{% link _mesh/dof3edge.md %}) for details.
 
 
 
