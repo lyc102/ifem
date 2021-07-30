@@ -61,6 +61,7 @@ if nargin>2
     end    
 end
 idxFlag = 1; % default show index number
+
 if nargin>2 && isnumeric(varargin{1})
     shift = varargin{1};
 else

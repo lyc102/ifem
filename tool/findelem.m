@@ -59,7 +59,7 @@ if length(range) < size(elem,1)
     end
 end
 nDigit =ceil(log10(range+1));
-oSize = 150*nDigit;
+oSize = 400*nDigit;
 f = gcf;
 set(f, 'Units', 'pixel');
 fHeight = f.Position(4);
@@ -68,7 +68,7 @@ if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
         s = scatter(center(:,1),center(:,2),oSize,'o','LineWidth',1,'MarkerEdgeColor','k',...
             'MarkerFaceColor','y');
         if max(f.Position(3:4)) <= 1
-            fSz = 10*f.Position(4); % font size is proportional to height
+            fSz = 20*f.Position(4); % font size is proportional to height
         else
             fSz = log(f.Position(3)*f.Position(4));
         end
@@ -88,12 +88,13 @@ if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
     end
 end
 hold off
-%%
+%% relative position of numbers
+% add by Shuhao Cao
     function resizeCallback(f, ~)
         if max(f.Position(3:4)) <= 1 % relative
-            newFSz = 40*f.Position(4); % font size is proportional to height
-            newOSize = 5*oSize*(f.Position(4));
-            newTshift = 2*tShift*f.Position(4);
+            newFSz = 80*f.Position(4); % font size is proportional to height
+            newOSize = 10*oSize*(f.Position(4));
+            newTshift = 4*tShift*f.Position(4);
         else % pixel
             newFSz = log(f.Position(3)*f.Position(4));
             newOSize = oSize*(f.Position(4)/fHeight);
