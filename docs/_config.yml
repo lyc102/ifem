@@ -35,6 +35,8 @@ repository_tree: master
 # Build settings
 # theme: minimal-mistakes-jekyll
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
+search: true
+search_full_content: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.
