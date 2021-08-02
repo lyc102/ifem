@@ -49,7 +49,7 @@ if length(range) < size(elem,1)
     y = reshape(node(elem(range,:),2),size(range,1), size(elem,2))';
     h = patch(x,y,'y');
     if nargin > 3
-        if strcmp(varargin{1},'noindex') || strcmp(varargin{1},'index')
+        if strcmp(varargin{1},'noindex')
            if size(varargin,2)>=2
                 set(h,varargin{2:end});
            end
