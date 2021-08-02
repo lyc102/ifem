@@ -83,26 +83,10 @@ div#notebook {
 </ul>
 </li>
 </ol>
-<p>Run the following example and read the code for the illustration of each step.</p>
+<p><strong>Reference</strong>: L. Chen, H. Wei, M. Wen. <a href="https://www.math.uci.edu/~chenlong/interface_vem.html">An Interface-Fitted Mesh Generator and Virtual Element Methods for Elliptic Interface Problems</a>. <em>Journal of Computational Physics</em>. 334(1), 2017, 327–348.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-matlab"><pre><span></span><span class="n">box</span> <span class="p">=</span> <span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">];</span>
-<span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="n">interface</span><span class="p">]</span> <span class="p">=</span> <span class="n">interfacemeshdoc</span><span class="p">(</span><span class="n">box</span><span class="p">,@</span><span class="n">phiheart</span><span class="p">,</span><span class="mf">0.05</span><span class="p">);</span>
-<span class="n">showmesh</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
-<span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">interface</span><span class="p">.</span><span class="n">edge</span><span class="p">,</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="s">&#39;noindex&#39;</span><span class="p">,</span><span class="s">&#39;draw&#39;</span><span class="p">);</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -2935,6 +2919,30 @@ HbebfkWPMVcAAAAASUVORK5CYII=
 <span class="n">interface</span><span class="p">.</span><span class="n">sElem</span> <span class="p">=</span> <span class="n">sElem</span><span class="p">;</span>
 <span class="n">interface</span><span class="p">.</span><span class="n">edge</span> <span class="p">=</span> <span class="n">interfaceEdge</span><span class="p">;</span>
 <span class="n">interface</span><span class="p">.</span><span class="n">node</span> <span class="p">=</span> <span class="n">nearInterfaceNode</span><span class="p">;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Further-Reading">Further Reading<a class="anchor-link" href="#Further-Reading">&#182;</a></h2><p>Run the following example in MATLAB and read <code>interfacemeshdoc</code> to learn more.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-matlab"><pre><span></span><span class="n">box</span> <span class="p">=</span> <span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">];</span>
+<span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">,</span><span class="n">interface</span><span class="p">]</span> <span class="p">=</span> <span class="n">interfacemeshdoc</span><span class="p">(</span><span class="n">box</span><span class="p">,@</span><span class="n">phiheart</span><span class="p">,</span><span class="mf">0.05</span><span class="p">);</span>
+<span class="n">showmesh</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">elem</span><span class="p">);</span>
+<span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">interface</span><span class="p">.</span><span class="n">edge</span><span class="p">,</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="s">&#39;noindex&#39;</span><span class="p">,</span><span class="s">&#39;draw&#39;</span><span class="p">);</span>
 </pre></div>
 
     </div>
