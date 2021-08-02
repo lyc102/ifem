@@ -34,8 +34,13 @@ docs:
       - title: "Dof on Edges in 3D"
         url: /mesh/dof3edge/
 
-  - title: Mesh Smoothing and Optimization
+  - title: Mesh Generation and Optimization
     url: /mesh/opt/
+    children:
+      - title: "Interface Generator"
+        url: /mesh/interfacemeshdoc/
+      - title: "ODT Mesh Smoothing"
+        url: /mesh/opt/
 
   - title: Finite element methods
     url: /fem/
@@ -144,7 +149,7 @@ fem:
         url: /fem/PoissonBDM1mfemrate/
       - title: "RT1 Element"
         url: /fem/PoissonRT1mfemrate/
-  
+
   - title: "Poisson Equation 3D: Mixed Formulation"
     children:
       - title: "RT0 Element"
@@ -209,9 +214,12 @@ mesh:
         url: /mesh/uniformrefine3/
       - title: "Dof on Edges in 3D"
         url: /mesh/dof3edge/
-  - title: Mesh Smoothing and Optimization
-    url: /mesh/opt/
-
+  - title: Mesh Generation and Optimization
+    children:
+      - title: "Interface Generator"
+        url: /mesh/interfacemeshdoc/
+      - title: "ODT Mesh Smoothing"
+        url: /mesh/opt/
 
 
 # sidebar navigation list sample

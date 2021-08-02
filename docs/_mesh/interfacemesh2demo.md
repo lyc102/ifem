@@ -1,6 +1,6 @@
 ---
 permalink: /mesh/interfacemesh2demo/
-title: "Interface Mesh Generator: 2D"
+title: "Demo of Interface Mesh Generator"
 sidebar:
     nav: mesh
 ---
