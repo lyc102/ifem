@@ -71,7 +71,7 @@ docs:
       - title: "Solvers for Poisson-type equations"
         url: /solver/mgPoisson/
 
-- title: Data Structure for DoFs
+  - title: Data Structure for DoFs
     url: /dof/
     children:
       - title: "Dof on Edges in 3D"
@@ -225,6 +225,12 @@ mesh:
         url: /mesh/interfacemeshdoc/
       - title: "Mesh Smoothing"
         url: /mesh/opt/
+
+dof:
+  - title: "Back to main"
+    url: /
+  - title: "Lagrange element"
+    url: /
 
 
 # sidebar navigation list sample
