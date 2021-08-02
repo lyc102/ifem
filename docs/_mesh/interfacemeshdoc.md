@@ -7,8 +7,6 @@ sidebar:
 
 
 
-# Interface-fitted Mesh Generator: Two Dimensions
-
 We explain a simple mesh generator for generating an interface-fitted mesh in two dimensions. 
 
 **Algorithm:  2D Interface-fitted Mesh Generation**
@@ -206,9 +204,8 @@ findedge(node,interfaceEdge,'all','noindex','draw');
 ```
 
 
-​    
 ![png](interfacemeshdoc_files/interfacemeshdoc_12_0.png)
-​    
+    
 
 
 
