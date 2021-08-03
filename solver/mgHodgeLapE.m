@@ -47,7 +47,7 @@ setupflag = option.setupflag;
 
 %% Set up multilevel structure
 if setupflag == true
-    %% Hierarchical meshes
+    %% Hierarchical meshes (uniform)
     HB = zeros(N,3);
     level = 20;
     NL(level+1) = N; % now NL(1:level) = 0;

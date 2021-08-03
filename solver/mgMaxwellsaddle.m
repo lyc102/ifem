@@ -81,16 +81,16 @@ u0 = option.x0(1:Nf);
 p0 = option.x0(Nf+1:end);
 option.x0 = u0;
 option.solver = 'CG';
-if nargin>=6
+if nargin>=11
     HB = varargin{1};
 else
     HB = [];
 end
 
 if N>= Ng
-    [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option); % lowest order
+    [u,info] = mgHodgeLapE(Abar,f,node,elem,bdFlag,option,HB); % lowest order
 else
-    [u,info] = mgHodgeLapE1(Abar,f,node,elem,bdFlag,option); % linear
+    [u,info] = mgHodgeLapE1(Abar,f,node,elem,bdFlag,option,HB); % linear
 end
 
 Apoption.x0 = p0;

@@ -70,10 +70,10 @@ if (nargin <=3) || ~(strcmp(varargin{1},'noindex'))
         if max(f.Position(3:4)) <= 1
             fSz = 20*f.Position(4); % font size is proportional to height
         else
-            fSz = log(f.Position(3)*f.Position(4));
+            fSz = 0.75*log(f.Position(3)*f.Position(4));
         end
         tShift = 0.02*(max(nDigit) + 1 - nDigit);
-        tShift(nDigit==1) = 0.5*tShift(nDigit==1);
+        tShift(nDigit==1) = 0.3*tShift(nDigit==1);
         t = text(center(:,1)-tShift,center(:,2),int2str(range),...
             'Fontsize',fSz,'FontWeight','bold','Color','k');
         nElemShown = length(t);
@@ -92,12 +92,12 @@ hold off
 % add by Shuhao Cao
     function resizeCallback(f, ~)
         if max(f.Position(3:4)) <= 1 % relative
-            newFSz = 80*f.Position(4); % font size is proportional to height
-            newOSize = 10*oSize*(f.Position(4));
-            newTshift = 4*tShift*f.Position(4);
+            newFSz = 30*f.Position(4); % font size is proportional to height
+            newOSize = 3*oSize*(f.Position(4));
+            newTshift = 2*tShift*f.Position(4);
         else % pixel
-            newFSz = log(f.Position(3)*f.Position(4));
-            newOSize = oSize*(f.Position(4)/fHeight);
+            newFSz = 0.75*log(f.Position(3)*f.Position(4));
+            newOSize = 0.75*oSize*(f.Position(4)/fHeight);
             newTshift = tShift/(f.Position(4)/fHeight);
         end
         % change font size accordingly

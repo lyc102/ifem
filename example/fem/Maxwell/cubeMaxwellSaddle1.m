@@ -36,10 +36,11 @@ uIuhErr = zeros(maxIt,1);
 
 %% Finite Element Method        
 for k = 1:maxIt   
+    fprintf('\n\n Iter # = %d \n',k);
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);     
     [soln,eqn,info] = Maxwell1saddle(node,elem,bdFlag,pde,option);  
     u = soln.u;
-    fprintf('\n\n # of DoFs = %d \n',length(u));
+    fprintf('\n # of DoFs = %d \n',length(u));
     % compute error
     uI = edgeinterpolate1(pde.exactu,node,eqn.edge);
     energyErr(k) = getHcurlerror3ND1(node,elem,pde.curlu,u);
