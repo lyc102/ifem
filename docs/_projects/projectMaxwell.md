@@ -52,7 +52,7 @@ The global orientation of an edge is from the node with smaller index to
 bigger one. `elem2edgeSign` records the consistency of the local and
 global edge orientation.
 
-Read [Dof on Edges in Three Dimensions]({{site.baseurl}}{% link _mesh/dof3edge.md %}) for detailed discussion.
+Read [Dof on Edges in Three Dimensions]({{site.baseurl}}{% link _dof/dof3edge.md %}) for detailed discussion.
 
 
 ```matlab
