@@ -31,16 +31,13 @@ docs:
         url: /mesh/sc3/
       - title: "Uniform refinement in 3D"
         url: /mesh/uniformrefine3/
+      - title: "Dof on Edges in 3D"
+        url: /mesh/dof3edge/
 
-  - title: Mesh Generation and Optimization
+  - title: Mesh Smoothing and Optimization
     url: /mesh/opt/
-    children:
-      - title: "Interface Mesh Generator"
-        url: /mesh/interfacemeshdoc/
-      - title: "Mesh Smoothing"
-        url: /mesh/opt/
 
-  - title: Finite Element Methods
+  - title: Finite element methods
     url: /fem/
     children:
       - title: "FEM for Poisson equation"
@@ -52,7 +49,7 @@ docs:
       - title: "FEM examples"
         url: /fem/examples/
 
-  - title: Adaptive Finite Element Methods
+  - title: Adaptive Finite element methods
     children:
       - title: "Introduction to AFEM"
         url: /afem/
@@ -70,13 +67,6 @@ docs:
         url: /solver/introduction/
       - title: "Solvers for Poisson-type equations"
         url: /solver/mgPoisson/
-
-  - title: Data Structure for DoFs
-    url: /dof/
-    children:
-      - title: "Dof on Edges in 3D"
-        url: /mesh/dof3edge/
-
 
   - title: Research and Projects
     children:
@@ -154,7 +144,7 @@ fem:
         url: /fem/PoissonBDM1mfemrate/
       - title: "RT1 Element"
         url: /fem/PoissonRT1mfemrate/
-
+  
   - title: "Poisson Equation 3D: Mixed Formulation"
     children:
       - title: "RT0 Element"
@@ -219,18 +209,9 @@ mesh:
         url: /mesh/uniformrefine3/
       - title: "Dof on Edges in 3D"
         url: /mesh/dof3edge/
-  - title: Mesh Generation and Optimization
-    children:
-      - title: "Interface Mesh Generator"
-        url: /mesh/interfacemeshdoc/
-      - title: "Mesh Smoothing"
-        url: /mesh/opt/
+  - title: Mesh Smoothing and Optimization
+    url: /mesh/opt/
 
-dof:
-  - title: "Back to main"
-    url: /
-  - title: "Lagrange element"
-    url: /
 
 
 # sidebar navigation list sample
