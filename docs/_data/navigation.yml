@@ -35,6 +35,8 @@ docs:
   - title: Mesh Generation and Optimization
     url: /mesh/opt/
     children:
+      - title: "Demo: Interface Mesh Generator"
+        url: /mesh/interfacemesh2demo/
       - title: "Interface Mesh Generator"
         url: /mesh/interfacemeshdoc/
       - title: "Mesh Smoothing"
@@ -221,6 +223,8 @@ mesh:
         url: /mesh/dof3edge/
   - title: Mesh Generation and Optimization
     children:
+      - title: "Demo: Interface Mesh Generator"
+        url: /mesh/interfacemesh2demo/
       - title: "Interface Mesh Generator"
         url: /mesh/interfacemeshdoc/
       - title: "Mesh Smoothing"

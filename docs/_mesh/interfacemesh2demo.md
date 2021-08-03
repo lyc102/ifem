@@ -7,7 +7,7 @@ sidebar:
 
 
 
-We provide several examples on using `interfacemesh` to generate an interface-fitted mmesh satisfying the maximum angle condition in two dimensions. We refer to [a simple interface mesh generator](interfacemeshdoc.html) for detailed explanation of the algorithm and `help interfacemesh` for input and output arguments.
+We provide several examples on using `interfacemesh` to generate an interface-fitted mesh satisfying the maximum angle condition in two dimensions. We refer to [a simple interface mesh generator](interfacemeshdoc.html) for detailed explanation of the algorithm and `help interfacemesh` for input and output arguments.
 
 
 ```matlab
