@@ -1,8 +1,8 @@
 function cubeIdx = getCubeIdx(p, box, h)
 %% GETCUBEIDX get the index of small cube containing p
 %
-%
-%
+%  cubeIdx = GETCUBEIDX(p, box, h) get the index of the small cube
+%  containing p in a uniform mesh of the box with mesh size h.
 %
 
 ni = floor((box(2) - box(1))/h)+1;

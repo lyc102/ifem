@@ -1,7 +1,7 @@
-function  [node,face,face2elem,interfaceData] = interfacemesh3(cube,surface,h)
+function  [node,face,face2elem,interface] = interfacemesh3(cube,surface,h)
 %% INTERFACEMESH3 generates the mesh structure for elliptic interface problems
 %
-%   [node,face,face2elem,interfaceData] = INTERFACEADAPTIVEMESH(cube, phi, h), where 
+%   [node,face,face2elem,interfaceData] = INTERFACEMESH3(cube, phi, h), where 
 %    - cube = [xmin, xmax, ymin, ymax, zmin, zmax],  represent an cube domain 
 %       enclosing the interface; 
 %    - surface class 
@@ -14,43 +14,45 @@ function  [node,face,face2elem,interfaceData] = interfacemesh3(cube,surface,h)
 %    - h is the mesh size of the Cartesian grid on cube.
 %
 %   Example: One sphere
-%       cube = [-1 1 -1 1 -1 1];
-%       surface.phi = @(p) sum(p.^2, 2) - 0.5.^2;
-%       h = 0.125;
-%       [node,face,face2elem,interfaceData] = interfacemesh3(cube,surface,h);
-%       showmesh(node,interfaceData.interface);
 %
-%   Example: Two spheres
-%       cube = [-1 1 -1 1 -1 1]*2;
-%       surface = twospherephi;
-%       h = 0.125;
-%       [node,face,face2elem,interfaceData] = interfacemesh3(cube,surface,h);
-%       showmesh(node, interfaceData.interface);
+%     surface = MolecularSurface('sphere.pqr');
+%     cube = [-1, 1, -1, 1, -1, 1]*3;
+%     h = 0.08;
+%     [node,face,face2elem,interface] = interfacemesh3(cube, surface, h);
+%     showmesh(node, interface.face);
 %
-%   Author: Huayi Wei <weihuayi@xtu.edu.cn>, based on discussion with Long Chen.
+%   Example: Ben molecular
+%       surface = MolecularSurface('ben.pqr');
+%       cube = [-1, 1, -1, 1, -1, 1]*3;
+%       h = 0.08;
+%       [node,face,face2elem,interface] = interfacemesh3(cube, surface, h);
+%       showmesh(node, interface.face);
+%
+%   Author: Huayi Wei <weihuayi@xtu.edu.cn>, discuss with Long Chen.
 %
 %   See also: interfacemesh, interfaceadaptivemesh
 %
 %   Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
+
 %% Generate the Cartesian mesh on a cube domain with size h
 [node,elem] = cubehexmesh(cube, h);
 N = size(node, 1); % number of nodes
-NC = size(elem,1); % number of small cubes
+NC = size(elem,1); % number of cubes
 
-%% Evaluate sign of vertices and find interface elements
+%% Evaluate sign of vertices and elements
 % find the sign function of all vertices
 phiValue = surface.phi(node);
-vSign = msign(phiValue);
+vSign = sign(phiValue);
 e2vSign = vSign(elem);     % element to vertices sign
 
-% find cut element
+% find cut elements
 eta = max(e2vSign,[],2).*min(e2vSign,[],2);
 isCutElem  = (eta < 0 | sum(abs(e2vSign),2) <= 5); 
 % eta < 0: elements cross interface
 % sum(abs(e2vSign),2) <= 5: at least 3 vertices on the interface
 cutElem = elem(isCutElem,:);
-% find more cut element
+% find more cut elements
 c = (node(elem(:,1),:)+node(elem(:,8),:))/2;
 dist = surface.phi(c);
 elemSign = sum(e2vSign,2);
@@ -61,11 +63,11 @@ moreCutElem = elem(isMoreCutElem,:);
 isallCutElem = isCutElem | isMoreCutElem;
 allCutElem = elem(isallCutElem,:);
  
-% index of element
+% index of elements
 elemIdx = zeros(NC,1,'int8');
 elemIdx((eta >= 0) & (max(e2vSign,[],2) == 1)) = 1;   % 1: exterior element
 elemIdx((eta >= 0) & (min(e2vSign,[],2) == -1)) = -1; % -1: interior element
-elemIdx(isallCutElem) = 0; % 0: interface element
+elemIdx(isallCutElem) = 0;                            % 0: interface element
 
 %% Find intersection points
 % find the cut edge
@@ -82,7 +84,7 @@ B = node(cutEdge(:,2),:);
 cutPoint = findintersectbisect(@(p)surface.phi(p),A,B);
 nCutPt = size(cutPoint,1); 
 N1 = N + nCutPt;
-node(N+1:N1,:) = cutPoint; % add the coordinates of the intersection points
+node(N+1:N1,:) = cutPoint; % add intersection points
 vSign(N+1:N1) = 0;
 
 % add more intersection points in elements with the same sign
@@ -95,7 +97,7 @@ if ~isfield(surface,'number')
     surface.number = 0;
 end
 nMore = 1;
-for i = 1:surface.number % compute intersection for each level set
+for i = 1:surface.number % compute intersection for each level set function
     isSpecialCutEdge = surface.phi_i(node(moreEdge(:, 1), :),i)...
                      .*surface.phi_i(node(moreEdge(:, 2), :),i) < 0;
     cutEdge = moreEdge(isSpecialCutEdge, :);
@@ -116,7 +118,7 @@ if nMore > 1  % more cute points are found
     vSign(N1+1:N1+nMore) = 0;
 end
 
-%% Find the special square face with diagonal vertex on the interface
+%% Find the special square face with the diagonal vertex on the interface
 T = auxstructurehex(allCutElem);
 face = T.face;
 face2elem = double(T.face2elem);
@@ -129,32 +131,28 @@ N2 = N1 + nMore+ size(auxPoint,1);
 node(N1+nMore+1:N2, :) = auxPoint; % add the coordinates of the aux points
 vSign(N1+nMore+1:N2, :) = 0;
 
-%% Find the boundary faces of all cut elements which are squares.
-sface = double(T.bdFace);           % node idx is global
-sface2elem = double(T.bdFace2elem); % elem idx is to allCutElem
-localidx2globalidx = find(isallCutElem);
-sface2elem = localidx2globalidx(sface2elem); % map to idx of elem
-eta = max(vSign(sface), [] ,2) == 1;  % outerior faces
-sface2elem(eta) = sface2elem(eta) + NC; % outerior polyhedron idx
-clear T;
+%% Collect all vertices near the interface
+isNearInterfaceNode = false(size(node,1), 1);
+isNearInterfaceNode(allCutElem(:)) = true; % include the vertices of allCutElem 
+isNearInterfaceNode(N+1:end) = true;    % and the cut points and the aux points
+nearInterfaceNode = node(isNearInterfaceNode,:);
 
-%% Construct Delaunay triangulation
-isInterfaceNode = false(size(node,1), 1);
-isInterfaceNode(allCutElem(:)) = true; % include the vertices of allCutElem 
-isInterfaceNode(N+1:end) = true;    % and the cut points and the aux points
-interfaceNode = node(isInterfaceNode,:);
+%% Construct the Delaunay triangulation
 % different versions of matlab using different delaunay triangulation
 matlabversion = version();
 if str2double(matlabversion(end-5:end-2)) <= 2013
-    DT = DelaunayTri(interfaceNode); %#ok<*DDELTRI>
+    DT = DelaunayTri(nearInterfaceNode); %#ok<*DDELTRI>
     tetElem = DT.Triangulation;
 else
-    DT = delaunayTriangulation(interfaceNode);
+    DT = delaunayTriangulation(nearInterfaceNode);
     tetElem = DT.ConnectivityList;
 end
-tetElem = fixorder3(interfaceNode, tetElem);
-localidx2globalidx = find(isInterfaceNode); % tetElem points to interfaceNode
+tetElem = fixorder3(nearInterfaceNode, tetElem);
+localidx2globalidx = find(isNearInterfaceNode); % tetElem points to interfaceNode
 tetElem = localidx2globalidx(tetElem);  % map to the global index of node
+
+%% Post-processing
+% keep good tets near the interface
 bc = (node(tetElem(:, 1), :) + node(tetElem(:, 2), :) ...
     + node(tetElem(:, 3), :) + node(tetElem(:, 4), :))/4.0;
 idx2cube = getCubeIdx(bc, cube, h); % Get the cube index of each tetElem
@@ -174,12 +172,21 @@ isBadTet =  (max(X,[],2) - min(X,[],2)) > 2*h - eps ... % d > 2h means
 tetElem = tetElem(~isBadTet,:);
 idx2cube = idx2cube(~isBadTet);
 
+%% Find the boundary faces of all cut elements which are squares.
+sface = double(T.bdFace);           % node idx is global
+sface2elem = double(T.bdFace2elem); % elem idx is to allCutElem
+localidx2globalidx = find(isallCutElem);
+sface2elem = localidx2globalidx(sface2elem); % map to idx of elem
+eta = max(vSign(sface), [] ,2) == 1;    % outerior faces
+sface2elem(eta) = sface2elem(eta) + NC; % outerior polyhedron idx
+clear T;
+
 %% Get triangular faces for interrior elements and interface
 localFace = [2 3 4; 1 4 3; 1 2 4; 1 3 2];
 NT = size(tetElem,1);
 tface = zeros(4*NT, 3);
 tface2elem = zeros(4*NT, 1);
-interface = zeros(4*NT, 3);
+triangle = zeros(4*NT, 3);
 
 % find the interior tet elements
 isIntTet = min(vSign(tetElem),[], 2) == -1;
@@ -216,15 +223,15 @@ for i = 1:4
     ct = c2;
     % add to interface    
     c4 = ci + sum(isInterface);
-    interface((ci+1):c4,:) = face(isInterface,:);
+    triangle((ci+1):c4,:) = face(isInterface,:);
     ci = c4;
 end
-interface((ci+1):end,:) = [];
+triangle((ci+1):end,:) = [];
 
 % find the interface 
-center = (node(intTet(:,1),:)+node(intTet(:,2),:)+node(intTet(:,3),:)+node(intTet(:,4),:))/4;
-isIntElem = surface.phi(center)<0;
-[~,bdface] = findboundary3(intTet(isIntElem,:));
+% center = (node(intTet(:,1),:)+node(intTet(:,2),:)+node(intTet(:,3),:)+node(intTet(:,4),:))/4;
+% isIntElem = surface.phi(center)<0;
+% [~,bdface] = findboundary3(intTet(isIntElem,:));
 
 % Find the triangular faces for exterior elements 
 extTet = tetElem(~isIntTet, :);
@@ -263,7 +270,7 @@ face2elem = [tface2elem; sface2elem];
 face = [tface,zeros(size(tface,1),1); sface];
 
 %% Generate interfaceData
-interfaceData.elemIdx = elemIdx;
-interfaceData.vSign = vSign;
-interfaceData.interface = interface;
-interfaceData.cutElem = allCutElem;
+interface.elemIdx = elemIdx;
+interface.vSign = vSign;
+interface.face = triangle;
+interface.cutElem = allCutElem;
