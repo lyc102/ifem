@@ -40,7 +40,6 @@ if nargin < 10
 end 
 option = mgoptions(option,length(b));    % parameters
 x0 = option.x0; N0 = option.N0; tol = option.tol; 
-solver = option.solver; 
 % mu = option.smoothingstep; preconditioner = option.preconditioner; coarsegridsolver = option.coarsegridsolver; 
 printlevel = option.printlevel; %setupflag = option.setupflag;
 maxIt = 400;   % increase the default step (200) for Maxwell equations
@@ -100,7 +99,7 @@ clear HB
 %% Krylov iterative methods with HX preconditioner
 k = 1;
 err = 1;
-switch upper(solver)
+switch upper(option.outsolver)
     case 'CG'
         if printlevel>=1
             fprintf('Conjugate Gradient Method using HX preconditioner \n');
@@ -138,6 +137,11 @@ switch upper(solver)
         end
         err = err(1:k,:);
         itStep = k-1;
+        if k > maxIt || (max(err(end,:))>tol)
+            flag = 1;
+        else
+            flag = 0;
+        end        
     case 'MINRES'
         fprintf('Minimum Residual Method with HX preconditioner \n')
         [x,flag,err,itStep] = minres(A,b,tol,maxIt,@HXpreconditioner,[],x0);         
@@ -149,11 +153,6 @@ switch upper(solver)
 end
 
 %% Output
-if k > maxIt || (max(err(end,:))>tol)
-    flag = 1;
-else
-    flag = 0;
-end
 time = cputime - t;
 if printlevel >= 1
     fprintf('#dof: %8.0u,   #nnz: %8.0u,   iter: %2.0u,   err = %8.4e,   time = %4.2g s\n',...

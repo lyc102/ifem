@@ -221,13 +221,13 @@ if isempty(option) || ~isfield(option,'solver')    % no option.solver
     if Ndof <= 1e4  % Direct solver for small size systems
         option.solver = 'direct';
     else            % Multigrid-type  solver for large size systems
-        option.solver = 'cg';
+        option.solver = 'mg';
     end
 end
 solver = option.solver;
 
 %% Assembeling corresponding matrices for HX preconditioner
-if ~strcmp(solver,'direct')
+if strcmp(solver,'mg')
     AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |Re(epsilon)| I
     BP = sparse(N,N);  % BP = - div(|Re(epsilon)|grad)   
     for i = 1:4
@@ -289,7 +289,7 @@ if any(isBdEdge)  % contains Dirichlet boundary condition
     Tbd = spdiags(bdidx,0,Ndof,Ndof);
     T = spdiags(1-bdidx,0,Ndof,Ndof);
     bigAD = T*(A-M)*T + Tbd;
-    if ~strcmp(solver,'direct')
+    if strcmp(solver,'mg')
         % modify the corresponding Poisson matrix
         bdidx = zeros(N,1); 
         bdidx(isBdNode) = 1;
@@ -369,6 +369,11 @@ if option.printlevel >= 2
 end
 
 %% Solve the system of linear equations
+if strcmp(solver,'none')
+    eqn = struct('A',A,'M',M,'AP',AP,'BP',BP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
+    info = [];
+    return;
+end
 if strcmp(solver,'direct')
     % exact solver
     tstart = cputime;
@@ -380,16 +385,20 @@ if strcmp(solver,'direct')
                   'stopErr',0, 'error',err,'flag',2);      
     if (nargin > 4) && isfield(option,'printlevel') && (option.printlevel >= 1)
         fprintf('#dof: %8.0u, Direct solver %4.2g \n',length(f),time);
-    end    
-elseif strcmp(solver,'none')
-    eqn = struct('A',A,'M',M,'AP',AP,'BP',BP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
-    info = [];
-    return;
-else
+    end
+elseif strcmp(solver,'amg')
 %     u0 = edgeinterpolate(pde.g_D,node,edge);
     u0 = u;
     option.x0 = u0;
-    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);
+    option.alpha = ones(Ndof,1);
+    option.beta = ones(Ndof,1);
+    option.outsolver = 'cg';    
+    [u,info] = amgMaxwell(bigAD,f,node,edge,option);
+else
+    u0 = u;
+    option.x0 = u0;
+    option.outsolver = 'cg';
+    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);    
 end
 
 %% Output

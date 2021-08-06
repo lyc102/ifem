@@ -21,9 +21,12 @@ NE = size(edge,1); N  = double(max(edge(:)));
 i = repmat((1:NE)',2,1);
 j = double(edge(:));
 s = [-ones(NE,1),ones(NE,1)];
-bdEdge = edge(isBdEdge,:);
-isBdNode = false(N,1);
-isBdNode(bdEdge(:)) = true;
-idx = ~(isBdEdge(i) | isBdNode(j)); 
-% idx = 1:length(i);
+if any(isBdEdge) % no grad on boundary edges
+    bdEdge = edge(isBdEdge,:);
+    isBdNode = false(N,1);
+    isBdNode(bdEdge(:)) = true;
+    idx = ~(isBdEdge(i) | isBdNode(j)); 
+else
+    idx = 1:length(i);
+end
 grad = sparse(i(idx),j(idx),s(idx),NE,N);

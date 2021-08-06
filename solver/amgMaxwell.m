@@ -1,7 +1,7 @@
-function [x,info] = amgMaxwell(A,b,node,edge,isBdEdge,option)
+function [x,info] = amgMaxwell(A,b,node,edge,option)
 %% AMGMAXWELL algebraic multigrid solver for Maxwell equations.
 % 
-% x = amgMaxwell(A,b,node,edge,isBdEdge) attempts to solve the system of
+% x = amgMaxwell(A,b,node,edge) attempts to solve the system of
 % linear equations Ax = b using multigrid type solver. The linear system is
 % obtained by either the first or second family of linear edge element
 % discretization of the Maxwell equation; See <a href="matlab:ifem
@@ -38,14 +38,13 @@ N = size(node,1);                  % number of nodes
 NE = size(edge,1);                 % number of edge;
 dim = size(node,2);      
 % Assign default values to unspecified parameters
-if nargin < 10 
+if ~exist('option','var')
     option = []; 
 end 
 option = mgoptions(option,length(b));    % parameters
 x0 = option.x0; 
 % N0 = option.N0; 
 tol = option.tol; 
-solver = option.solver; 
 % mu = option.smoothingstep; preconditioner = option.preconditioner; coarsegridsolver = option.coarsegridsolver; 
 printlevel = option.printlevel; %setupflag = option.setupflag;
 maxIt = 400;   % increase the default step (200) for Maxwell equations
@@ -63,12 +62,12 @@ end
 
 %% Transfer operators from nodal element to edge element
 if Ndof == NE        % lowest order edge element
-    II = node2edgematrix(node,edge,isBdEdge);
+    II = node2edgematrix(node,edge);
 elseif Ndof >= 2*NE  % first or second order edge element
-    II = node2edgematrix1(node,edge,isBdEdge);
+    II = node2edgematrix1(node,edge);
 end
 IIt = II';
-grad = gradmatrix(edge,isBdEdge);
+grad = gradmatrix(edge);
 gradt = grad';
 
 %% Free node 
@@ -81,7 +80,6 @@ gradt = grad';
 %   - AP: - div(alpha grad) + |beta| I
 %   - BP: - div(|beta|grad)
 
-BP = gradt*A*grad;
 % build graph Laplacian to approximate AP
 edgeVec = node(edge(:,2),:) - node(edge(:,1),:);
 edgeLength = sqrt(sum(edgeVec.^2,2));
@@ -94,8 +92,8 @@ if isfield(option,'alpha') % resacle by the magnetic coefficients
     end
 end
 % edge weight: h*alpha
-i1 = (1:NE)'; j1 = edge(:,1); s1 = sqrt(edgeLength.*alpha); 
-i2 = (1:NE)'; j2 = edge(:,2); s2 = -s1;
+i1 = (1:NE)'; j1 = double(edge(:,1)); s1 = sqrt(edgeLength.*alpha); 
+i2 = (1:NE)'; j2 = double(edge(:,2)); s2 = -s1;
 G = sparse([i1;i2],[j1;j2],[s1;s2],NE,N);
 AP = G'*G;
 % lumped mass matrix: h^3*beta
@@ -107,18 +105,26 @@ if isfield(option,'beta') % resacle by the dielectric coefficients
        beta = option.beta(edgeMiddle);         
     end
 end
-M = accumarray(edge(:),reptmat((edgeLength.^3).*beta,1,2),[N 1]);
+M = accumarray(edge(:),repmat((edgeLength.^3).*beta,2,1),[N 1]);
 AP = AP + spdiags(M,0,N,N);
+BP = gradt*A*grad;
+% % edge weight: h*beta
+% i1 = (1:NE)'; j1 = double(edge(:,1)); s1 = sqrt(edgeLength.*beta); 
+% i2 = (1:NE)'; j2 = double(edge(:,2)); s2 = -s1;
+% G = sparse([i1;i2],[j1;j2],[s1;s2],NE,N);
+% BP = G'*G;
 
 %% Transfer operators between multilevel meshes
 setupOption.solver = 'NO';
 [x,info,APi,Ri,RRi,ResAP,ProAP] = amg(AP,ones(N,1),setupOption); %#ok<ASGLU>
 [x,info,BPi,Si,SSi,ResBP,ProBP] = amg(BP,ones(N,1),setupOption); %#ok<ASGLU>
+D = diag(A);
+level = size(APi,1);
 
 %% Krylov iterative methods with HX preconditioner
 k = 1;
 err = 1;
-switch upper(solver)
+switch upper(option.outsolver)
     case 'CG'
         if printlevel>=1
             fprintf('Conjugate Gradient Method using HX preconditioner \n');
@@ -156,6 +162,11 @@ switch upper(solver)
         end
         err = err(1:k,:);
         itStep = k-1;
+        if k > maxIt || (max(err(end,:))>tol)
+            flag = 1;
+        else
+            flag = 0;
+        end
     case 'MINRES'
         fprintf('Minimum Residual Method with HX preconditioner \n')
         [x,flag,err,itStep] = minres(A,b,tol,maxIt,@HXpreconditioner,[],x0);         
@@ -167,11 +178,6 @@ switch upper(solver)
 end
 
 %% Output
-if k > maxIt || (max(err(end,:))>tol)
-    flag = 1;
-else
-    flag = 0;
-end
 time = cputime - t;
 if printlevel >= 1
     fprintf('#dof: %8.0u,   #nnz: %8.0u,   iter: %2.0u,   err = %8.4e,   time = %4.2g s\n',...

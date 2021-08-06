@@ -5,12 +5,13 @@
 close all;
 
 %% Defacult setting
-[node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
+[node,elem] = cubemesh([-1,1,-1,1,-1,1],0.5);
 pde = Maxwelldata2;
 % pde = planewavedata1;
 % bdFlag = setboundary3(node,elem,'Neumann');
 bdFlag = setboundary3(node,elem,'Dirichlet');
-% option.solver = 'cg';
+option.solver = 'amg';
+% option.printlevel = 2;
 
 %% Parameters
 maxIt = 4; 
@@ -26,7 +27,7 @@ for k = 1:maxIt
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
     % when epsilon is zero, a mixed formulation is needed
     if(abs(pde.epsilon)>1.0e-8)
-        [u,edge,eqn] = Maxwell(node,elem,bdFlag,pde); 
+        [u,edge,eqn] = Maxwell(node,elem,bdFlag,pde,option); 
     else
         [u,edge,eqn] = Maxwellsaddle(node,elem,bdFlag,pde,option); 
     end
