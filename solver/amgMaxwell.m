@@ -1,16 +1,19 @@
 function [x,info] = amgMaxwell(A,b,node,edge,isBdEdge,option)
 %% AMGMAXWELL algebraic multigrid solver for Maxwell equations.
 % 
-% x = amgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge) attempts to solve
-% the system of linear equations Ax = b using multigrid type solver. The
-% linear system is obtained by either the first or second family of linear
-% edge element discretization of the Maxwell equation; See <a href="matlab:ifem coarsendoc">doc Maxwell</a>.
+% x = amgMaxwell(A,b,node,edge,isBdEdge) attempts to solve the system of
+% linear equations Ax = b using multigrid type solver. The linear system is
+% obtained by either the first or second family of linear edge element
+% discretization of the Maxwell equation; See <a href="matlab:ifem
+% coarsendoc">doc Maxwell</a>.
+%
+% amgMaxwell is more algebraic than mgMaxwell but still requires geometric
+% information node and edge. Grapha Laplacian of vertices are used as
+% auxiliary Poisson operator and amg is used as Poisson solver.
 %
 % Input 
-%   -  A: curl(mu^(-1)curl) + epsilon I
+%   -  A: curl(alpha curl) + beta I
 %   -  b: right hand side
-%   - AP: - div(mu^{-1}grad) + |epsilon| I
-%   - BP: - div(|epsilon|grad)
 %   - node,elem,edge,HBmesh,isBdEdge: mesh information
 %   - options: type help mg
 %
@@ -20,7 +23,7 @@ function [x,info] = amgMaxwell(A,b,node,edge,isBdEdge,option)
 % harmonic Maxwell equation), set option.solver = 'minres' or 'bicg' or
 % 'gmres' to try other Krylov method with HX preconditioner.
 %
-% See also mg, mgMaxwellsaddle
+% See also mg, mgMaxwell, mgMaxwellsaddle
 %
 % Reference: 
 % R. Hiptmair and J. Xu, Nodal Auxiliary Space Preconditioning in
@@ -39,7 +42,9 @@ if nargin < 10
     option = []; 
 end 
 option = mgoptions(option,length(b));    % parameters
-x0 = option.x0; N0 = option.N0; tol = option.tol; 
+x0 = option.x0; 
+% N0 = option.N0; 
+tol = option.tol; 
 solver = option.solver; 
 % mu = option.smoothingstep; preconditioner = option.preconditioner; coarsegridsolver = option.coarsegridsolver; 
 printlevel = option.printlevel; %setupflag = option.setupflag;
@@ -69,24 +74,46 @@ gradt = grad';
 %% Free node 
 % isFreeNode = false(N,1);
 % isFreeNode(edge(isBdEdge,:)) = true;
-isFreeNode = true(N,1);
+% isFreeNode = true(N,1);
+
+%% Auxiliary Poisson matrix
+%   -  A: curl(alpha curl) + beta I
+%   - AP: - div(alpha grad) + |beta| I
+%   - BP: - div(|beta|grad)
+
+BP = gradt*A*grad;
+% build graph Laplacian to approximate AP
+edgeVec = node(edge(:,2),:) - node(edge(:,1),:);
+edgeLength = sqrt(sum(edgeVec.^2,2));
+if isfield(option,'alpha') % resacle by the magnetic coefficients
+    if isreal(option.alpha) && (length(option.alpha) == NE)
+       alpha = option.alpha;  
+    else % option.alpha is a function 
+       edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
+       alpha = option.alpha(edgeMiddle);         
+    end
+end
+% edge weight: h*alpha
+i1 = (1:NE)'; j1 = edge(:,1); s1 = sqrt(edgeLength.*alpha); 
+i2 = (1:NE)'; j2 = edge(:,2); s2 = -s1;
+G = sparse([i1;i2],[j1;j2],[s1;s2],NE,N);
+AP = G'*G;
+% lumped mass matrix: h^3*beta
+if isfield(option,'beta') % resacle by the dielectric coefficients
+    if isreal(option.beta) && (length(option.beta) == NE)
+       beta = option.beta;  
+    else % option.beta is a function 
+       edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
+       beta = option.beta(edgeMiddle);         
+    end
+end
+M = accumarray(edge(:),reptmat((edgeLength.^3).*beta,1,2),[N 1]);
+AP = AP + spdiags(M,0,N,N);
 
 %% Transfer operators between multilevel meshes
-[Pro,Res] = transferoperator(HB,NL,isFreeNode);
-APi = cell(level,1);
-BPi = cell(level,1);
-APi{level} = AP;    
-BPi{level} = BP;                
-for j = level:-1:2
-    APi{j-1} = Res{j}*APi{j}*Pro{j-1};           % Ac = Res*Af*Pro    
-    BPi{j-1} = Res{j}*BPi{j}*Pro{j-1};  
-    Ri{j} = tril(APi{j});     % smoother for AP
-    RRi{j} = triu(APi{j});   
-    Si{j} = tril(BPi{j});     % smoother for BP   
-    SSi{j} = triu(BPi{j});       
-end
-D = diag(A);                   
-clear HB
+setupOption.solver = 'NO';
+[x,info,APi,Ri,RRi,ResAP,ProAP] = amg(AP,ones(N,1),setupOption); %#ok<ASGLU>
+[x,info,BPi,Si,SSi,ResBP,ProBP] = amg(BP,ones(N,1),setupOption); %#ok<ASGLU>
 
 %% Krylov iterative methods with HX preconditioner
 k = 1;
@@ -172,11 +199,11 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
     ri{level} = rc;            
     for i = level:-1:2
         ei{i} = Ri{i}\ri{i};   
-        ri{i-1} = Res{i}*(ri{i}-APi{i}*ei{i});
+        ri{i-1} = ResAP{i}*(ri{i}-APi{i}*ei{i});
     end
     ei{1} = APi{1}\ri{1};      
     for i = 2:level
-        ei{i} = ei{i} + Pro{i-1}*ei{i-1};
+        ei{i} = ei{i} + ProAP{i-1}*ei{i-1};
         ei{i} = ei{i} + RRi{i}\(ri{i} - APi{i}*ei{i});
     end
     eaux = [II*reshape(ei{level},dim*N,1); zeros(Ndof-size(IIt,2),1)]; % transfer back to the edge element space
@@ -185,11 +212,11 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
     ri{level} = gradt*r(1:NE);          % transfer the residual to the null space    
     for i = level:-1:2
         ei{i} = Si{i}\ri{i};   
-        ri{i-1} = Res{i}*(ri{i}-BPi{i}*ei{i});
+        ri{i-1} = ResBP{i}*(ri{i}-BPi{i}*ei{i});
     end
     ei{1} = BPi{1}\ri{1};      
     for i=2:level
-        ei{i} = ei{i} + Pro{i-1}*ei{i-1};
+        ei{i} = ei{i} + ProBP{i-1}*ei{i-1};
         ei{i} = ei{i} + SSi{i}\(ri{i}-BPi{i}*ei{i});
     end
     eaux = eaux + [grad*ei{level}; zeros(Ndof-NE,1)]; % transfer back to the edge element space
