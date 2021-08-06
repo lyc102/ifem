@@ -39,7 +39,7 @@ if ~isfield(mesh,'size')
     mesh.size = 1e5; % default size is 100,000
 end
 if ~isfield(mesh,'shape')
-    mesh.shape = 'square';
+    mesh.shape = 'cube';
 end
 if ~isfield(mesh,'type')
     mesh.type = 'uniform';
@@ -139,11 +139,11 @@ switch upper(pde)
         end                                    
         switch upper(fem)
             case 'ND0'
-                [u,edge,eqn] = Maxwell(node,elem,HB,Maxwelldata,bdFlag,option); 
+                [u,edge,eqn] = Maxwell(node,elem,bdFlag,Maxwelldata,option,HB); 
             case 'ND1'
-                [u,edge,eqn] = Maxwell1(node,elem,HB,Maxwelldata,bdFlag,option);                 
+                [u,edge,eqn] = Maxwell1(node,elem,bdFlag,Maxwelldata,option,HB);                 
             case 'ND2'
-                [u,T,eqn] = Maxwell2(node,elem,HB,Maxwelldata,bdFlag,option); 
+                [u,T,eqn] = Maxwell2(node,elem,bdFlag,Maxwelldata,option,HB); 
                 edge = T.edge;
         end
 %% Hodge Laplace equation      
