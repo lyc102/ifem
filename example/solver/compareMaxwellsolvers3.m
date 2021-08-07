@@ -5,7 +5,7 @@
 %% Cube uniform grids
 mesh.shape = 'cube';
 mesh.type = 'uniform';
-mesh.size = 1e4;
+mesh.size = 6e4;
 pde = 'Maxwell';
 fem = 'ND1';
 % get the matrix
@@ -15,10 +15,9 @@ tic; disp('Direct solver');
 x1 = eqn.bigA\eqn.f; 
 toc;
 tic; 
-x2 = mgMaxwell(eqn.bigA,eqn.f,eqn.AP,eqn.BP,T.node,T.elem,T.edge,T.HB,...
-              eqn.isBdEdge);
+x2 = amgMaxwell(eqn.bigA,eqn.f,T.node,T.edge);
 toc;
-fprintf('Difference between direct and mg solvers %0.2g \n',...
+fprintf('Difference between direct and amg solvers %0.2g \n',...
          norm(x1-x2)/norm(eqn.f));
 
 %% Lshape adaptive grids
@@ -35,7 +34,7 @@ x1 = eqn.bigA\eqn.f;
 toc;
 tic; 
 option.solver = 'CG';
-x2 = mgMaxwell(eqn.bigA,eqn.f,eqn.AP,eqn.BP,T.node,T.elem,T.edge,T.HB,...
-              eqn.isBdEdge,option);
+x2 = amgMaxwell(eqn.bigA,eqn.f,T.node,T.edge);
+% x2 = mgMaxwell(eqn.bigA,eqn.f,eqn.AP,T.node,T.elem,T.edge,T.HB,option);
 toc;
 disp(norm(x1-x2));

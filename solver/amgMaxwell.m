@@ -40,7 +40,7 @@ dim = size(node,2);
 % Assign default values to unspecified parameters
 if ~exist('option','var')
     option = []; 
-end 
+end
 option = mgoptions(option,length(b));    % parameters
 x0 = option.x0; 
 % N0 = option.N0; 
@@ -99,6 +99,8 @@ else
            edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
            alpha = option.alpha(edgeMiddle);         
         end
+    else
+        alpha = 1;
     end
     % edge weight: h*alpha
     % AP = gradt*spdiags(edgeLength.*alpha,0,NE,NE)*grad;
@@ -117,6 +119,8 @@ else
            edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
            beta = option.beta(edgeMiddle);         
         end
+    else
+        beta = 1;
     end
     M = accumarray(edge(:),repmat((edgeLength.^3).*beta,2,1),[N 1]);
     AP = AP + spdiags(M,0,N,N);
@@ -124,7 +128,11 @@ end
 % BP is Galerkin projection to the free node space
 % boundary nodes
 bdidx = zeros(N,1); 
-bdidx(isBdNode) = 1;
+if isempty(isBdNode)  % Neumann boundary condition
+   bdidx = 1e-6;
+else
+   bdidx(isBdNode) = 1;
+end
 Tbd = spdiags(bdidx,0,N,N);
 BP = gradt*A(1:NE,1:NE)*grad + Tbd;
 

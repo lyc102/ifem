@@ -218,18 +218,20 @@ clear pxyz Jp bt rhs phi_k
 
 %% Set up solver
 if isempty(option) || ~isfield(option,'solver')    % no option.solver
-    if Ndof <= 1e3  % Direct solver for small size systems
+    if Ndof <= 2e3  % Direct solver for small size systems
         option.solver = 'direct';
     else            % Multigrid-type  solver for large size systems
         option.solver = 'mg';
+        option.outsolver = 'cg';    
     end
+elseif ~isfield(option,'outsolver')
+    option.outsolver = 'cg'; 
 end
 solver = option.solver;
 
 %% Assembeling corresponding matrices for HX preconditioner
-if strcmp(solver,'mg')
+if strcmp(solver,'mg') || strcmp(solver,'none')
     AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |Re(epsilon)| I
-    BP = sparse(N,N);  % BP = - div(|Re(epsilon)|grad)   
     for i = 1:4
         for j = i:4
             switch ndims(mu)
@@ -240,21 +242,17 @@ if strcmp(solver,'mg')
                     muinvDi = sum(bsxfun(@times, muinv, Dlambda(:,:,i)), 2);
                     Aij = dot(muinvDi,Dlambda(:,:,j),2).*volume;
             end
-            Bij = abs(real(epsilon)).*temp;
             Mij = 1/20*abs(real(epsilon)).*volume;
             if (j==i)
                 AP = AP + sparse(elem(:,i),elem(:,j),Aij+2*Mij,N,N);
-                BP = BP + sparse(elem(:,i),elem(:,j),Bij,N,N);            
             else
                 AP = AP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
                                  [Aij+Mij; Aij+Mij],N,N);        
-                BP = BP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
-                                 [Bij; Bij],N,N);        
             end        
         end
     end
 end
-clear Aij Bij Mij DiDj
+clear Aij Mij DiDj
 
 %% Boundary conditions
 if ~isfield(pde,'g_D'), pde.g_D = []; end
@@ -289,7 +287,7 @@ if any(isBdEdge)  % contains Dirichlet boundary condition
     Tbd = spdiags(bdidx,0,Ndof,Ndof);
     T = spdiags(1-bdidx,0,Ndof,Ndof);
     bigAD = T*(A-M)*T + Tbd;
-    if strcmp(solver,'mg')
+    if strcmp(solver,'mg') || strcmp(solver,'none')
 %     if strcmp(solver,'mg') || strcmp(solver,'amg')
         % modify the corresponding Poisson matrix
         bdidx = zeros(N,1); 
@@ -297,13 +295,9 @@ if any(isBdEdge)  % contains Dirichlet boundary condition
         Tbd = spdiags(bdidx,0,N,N);
         T = spdiags(1-bdidx,0,N,N);
         AP = T*AP*T + Tbd;
-        BP = T*BP*T + Tbd;
     end
 else      % pure Neumann boundary condition
     bigAD = A - M;
-    if ~strcmp(solver,'direct')
-       BP = BP + 1e-8*speye(N);  % make B non-singular      
-    end
 end
 
 %% Part 2: Find boundary edges and modify the load b
@@ -371,7 +365,7 @@ end
 
 %% Solve the system of linear equations
 if strcmp(solver,'none')
-    eqn = struct('A',A,'M',M,'AP',AP,'BP',BP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
+    eqn = struct('A',A,'M',M,'AP',AP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
     info = [];
     return;
 end
@@ -389,18 +383,14 @@ if strcmp(solver,'direct')
     end
 elseif strcmp(solver,'amg')
 %     u0 = edgeinterpolate(pde.g_D,node,edge);
-    u0 = u;
-    option.x0 = u0;
-    option.alpha = ones(Ndof,1);
-    option.beta = ones(Ndof,1);
+    option.x0 = u;
+    option.alpha = ones(Ndof,1); % change to 1/pde.mu
+    option.beta = ones(Ndof,1);  % change to 1/real(pde.epsilon)
 %     option.isBdEdge = isBdEdge;
-    option.outsolver = 'cg';    
     [u,info] = amgMaxwell(bigAD,f,node,edge,option);
 else
-    u0 = u;
-    option.x0 = u0;
-    option.outsolver = 'cg';
-    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemold,edge,HB,isBdEdge,option);    
+    option.x0 = u;
+    [u,info] = mgMaxwell(bigAD,f,AP,node,elemold,edge,HB,option);    
 end
 
 %% Output

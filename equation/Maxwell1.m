@@ -228,37 +228,41 @@ clear pxy Jp bt rhs phi_k psi_k
 
 %% Set up solver
 if isempty(option) || ~isfield(option,'solver')    % no option.solver
-    if Ndof <= 1e4  % Direct solver for small size systems
+    if Ndof <= 2e3  % Direct solver for small size systems
         option.solver = 'direct';
     else            % Multigrid-type  solver for large size systems
-        option.solver = 'cg';
+        option.solver = 'mg';
+        option.outsolver = 'cg';    
     end
+elseif ~isfield(option,'outsolver')
+    option.outsolver = 'cg'; 
 end
 solver = option.solver;
 
 %% Assembeling corresponding matrices for HX preconditioner
-if ~strcmp(solver,'direct')
-    AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |epsilon| I
-    BP = sparse(N,N);  % BP = - div(|epsilon|grad)
+if strcmp(solver,'mg') || strcmp(solver,'none')
+    AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |Re(epsilon)| I
     for i = 1:4
         for j = i:4
-            temp = dot(Dlambda(:,:,i),Dlambda(:,:,j),2).*volume;
-            Aij = 1./mu.*temp;
-            Bij = abs(real(epsilon)).*temp;
+            switch ndims(mu)
+                case 2
+                    temp = DiDj(:,i,j).*volume;
+                    Aij = 1./mu.*temp;
+                case 3
+                    muinvDi = sum(bsxfun(@times, muinv, Dlambda(:,:,i)), 2);
+                    Aij = dot(muinvDi,Dlambda(:,:,j),2).*volume;
+            end
             Mij = 1/20*abs(real(epsilon)).*volume;
             if (j==i)
                 AP = AP + sparse(elem(:,i),elem(:,j),Aij+2*Mij,N,N);
-                BP = BP + sparse(elem(:,i),elem(:,j),Bij,N,N);            
             else
                 AP = AP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
                                  [Aij+Mij; Aij+Mij],N,N);        
-                BP = BP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
-                                 [Bij; Bij],N,N);        
             end        
         end
     end
 end
-clear Aij Bij Mij
+clear Aij Mij DiDj
 
 %% Boundary conditions
 if ~isfield(pde,'g_D'), pde.g_D = []; end
@@ -293,20 +297,16 @@ if any(isBdEdge)
     Tbd = spdiags(bdidx,0,Ndof,Ndof);
     T = spdiags(1-bdidx,0,Ndof,Ndof);
     bigAD = T*(A-M)*T + Tbd;
-    if ~strcmp(solver,'direct')
+    if strcmp(solver,'mg') || strcmp(solver,'none')
         % modify the corresponding Poisson matrix
         bdidx = zeros(N,1); 
         bdidx(isBdNode) = 1;
         Tbd = spdiags(bdidx,0,N,N);
         T = spdiags(1-bdidx,0,N,N);
         AP = T*AP*T + Tbd;
-        BP = T*BP*T + Tbd;
     end
-else
+else   % pure Neumann boundary condition
     bigAD = A - M;
-    if ~strcmp(solver,'direct')
-       BP = BP + 1e-8*speye(N);        
-    end    
 end
 
 %% Part 2: Find boundary edges and modify the load b
@@ -383,7 +383,7 @@ if strcmp(solver,'direct')
         fprintf('#dof: %8.0u, Direct solver %4.2g \n',length(f),time);
     end
 elseif strcmp(solver,'none')
-    eqn = struct('A',A,'M',M,'AP',AP,'BP',BP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge);
+    eqn = struct('A',A,'M',M,'AP',AP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge);
     info = [];
     return;
 elseif strcmp(solver,'amg')

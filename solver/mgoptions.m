@@ -30,6 +30,11 @@ if isfield(option,'solver')
 else
     option.solver = 'CG';
 end
+if isfield(option,'outsolver')
+    option.outsolver = upper(option.outsolver);
+else
+    option.outsolver = 'CG';
+end
 if isfield(option,'smoother')
     option.smoother = upper(option.smoother);
 else

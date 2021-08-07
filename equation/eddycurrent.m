@@ -169,37 +169,35 @@ clear pxyz Jp bt rhs phi_k
 
 %% Set up solver
 if isempty(option) || ~isfield(option,'solver')    % no option.solver
-    if Ndof <= 1e3  % Direct solver for small size systems
+    if Ndof <= 2e3  % Direct solver for small size systems
         option.solver = 'direct';
     else            % Multigrid-type  solver for large size systems
-        option.solver = 'cg';
+        option.solver = 'mg';
+        option.outsolver = 'cg';    
     end
+elseif ~isfield(option,'outsolver')
+    option.outsolver = 'cg'; 
 end
 solver = option.solver;
 
 %% Assembeling corresponding matrices for HX preconditioner
 if ~strcmp(solver,'direct') && ~strcmp(solver,'nosolve')
     AP = sparse(N,N);  % AP = - div(mu^{-1}grad) + |Re(beta)| I
-    BP = sparse(N,N);  % BP = - div(|Re(beta)|grad)
     for i = 1:3
         for j = i:3
             temp = DiDj(:,i,j).*area;
             Aij = 1./mu.*temp;
-            Bij = abs(real(beta)).*temp;
             Mij = 1/12*abs(real(beta)).*area;
             if (j==i)
                 AP = AP + sparse(elem(:,i),elem(:,j),Aij+2*Mij,N,N);
-                BP = BP + sparse(elem(:,i),elem(:,j),Bij,N,N);            
             else
                 AP = AP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
                                  [Aij+Mij; Aij+Mij],N,N);        
-                BP = BP + sparse([elem(:,i);elem(:,j)],[elem(:,j);elem(:,i)],...
-                                 [Bij; Bij],N,N);        
             end        
         end
     end
 end
-clear Aij Bij Mij
+clear Aij Mij
 
 %% Boundary conditions
 if ~isfield(pde,'g_D'), pde.g_D = []; end
@@ -299,11 +297,15 @@ elseif strcmp(solver,'nosolve')
     eqn = struct('A',A,'M',M,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge); 
     info = [];
     return;
-else
+elseif strcmp(solver,'amg')
 %     u0 = edgeinterpolate(pde.g_D,node,edge);
-    u0 = u;
-    option.x0 = u0;
-    [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elem,edge,[],isBdEdge,option);
+    option.x0 = u;
+    option.alpha = ones(Ndof,1); % change to 1/pde.mu
+    option.beta = ones(Ndof,1);  % change to 1/real(pde.epsilon)
+    [u,info] = amgMaxwell(bigAD,f,node,edge,option);
+else
+    option.x0 = u;
+    [u,info] = mgMaxwell(bigAD,f,AP,node,elemold,edge,HB,option);    
 end
 
 %% Output

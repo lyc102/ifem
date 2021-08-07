@@ -1,7 +1,7 @@
-function [x,info] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge,option)
+function [x,info] = mgMaxwell(A,b,AP,node,elem,edge,HBmesh,option)
 %% MGMAXWELL multigrid-type solver for Maxwell equations.
 % 
-% x = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge) attempts to solve
+% x = mgMaxwell(A,b,AP,node,elem,edge,HBmesh) attempts to solve
 % the system of linear equations Ax = b using multigrid type solver. The
 % linear system is obtained by either the first or second family of linear
 % edge element discretization of the Maxwell equation; See <a href="matlab:ifem coarsendoc">doc Maxwell</a>.
@@ -10,8 +10,7 @@ function [x,info] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge,option)
 %   -  A: curl(mu^(-1)curl) + epsilon I
 %   -  b: right hand side
 %   - AP: - div(mu^{-1}grad) + |epsilon| I
-%   - BP: - div(|epsilon|grad)
-%   - node,elem,edge,HBmesh,isBdEdge: mesh information
+%   - node,elem,edge,HBmesh: mesh information
 %   - options: type help mg
 %
 % By default, the HX preconditioned PCG is used which works well for
@@ -20,7 +19,7 @@ function [x,info] = mgMaxwell(A,b,AP,BP,node,elem,edge,HBmesh,isBdEdge,option)
 % harmonic Maxwell equation), set option.solver = 'minres' or 'bicg' or
 % 'gmres' to try other Krylov method with HX preconditioner.
 %
-% See also mg, mgMaxwellsaddle
+% See also amgMaxwell, mg, mgMaxwellsaddle
 %
 % Reference: 
 % R. Hiptmair and J. Xu, Nodal Auxiliary Space Preconditioning in
@@ -65,6 +64,12 @@ if dim == 3  % 3-D
 end
 
 %% Transfer operators from nodal element to edge element
+if isfield(option,'isBdEdge')
+    isBdEdge = option.isBdEdge;
+else   % treat diagonal entries as bdEdge
+    deg = sum(spones(A(1:NE,1:NE)),2);
+    isBdEdge = (deg == 1);
+end
 if Ndof == NE        % lowest order edge element
     II = node2edgematrix(node,edge,isBdEdge);
 elseif Ndof >= 2*NE  % first or second order edge element
@@ -73,10 +78,14 @@ end
 IIt = II';
 [grad,isBdNode] = gradmatrix(edge,isBdEdge);
 gradt = grad';
-% bdidx = zeros(N,1); 
-% bdidx(isBdNode) = 1;
-% Tbd = spdiags(bdidx,0,N,N);
-% BP = gradt*A(1:NE,1:NE)*grad + Tbd;
+bdidx = zeros(N,1); 
+if isempty(isBdNode)  % Neumann boundary condition
+   bdidx = 1e-6;
+else
+   bdidx(isBdNode) = 1;
+end
+Tbd = spdiags(bdidx,0,N,N);
+BP = gradt*A(1:NE,1:NE)*grad + Tbd;
 
 %% Free node 
 % isFreeNode = false(N,1);
@@ -99,8 +108,6 @@ for j = level:-1:2
     SSi{j} = triu(BPi{j});       
 end
 D = diag(A);
-% B = tril(A);
-% Bt = B';
 clear HB
 
 %% Krylov iterative methods with HX preconditioner
@@ -177,7 +184,6 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
     function Br = HXpreconditioner(r)
     %% 1. Smoothing in the finest grid of the original system
 %     eh = triu(A)\(D.*(tril(A)\r));  % Gauss-Seidal. less iteration steps
-%     eh = Bt\(D.*(B\r));  % Gauss-Seidal. less iteration steps
     eh = 0.75*r./D;  % Jacobi method. less computational time
 
     %% 2. Correction in the auxiliary spaces
