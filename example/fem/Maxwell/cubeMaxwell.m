@@ -5,12 +5,13 @@
 close all;
 
 %% Defacult setting
-[node,elem] = cubemesh([-1,1,-1,1,-1,1],0.5);
+[node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
 pde = Maxwelldata2;
 % pde = planewavedata1;
 % bdFlag = setboundary3(node,elem,'Neumann');
 bdFlag = setboundary3(node,elem,'Dirichlet');
 option.solver = 'amg';
+% option.solver = 'mg';
 % option.printlevel = 2;
 
 %% Parameters

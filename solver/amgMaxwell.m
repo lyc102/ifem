@@ -77,8 +77,8 @@ gradt = grad';
 
 %% Auxiliary Poisson matrix
 %   -  A: curl(alpha curl) + beta I
-%   - AP: - div(alpha grad) + |beta| I
-%   - BP: - div(|beta|grad)
+%   - AP: - div(alpha grad) + beta I
+%   - BP: - div(beta grad)
 
 % build graph Laplacian to approximate AP
 edgeVec = node(edge(:,2),:) - node(edge(:,1),:);
@@ -120,6 +120,7 @@ setupOption.solver = 'NO';
 [x,info,BPi,Si,SSi,ResBP,ProBP] = amg(BP,ones(N,1),setupOption); %#ok<ASGLU>
 D = diag(A);
 level = size(APi,1);
+disp(level);
 
 %% Krylov iterative methods with HX preconditioner
 k = 1;

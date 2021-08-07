@@ -290,6 +290,7 @@ if any(isBdEdge)  % contains Dirichlet boundary condition
     T = spdiags(1-bdidx,0,Ndof,Ndof);
     bigAD = T*(A-M)*T + Tbd;
     if strcmp(solver,'mg')
+%     if strcmp(solver,'mg') || strcmp(solver,'amg')
         % modify the corresponding Poisson matrix
         bdidx = zeros(N,1); 
         bdidx(isBdNode) = 1;
