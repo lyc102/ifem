@@ -218,7 +218,7 @@ clear pxyz Jp bt rhs phi_k
 
 %% Set up solver
 if isempty(option) || ~isfield(option,'solver')    % no option.solver
-    if Ndof <= 1e4  % Direct solver for small size systems
+    if Ndof <= 1e3  % Direct solver for small size systems
         option.solver = 'direct';
     else            % Multigrid-type  solver for large size systems
         option.solver = 'mg';

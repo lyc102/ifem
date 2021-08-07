@@ -64,7 +64,7 @@ end
 if isfield(option,'isBdEdge')
     isBdEdge = option.isBdEdge;
 else
-    deg = sum(spones(A),2);
+    deg = sum(spones(A(1:NE,1:NE)),2);
     isBdEdge = (deg == 1);
 end
 if Ndof == NE        % lowest order edge element
@@ -126,7 +126,7 @@ end
 bdidx = zeros(N,1); 
 bdidx(isBdNode) = 1;
 Tbd = spdiags(bdidx,0,N,N);
-BP = gradt*A*grad + Tbd;
+BP = gradt*A(1:NE,1:NE)*grad + Tbd;
 
 %% Transfer operators between multilevel meshes
 setupOption.solver = 'NO';

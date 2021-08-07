@@ -10,8 +10,8 @@ pde = Maxwelldata2;
 % pde = planewavedata1;
 % bdFlag = setboundary3(node,elem,'Neumann');
 bdFlag = setboundary3(node,elem,'Dirichlet');
-option.solver = 'amg';
-% option.solver = 'mg';
+% option.solver = 'amg';
+option.solver = 'mg';
 % option.printlevel = 2;
 
 %% Parameters

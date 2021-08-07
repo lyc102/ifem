@@ -10,7 +10,8 @@ pde = Maxwelldata2;
 % pde = planewavedata1;
 % bdFlag = setboundary3(node,elem,'Neumann');
 bdFlag = setboundary3(node,elem,'Dirichlet');
-% option.solver = 'cg';
+% option.solver = 'mg';
+option.solver = 'amg';
 
 %% Parameters
 maxIt = 4; 
@@ -25,7 +26,7 @@ for k = 1:maxIt
     % refine grid    
     [node,elem,bdFlag] = uniformrefine3(node,elem,bdFlag);
     % solve the equation
-    [u,edge,eqn] = Maxwell1(node,elem,bdFlag,pde); 
+    [u,edge,eqn] = Maxwell1(node,elem,bdFlag,pde,option); 
     % compute error
     energyErr(k) = getHcurlerror3ND1(node,elem,pde.curlu,real(u));
     L2Err(k) = getL2error3ND1(node,elem,pde.exactu,real(u));

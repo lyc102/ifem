@@ -386,9 +386,19 @@ elseif strcmp(solver,'none')
     eqn = struct('A',A,'M',M,'AP',AP,'BP',BP,'f',f,'g',g,'bigA',bigAD,'isBdEdge',isBdEdge);
     info = [];
     return;
+elseif strcmp(solver,'amg')
+%     u0 = edgeinterpolate(pde.g_D,node,edge);
+    u0 = u;
+    option.x0 = u0;
+    option.alpha = ones(NE,1);
+    option.beta = ones(NE,1);
+%     option.isBdEdge = isBdEdge;
+    option.outsolver = 'cg';    
+    [u,info] = amgMaxwell(bigAD,f,node,edge,option);
 else
     % option.x0 = edgeinterpolate1(pde.g_D(node),node,edge);
     option.x0 = u;
+    option.outsolver = 'cg';
     [u,info] = mgMaxwell(bigAD,f,AP,BP,node,elemMG,edge,HB,isBdEdge,option);
 end
 

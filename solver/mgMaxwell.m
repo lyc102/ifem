@@ -71,8 +71,12 @@ elseif Ndof >= 2*NE  % first or second order edge element
     II = node2edgematrix1(node,edge,isBdEdge);
 end
 IIt = II';
-grad = gradmatrix(edge,isBdEdge);
+[grad,isBdNode] = gradmatrix(edge,isBdEdge);
 gradt = grad';
+% bdidx = zeros(N,1); 
+% bdidx(isBdNode) = 1;
+% Tbd = spdiags(bdidx,0,N,N);
+% BP = gradt*A(1:NE,1:NE)*grad + Tbd;
 
 %% Free node 
 % isFreeNode = false(N,1);
@@ -80,6 +84,7 @@ gradt = grad';
 isFreeNode = true(N,1);
 
 %% Transfer operators between multilevel meshes
+
 [Pro,Res] = transferoperator(HB,NL,isFreeNode);
 APi = cell(level,1);
 BPi = cell(level,1);
