@@ -15,7 +15,7 @@ function [x,info] = amgMaxwell(A,b,node,edge,option)
 %   -  A: curl(alpha curl) + beta I
 %   -  b: right hand side
 %   -  node,edge: mesh information
-%   -  options: type help mg
+%   -  options: extra structures
 %
 % By default, the HX preconditioned PCG is used which works well for
 % symmetric positive definite matrices (e.g. arising from eddy current
@@ -73,7 +73,7 @@ elseif Ndof >= 2*NE  % first or second order edge element
     II = node2edgematrix1(node,edge,isBdEdge);
 end
 IIt = II';
-grad = gradmatrix(edge);
+[grad,isBdNode] = gradmatrix(edge,isBdEdge);
 gradt = grad';
 
 %% Free node 
@@ -86,43 +86,53 @@ gradt = grad';
 %   - AP: - div(alpha grad) + beta I
 %   - BP: - div(beta grad)
 
-% build graph Laplacian to approximate AP
-edgeVec = node(edge(:,2),:) - node(edge(:,1),:);
-edgeLength = sqrt(sum(edgeVec.^2,2));
-if isfield(option,'alpha') % resacle by the magnetic coefficients
-    if isreal(option.alpha) && (length(option.alpha) == NE)
-       alpha = option.alpha;  
-    else % option.alpha is a function 
-       edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
-       alpha = option.alpha(edgeMiddle);         
+if isfield(option,'AP')
+    AP = option.AP;
+else
+    % build graph Laplacian to approximate AP
+    edgeVec = node(edge(:,2),:) - node(edge(:,1),:);
+    edgeLength = sqrt(sum(edgeVec.^2,2));
+    if isfield(option,'alpha') % resacle by the magnetic coefficients
+        if isreal(option.alpha) && (length(option.alpha) == NE)
+           alpha = option.alpha;  
+        else % option.alpha is a function 
+           edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
+           alpha = option.alpha(edgeMiddle);         
+        end
     end
-end
-% edge weight: h*alpha
-i1 = (1:NE)'; j1 = double(edge(:,1)); s1 = sqrt(edgeLength.*alpha); 
-i2 = (1:NE)'; j2 = double(edge(:,2)); s2 = -s1;
-G = sparse([i1;i2],[j1;j2],[s1;s2],NE,N);
-AP = G'*G;
-% lumped mass matrix: h^3*beta
-if isfield(option,'beta') % resacle by the dielectric coefficients
-    if isreal(option.beta) && (length(option.beta) == NE)
-       beta = option.beta;  
-    else % option.beta is a function 
-       edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
-       beta = option.beta(edgeMiddle);         
+    % edge weight: h*alpha
+    % AP = gradt*spdiags(edgeLength.*alpha,0,NE,NE)*grad;
+    i1 = (1:NE)'; j1 = double(edge(:,1)); s1 = sqrt(edgeLength.*alpha); 
+    i2 = (1:NE)'; j2 = double(edge(:,2)); s2 = -s1;
+    isFreeEdge = ~isBdEdge;
+    G = sparse([i1(isFreeEdge);i2(isFreeEdge)],...
+               [j1(isFreeEdge);j2(isFreeEdge)],...
+               [s1(isFreeEdge);s2(isFreeEdge)],NE,N);
+    AP = G'*G;
+    % lumped mass matrix: h^3*beta
+    if isfield(option,'beta') % resacle by the dielectric coefficients
+        if isreal(option.beta) && (length(option.beta) == NE)
+           beta = option.beta;  
+        else % option.beta is a function 
+           edgeMiddle = (node(edge(:,2),:) + node(edge(:,1),:))/2; 
+           beta = option.beta(edgeMiddle);         
+        end
     end
+    M = accumarray(edge(:),repmat((edgeLength.^3).*beta,2,1),[N 1]);
+    AP = AP + spdiags(M,0,N,N);
 end
-M = accumarray(edge(:),repmat((edgeLength.^3).*beta,2,1),[N 1]);
-AP = AP + spdiags(M,0,N,N);
-BP = gradt*A*grad;
+% BP is Galerkin projection to the free node space
+% boundary nodes
+bdidx = zeros(N,1); 
+bdidx(isBdNode) = 1;
+Tbd = spdiags(bdidx,0,N,N);
+BP = gradt*A*grad + Tbd;
 
 %% Transfer operators between multilevel meshes
 setupOption.solver = 'NO';
 [x,info,APi,Ri,RRi,ResAP,ProAP] = amg(AP,ones(N,1),setupOption); %#ok<ASGLU>
 [x,info,BPi,Si,SSi,ResBP,ProBP] = amg(BP,ones(N,1),setupOption); %#ok<ASGLU>
 D = diag(A);
-level = min(size(APi,1),size(BPi,1));
-% level = 2;
-disp(level);
 
 %% Krylov iterative methods with HX preconditioner
 k = 1;
@@ -203,6 +213,7 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
     %% 2. Correction in the auxiliary spaces
     % Part1: II*(AP)^{-1}*II^t
     rc = reshape(IIt*r(1:size(IIt,2)),N,dim);   % transfer to the nodal linear element space
+    level = size(APi,1);
     ri = cell(level,1);        
     ei = cell(level,1);        
     ri{level} = rc;            
@@ -217,7 +228,7 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
     end
     eaux = [II*reshape(ei{level},dim*N,1); zeros(Ndof-size(IIt,2),1)]; % transfer back to the edge element space
     % Part2:  grad*(BP)^{-1}*grad^t
-    % ri = cell(level,1);
+    level = size(BPi,1);
     ri{level} = gradt*r(1:NE);          % transfer the residual to the null space    
     for i = level:-1:2
         ei{i} = Si{i}\ri{i};   
