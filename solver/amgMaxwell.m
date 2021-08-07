@@ -14,8 +14,8 @@ function [x,info] = amgMaxwell(A,b,node,edge,option)
 % Input 
 %   -  A: curl(alpha curl) + beta I
 %   -  b: right hand side
-%   - node,elem,edge,HBmesh,isBdEdge: mesh information
-%   - options: type help mg
+%   -  node,edge: mesh information
+%   -  options: type help mg
 %
 % By default, the HX preconditioned PCG is used which works well for
 % symmetric positive definite matrices (e.g. arising from eddy current
@@ -61,10 +61,16 @@ if (norm(b) == 0)                  % if rhs vector is all zeros
 end
 
 %% Transfer operators from nodal element to edge element
+if isfield(option,'isBdEdge')
+    isBdEdge = option.isBdEdge;
+else
+    deg = sum(spones(A),2);
+    isBdEdge = (deg == 1);
+end
 if Ndof == NE        % lowest order edge element
-    II = node2edgematrix(node,edge);
+    II = node2edgematrix(node,edge,isBdEdge);
 elseif Ndof >= 2*NE  % first or second order edge element
-    II = node2edgematrix1(node,edge);
+    II = node2edgematrix1(node,edge,isBdEdge);
 end
 IIt = II';
 grad = gradmatrix(edge);
@@ -108,18 +114,14 @@ end
 M = accumarray(edge(:),repmat((edgeLength.^3).*beta,2,1),[N 1]);
 AP = AP + spdiags(M,0,N,N);
 BP = gradt*A*grad;
-% % edge weight: h*beta
-% i1 = (1:NE)'; j1 = double(edge(:,1)); s1 = sqrt(edgeLength.*beta); 
-% i2 = (1:NE)'; j2 = double(edge(:,2)); s2 = -s1;
-% G = sparse([i1;i2],[j1;j2],[s1;s2],NE,N);
-% BP = G'*G;
 
 %% Transfer operators between multilevel meshes
 setupOption.solver = 'NO';
 [x,info,APi,Ri,RRi,ResAP,ProAP] = amg(AP,ones(N,1),setupOption); %#ok<ASGLU>
 [x,info,BPi,Si,SSi,ResBP,ProBP] = amg(BP,ones(N,1),setupOption); %#ok<ASGLU>
 D = diag(A);
-level = size(APi,1);
+level = min(size(APi,1),size(BPi,1));
+% level = 2;
 disp(level);
 
 %% Krylov iterative methods with HX preconditioner

@@ -15,7 +15,7 @@ option.solver = 'amg';
 % option.printlevel = 2;
 
 %% Parameters
-maxIt = 4; 
+maxIt = 5; 
 N = zeros(maxIt,1); 
 h = zeros(maxIt,1);
 energyErr = zeros(maxIt,1);

@@ -393,6 +393,7 @@ elseif strcmp(solver,'amg')
     option.x0 = u0;
     option.alpha = ones(Ndof,1);
     option.beta = ones(Ndof,1);
+%     option.isBdEdge = isBdEdge;
     option.outsolver = 'cg';    
     [u,info] = amgMaxwell(bigAD,f,node,edge,option);
 else
