@@ -98,7 +98,9 @@ for j = level:-1:2
     Si{j} = tril(BPi{j});     % smoother for BP   
     SSi{j} = triu(BPi{j});       
 end
-D = diag(A);                   
+D = diag(A);
+% B = tril(A);
+% Bt = B';
 clear HB
 
 %% Krylov iterative methods with HX preconditioner
@@ -174,8 +176,9 @@ info = struct('solverTime',time,'itStep',itStep,'error',err,'flag',flag,'stopErr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function Br = HXpreconditioner(r)
     %% 1. Smoothing in the finest grid of the original system
-    eh = triu(A)\(D.*(tril(A)\r));  % Gauss-Seidal. less iteration steps
-%     eh = r./D;  % Jacobi method. less computational time
+%     eh = triu(A)\(D.*(tril(A)\r));  % Gauss-Seidal. less iteration steps
+%     eh = Bt\(D.*(B\r));  % Gauss-Seidal. less iteration steps
+    eh = 0.75*r./D;  % Jacobi method. less computational time
 
     %% 2. Correction in the auxiliary spaces
     % Part1: II*(AP)^{-1}*II^t

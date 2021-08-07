@@ -12,7 +12,8 @@ pde = Maxwelldata2;
  bdFlag = setboundary3(node,elem,'Dirichlet','all','Neumann','y==1');
 % bdFlag = setboundary3(node,elem,'Dirichlet');
 % option.solver = 'cg';
-option.solver = 'amg';
+% option.solver = 'amg';
+option.solver = 'mg';
 
 %% Parameters
 maxIt = 3; 
