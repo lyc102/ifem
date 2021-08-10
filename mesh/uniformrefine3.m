@@ -17,8 +17,7 @@ function [node,elem,bdFlag,HB] = uniformrefine3(node,elem,bdFlag,HB)
 %
 % Example
 %
-%     node = [-1,-1,-1; 1,-1,-1; 1,1,-1; -1,1,-1; -1,-1,1; 1,-1,1; 1,1,1; -1,1,1]; 
-%     elem = [1 2 3 7; 1 4 3 7; 1 5 6 7; 1 5 8 7; 1 2 6 7; 1 4 8 7];
+%     [node,elem] = cubemesh([-1,1,-1,1,-1,1]);
 %     figure(1); subplot(1,3,1); 
 %     set(gcf,'Units','normal'); set(gcf,'Position',[0.25,0.25,0.5,0.3]);
 %     showmesh3(node,elem,[],'FaceAlpha',0.35); view([210 8]);

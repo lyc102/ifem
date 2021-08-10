@@ -37,6 +37,13 @@ x0 = box(1); x1 = box(2);
 y0 = box(3); y1 = box(4);
 z0 = box(5); z1 = box(6);
 
+%       8 --- 7
+%      /|    /|
+%     5 --- 6 |      z
+%     | 4 --| 3      |  y
+%     |/    |/       | /
+%     1 --  2        o --- x
+
 node = [x0,y0,z0; x1,y0,z0; x1,y1,z0; x0,y1,z0; ...
         x0,y0,z1; x1,y0,z1; x1,y1,z1; x0,y1,z1];
 elem = [1 2 3 7; 1 4 3 7; 1 5 6 7; 1 5 8 7; 1 2 6 7; 1 4 8 7];
@@ -44,12 +51,12 @@ elem = [1 2 3 7; 1 4 3 7; 1 5 6 7; 1 5 8 7; 1 2 6 7; 1 4 8 7];
 
 if (nargin >= 2) 
     if length(h) == 1       
-        [x,y,z] = meshgrid(x0:h:x1,y0:h:y1,z0:h:z1);
+        [x,y,z] = ndgrid(x0:h:x1,y0:h:y1,z0:h:z1);
     elseif length(h) == 3
         hx = (x1- x0)/floor(abs((x1- x0)/h(1)));
         hy = (x1- x0)/floor(abs((x1- x0)/h(2)));
         hz = (x1- x0)/floor(abs((x1- x0)/h(3)));
-        [x,y,z] = meshgrid(x0:hx:x1,y0:hy:y1,z0:hz:z1);
+        [x,y,z] = ndgrid(x0:hx:x1,y0:hy:y1,z0:hz:z1);
     end  
     node = [x(:),y(:),z(:)];
     [nx,ny,nz] = size(x);
@@ -61,13 +68,13 @@ if (nargin >= 2)
         for j = 1:ny-1
             for k = 1:nz-1
                 localIndex(1) = indexMap(i,j,k);
-                localIndex(2) = indexMap(i,j+1,k);
+                localIndex(2) = indexMap(i+1,j,k);
                 localIndex(3) = indexMap(i+1,j+1,k);
-                localIndex(4) = indexMap(i+1,j,k);
+                localIndex(4) = indexMap(i,j+1,k);
                 localIndex(5) = indexMap(i,j,k+1);
-                localIndex(6) = indexMap(i,j+1,k+1);
+                localIndex(6) = indexMap(i+1,j,k+1);
                 localIndex(7) = indexMap(i+1,j+1,k+1);
-                localIndex(8) = indexMap(i+1,j,k+1);
+                localIndex(8) = indexMap(i,j+1,k+1);
                 elem(idx:idx+5,:) = localIndex([1 2 3 7; 1 4 3 7; 1 5 6 7;...
                                                 1 5 8 7; 1 2 6 7; 1 4 8 7]);
                 idx = idx + 6;
