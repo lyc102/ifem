@@ -34,7 +34,7 @@ findedge(node,edge,s==1);
 
 
 
-![png]({{site.baseurl}}/assets/images/mesh/auxstructuredoc_4_0.png)
+![png](mesh_figures/auxstructuredoc_4_0.png)
     
 
 
@@ -75,7 +75,7 @@ findnode(node,5);
 
 
 
-![png]({{site.baseurl}}/assets/images/mesh/auxstructuredoc_8_1.png)
+![png](mesh_figures/auxstructuredoc_8_1.png)
     
 
 
@@ -118,7 +118,7 @@ display(elem2edge);
 
 
 
-![png]({{site.baseurl}}/assets/images/mesh/auxstructuredoc_13_1.png)
+![png](mesh_figures/auxstructuredoc_13_1.png)
     
 
 
@@ -170,5 +170,5 @@ display(edge2elem);
 
 ​    
 
-![png]({{site.baseurl}}/assets/images/mesh/auxstructuredoc_17_1.png)
+![png](mesh_figures/auxstructuredoc_17_1.png)
 

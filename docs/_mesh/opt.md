@@ -16,7 +16,7 @@ regularity of triangles in the input mesh `(node,elem)` and outputs a
 better mesh `(node,elem)`. Note that the connectivity, i.e., `elem` might be changed. Use 
 
     node = meshsmoothing(node,elem)
-    
+
 to move nodes only.
 
 After showing an example, we shall explain algorithms implemented in `optmesh.m`.
@@ -44,11 +44,11 @@ showmeshquality(node,elem); axis([0 1 0 2700]);
 
 
 
-![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_2_1.png)
+![png](mesh_figures/meshoptdoc_2_1.png)
     
 
 
-![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_2_2.png)
+![png](mesh_figures/meshoptdoc_2_2.png)
     
 
 
@@ -79,8 +79,7 @@ showmesh(node,elem); findnode(node,'all','noindex');
 ```
 
 
-    
-![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_4_0.png)
+![png](mesh_figures/meshoptdoc_4_0.png)
     
 
 
@@ -102,11 +101,11 @@ subplot(1,2,2); showmesh(node,elem);
 ```
 
 
-    
-![png]({{ site.baseurl }}/assets/images/mesh/meshoptdoc_7_0.png)
-    
+![png](mesh_figures/meshoptdoc_7_0.png)    
 
 ## Reference
+
+- L. Chen and J. Xu. Optimal Delaunay Triangulations. *Journal of Computational Mathematics*. 299--308, 2004. 
 
 ```bibtex
 @article{ChenXu2004,
@@ -114,18 +113,19 @@ subplot(1,2,2); showmesh(node,elem);
   author={Chen, Long and Xu, Jinchao},
   journal={Journal of Computational Mathematics},
   pages={299--308},
-  year={2004},
-  publisher={JSTOR}
-}
-
-@article{PerssonStrang2004,
-  title={A simple mesh generator in MATLAB},
-  author={Persson, Per-Olof and Strang, Gilbert},
-  journal={SIAM review},
-  volume={46},
-  number={2},
-  pages={329--345},
-  year={2004},
-  publisher={SIAM}
+  year={2004}
 }
 ```
+
+- L. Chen. [Mesh smoothing schemes based on optimal Delaunay triangulations](https://www.math.uci.edu/~chenlong/C2004.html). In*13th International Meshing Roundtable*, pages 109-120, Williamsburg, VA, 2004. Sandia National Laboratories.
+
+```bibtex
+@inproceedings{chen2004mesh,
+  title={Mesh Smoothing Schemes Based on Optimal Delaunay Triangulations.},
+  author={Chen, Long},
+  booktitle={IMR},
+  pages={109--120},
+  year={2004}
+}
+```
+

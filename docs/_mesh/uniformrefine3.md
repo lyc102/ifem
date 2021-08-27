@@ -27,7 +27,7 @@ findnode3(node);
 ```
 
 
-![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_2_0.png)
+![png](mesh_figures/uniformrefine3doc_2_0.png)
     
 
 
@@ -65,7 +65,7 @@ showmesh3(node,elem,[],'FaceAlpha',0.15); view([34 12]);
 findnode3(node);
 ```
 
-![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_7_0.png)
+![png](mesh_figures/uniformrefine3doc_7_0.png)
 
 The initial mesh is still positive but after one uniform refinement the diagonal 6-9 is longer than 5-10. Therefore the refined mesh is less shape regular although
 still three congruence classes are possible. To have a better mesh quality, one may want to use the shorter one (implemented in `uniformrefine3l`). The subroutine `uniformrefine3`
@@ -136,7 +136,7 @@ meshquality(node,elem);
      - Min quality 0.7174 - Mean quality 0.7174 
 
 
-![png]({{site.baseurl}}/assets/images/mesh/uniformrefine3doc_14_1.png)
+![png](mesh_figures/uniformrefine3doc_14_1.png)
     
 
 
@@ -164,8 +164,8 @@ end
 
 
 ​    
-    ans =
-    
+​    ans =
+​    
          0
 
 

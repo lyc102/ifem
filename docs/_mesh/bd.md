@@ -48,8 +48,7 @@ findedge(node,locEdge,'all','vec');
 ```
 
 
-​    
-![png]({{site.baseurl}}/assets/images/mesh/bddoc_4_0.png)
+![png](mesh_figures/bddoc_4_0.png)
 ​    
 
 
@@ -73,7 +72,7 @@ Neumann = totalEdge(bdFlag(:) == 2,:);
 findedge(node,totalEdge,bdFlag(:) == 2,'MarkerFaceColor','y');
 ```
 
-![png]({{site.baseurl}}/assets/images/mesh/bddoc_9_0.png)
+![png](mesh_figures/bddoc_9_0.png)
     
 
 Or simply call
@@ -114,8 +113,8 @@ display(bdFlag)
 
 
 ​    
-    bdFlag =
-    
+​    bdFlag =
+​    
         1    0    1
         1    0    0
         1    0    0
@@ -124,7 +123,7 @@ display(bdFlag)
 
 
 
-![png]({{site.baseurl}}/assets/images/mesh/bddoc_11_1.png)
+![png](mesh_figures/bddoc_11_1.png)
     
 
 
@@ -172,8 +171,8 @@ display(bdFlag)
 
 
 ​    
-    bdFlag =
-    
+​    bdFlag =
+​    
         0    1    0    0
         0    0    0    0
         1    0    0    0
@@ -181,8 +180,7 @@ display(bdFlag)
 
 
 
-​    
-![png]({{site.baseurl}}/assets/images/mesh/bddoc_15_1.png)
+![png](mesh_figures/bddoc_15_1.png)
 ​    
 
 The top and bottom of the prism is set as Dirichlet boundary condition and other faces are zero flux boundary condition. Note that if the i-th face of t is on the boundary but `bdFlag(t,i)=0`, it is equivalent to use homogenous Neumann boundary condition (zero

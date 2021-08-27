@@ -112,7 +112,7 @@ findnode3(node,elem(:));
 display(elem);
 ```
 
-    
+
     elem =
     
          1     2     3     7
@@ -121,10 +121,9 @@ display(elem);
          1     5     8     7
          1     2     6     7
          1     4     8     7
-    
 
-    
-![png]({{site.baseurl}}/assets/images/mesh/sc3doc_6_1.png)
+
+![png](mesh_figures/sc3doc_6_1.png)
 
 
 ### Generate index pointers for edges and faces
@@ -151,7 +150,7 @@ sortedTotalFace = sort(totalFace,2);
 display(face);
 ```
 
-    
+
     edge =
     
       19x2 uint32 matrix
@@ -175,8 +174,9 @@ display(face);
        5   8
        6   7
        7   8
-    
-    
+
+
+​    
     face =
     
       18x3 uint32 matrix
@@ -199,7 +199,7 @@ display(face);
        4   7   8
        5   6   7
        5   7   8
-    
+
 
 
 In iFEM, `N,NE,NF,NT` represents the number of vertices, edges, faces and tetrahedrons, respectively.
@@ -225,7 +225,7 @@ display(elem2edge);
 display(elem2face);
 ```
 
-    
+
     elem2edge =
     
       6x6 uint32 matrix
@@ -236,8 +236,9 @@ display(elem2face);
         4    7    6   17   16   19
         1    5    6    9   10   18
         3    7    6   14   13   19
-    
-    
+
+
+​    
     elem2face =
     
       6x4 uint32 matrix
@@ -248,7 +249,7 @@ display(elem2face);
        18   12    9   10
        14   11    3    2
        16   12    6    7
-    
+
 
 
 **Face to edge Pointer**
@@ -327,7 +328,7 @@ Two types of ordering of `elem` is of particular importantance
 In the ascending ordering, the vertices of `elem` is sorted such that 
 
     elem(t,1) < elem(t,2) < elem(t,3) < elem(t,4). 
-    
+
 Such ordering will benefit the construction of local bases for high order basis or basis with orientation. This can be easily achieved by `elem = sort(elem,2)`. One has to rotate the boundary flag accordingly.
 
 
@@ -337,7 +338,7 @@ bdFlag = setboundary3(node,elem,'Dirichlet');
 display(elem);
 ```
 
-    
+
     elem =
     
          1     2     3     7
@@ -346,7 +347,7 @@ display(elem);
          1     5     7     8
          1     2     6     7
          1     4     7     8
-    
+
 
 
 In the positive ordering, the four vertices are ordered such that the
@@ -359,7 +360,7 @@ vertices for elements with negative volume.
 elem = fixorder3(node,elem)   % switchs the vertices for elements with negative volume.
 ```
 
-    
+
     elem =
     
          1     2     3     7
@@ -368,7 +369,7 @@ elem = fixorder3(node,elem)   % switchs the vertices for elements with negative 
          1     5     7     8
          1     6     2     7
          1     7     4     8
-    
+
 
 
 ### edge
@@ -397,7 +398,7 @@ For 3-D triangulations, the `face` produced by `unique` function is already sort
 Again the local and the global ordering may not be consistent. That is
 
     face(elem2face(t,:),1) < face(elem2face(t,:),2) < face(elem2face(t,:),3)
-    
+
 may not be always true unless we use the ascending ordering in both `face` and `locFace`.
 
 ## Orientation
@@ -461,7 +462,7 @@ The local ordering orientation is implicitly used when computing finite element 
 
 $$
 \phi_{i,j,k} = 2(\lambda_i \nabla \lambda_j \times \nabla \lambda_k+ \lambda_j \nabla \lambda_k \times \nabla \lambda_i+\lambda_k \nabla \lambda_i \times \nabla \lambda_j).
-$$ 
+$$
 
 Odd permutation of `[i j k]` will change the sign of the basis. The direction of $\phi_{i,j,k}$ is the normal vector determined by `[i,j,k]` ordering. Note that this is defined locally, i.e., element by element. 
 
@@ -475,7 +476,7 @@ totalFace = [elem(:,[2 3 4]); elem(:,[1 4 3]); elem(:,[1 2 4]); elem(:,[1 3 2])]
 elem2faceSign = reshape(sum(sign(diff(totalFace(:,[1:3,1]),1,2)),2),NT,4)
 ```
 
-    
+
     elem2faceSign =
     
          1    -1     1    -1
@@ -484,7 +485,7 @@ elem2faceSign = reshape(sum(sign(diff(totalFace(:,[1:3,1]),1,2)),2),NT,4)
          1    -1     1    -1
         -1    -1     1     1
         -1    -1     1     1
-    
+
 
 
 When both `elem` and `locFace` are ascend ordered, the orientation of the
@@ -525,7 +526,7 @@ direction(idx) = -1;
 elem2edgeSign = reshape(direction,NT,6)
 ```
 
-    
+
     elem2edgeSign =
     
       6�6 int8 matrix
@@ -536,7 +537,7 @@ elem2edgeSign = reshape(direction,NT,6)
         1    1    1    1    1    1
         1    1    1   -1    1    1
         1    1    1   -1    1    1
-    
+
 
 
 ### face to edge
@@ -556,7 +557,7 @@ direction(idx) = -1;
 face2edgeSignp = reshape(direction,NF,3)
 ```
 
-    
+
     face2edgeSignp =
     
          1    -1     1
@@ -577,7 +578,7 @@ face2edgeSignp = reshape(direction,NF,3)
          1    -1     1
          1    -1     1
          1    -1     1
-    
+
 
 
 ## Summary
@@ -676,13 +677,14 @@ elem2face = uint32(reshape(jf,NT,4))
 [v,elemSign] = simplexvolume(node,elem)
 ```
 
-    
+
     elem =
     
          1     4     5     8
          1     4     5     7
-    
-    
+
+
+​    
     edge =
     
       9x2 uint32 matrix
@@ -696,8 +698,9 @@ elem2face = uint32(reshape(jf,NT,4))
        4   8
        5   7
        5   8
-    
-    
+
+
+​    
     face =
     
       7x3 uint32 matrix
@@ -709,41 +712,45 @@ elem2face = uint32(reshape(jf,NT,4))
        1   5   8
        4   5   7
        4   5   8
-    
-    
+
+
+​    
     elem2edge =
     
       2x6 uint32 matrix
     
        1   2   4   5   7   9
        1   2   3   5   6   8
-    
-    
+
+
+​    
     elem2face =
     
       2x4 uint32 matrix
     
        7   5   3   1
        6   4   2   1
-    
-    
+
+
+​    
     v =
     
         0.6667
         0.6667
-    
-    
+
+
+​    
     elemSign =
     
         -1
          1
-    
 
 
 
-    
 
-![png]({{site.baseurl}}/assets/images/mesh/sc3doc_31_1.png)
+​    
+
+![png](mesh_figures/sc3doc_31_1.png)
     
 
 
@@ -768,7 +775,7 @@ display('change to ascend ordering');
 [elem,bdFlag] = sortelem3(elem,bdFlag)
 ```
 
-    
+
     elem =
     
          1     2     3     7
@@ -777,8 +784,9 @@ display('change to ascend ordering');
          1     5     8     7
          1     2     6     7
          1     4     8     7
-    
-    
+
+
+​    
     bdFlag =
     
       6x4 uint8 matrix
@@ -800,8 +808,9 @@ display('change to ascend ordering');
          1     5     7     8
          1     2     6     7
          1     4     7     8
-    
-    
+
+
+​    
     bdFlag =
     
       6x4 uint8 matrix
@@ -812,13 +821,13 @@ display('change to ascend ordering');
        2   0   2   0
        1   0   0   2
        2   0   2   0
-    
 
 
 
-    
 
-![png]({{site.baseurl}}/assets/images/mesh/sc3doc_34_1.png)
+​    
+
+![png](mesh_figures/sc3doc_34_1.png)
 
 
 We can use `bdFlag` to find the boundary nodes, edges and faces. To find the outward normal direction of the boundary face, we use `gradbasis3` to get `Dlambda(t,:,k)` which is the gradient of $\lambda_k$. The outward normal direction of the kth face can be obtained by `-Dlambda(t,:,k)` which is independent of the ordering and orientation of `elem`.
@@ -857,15 +866,16 @@ display(NeumannFace);
 display(bdFaceOutDirec);
 ```
 
-    
+
     DirichletFace =
     
       2x3 uint32 matrix
     
        2   3   7
        2   6   7
-    
-    
+
+
+​    
     NeumannFace =
     
       10x3 uint32 matrix
@@ -880,8 +890,9 @@ display(bdFaceOutDirec);
        4   7   8
        5   6   7
        5   7   8
-    
-    
+
+
+​    
     bdFaceOutDirec =
     
          0     0    -1
@@ -894,5 +905,4 @@ display(bdFaceOutDirec);
          0     1     0
          0     0     1
          0     0     1
-    
 
