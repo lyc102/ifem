@@ -36,7 +36,7 @@ findelem(node,elem);
 findnode(node);
 ```
 
-<img src="mesh_figures/scdoc_3_0.png" alt="scdoc_3_0" style="zoom:75%;" />
+![png](mesh_figures/scdoc_3_0.png)
 
 The basic data structure of a mesh consists of `node` and `elem`.
 The integers `N, NE, NT, NE` represents the muber of vertice, edges, triangles, edges
@@ -401,8 +401,8 @@ display(elem2edgeSign);
 
 
 ​    
-    edge =
-    
+​    edge =
+​    
                1           2
                1           3
                1           4
@@ -411,23 +411,22 @@ display(elem2edgeSign);
 
 
 ​    
-    elem2edge =
-    
+​    elem2edge =
+​    
                2           1           4
                2           5           3
 
 
 ​    
-    elem2edgeSign =
-    
+​    elem2edgeSign =
+​    
         -1     1     1
          1     1    -1
 
 
 
+![png](mesh_figures/scdoc_16_1.png)
 
-​    <img src="mesh_figures/scdoc_16_1.png" alt="scdoc_16_1" style="zoom:75%;" />
-   
 
 ```matlab
 node = [0,0; 1,0; 1,1; 0,1];    % nodes
@@ -454,9 +453,9 @@ display(elem2edgeSign);
          1     3     4
 
 
+​    edge =
 ​    
-    edge =
-    
+
                1           2
                1           3
                1           4
@@ -465,18 +464,18 @@ display(elem2edgeSign);
 
 
 ​    
-    elem2edge =
-    
+​    elem2edge =
+​    
                4           2           1
                5           3           2
 
 
 ​    
-    elem2edgeSign =
-    
+​    elem2edgeSign =
+​    
          1    -1     1
          1    -1     1
 
 
 
-<img src="mesh_figures/scdoc_17_1.png" alt="scdoc_17_1" style="zoom:75%;" />    
+![png](mesh_figures/scdoc_17_1.png)    
