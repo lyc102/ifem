@@ -398,33 +398,24 @@ display(elem2edgeSign);
     
          2     3     1
          4     1     3
-
-
-​    
-​    edge =
-​    
+         
+    edge =
                1           2
                1           3
                1           4
                2           3
                3           4
-
-
-​    
-​    elem2edge =
-​    
+    
+    elem2edge =
                2           1           4
-               2           5           3
-
-
-​    
-​    elem2edgeSign =
-​    
+               2           5           3   
+    
+    elem2edgeSign =
         -1     1     1
          1     1    -1
 
 
-
+  
 ![png](mesh_figures/scdoc_16_1.png)
 
 
@@ -451,31 +442,23 @@ display(elem2edgeSign);
     
          1     2     3
          1     3     4
-
-
-​    edge =
-​    
-
+         
+    edge = 
                1           2
                1           3
                1           4
                2           3
                3           4
-
-
-​    
-​    elem2edge =
-​    
+               
+    elem2edge =
                4           2           1
                5           3           2
-
-
-​    
-​    elem2edgeSign =
-​    
+    
+    elem2edgeSign =
          1    -1     1
          1    -1     1
 
 
+  
 
 ![png](mesh_figures/scdoc_17_1.png)    
