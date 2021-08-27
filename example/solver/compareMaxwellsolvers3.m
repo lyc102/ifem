@@ -23,7 +23,7 @@ fprintf('Difference between direct and amg solvers %0.2g \n',...
 %% Lshape adaptive grids
 mesh.shape = 'Lshape';
 mesh.type = 'adaptive';
-mesh.size = 4e4;
+mesh.size = 3e4;
 pde = 'Maxwell';
 fem = 'ND1';
 % get the matrix

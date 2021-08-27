@@ -134,8 +134,8 @@ else
    bdidx(isBdNode) = 1;
 end
 Tbd = spdiags(bdidx,0,N,N);
-% BP = gradt*A(1:NE,1:NE)*grad + Tbd;
-BP = gradt*spdiags(edgeLength.*beta,0,NE,NE)*grad + Tbd;
+BP = gradt*A(1:NE,1:NE)*grad + Tbd;
+% BP = gradt*spdiags(edgeLength.*beta,0,NE,NE)*grad + Tbd;
 
 %% Transfer operators between multilevel meshes
 setupOption.solver = 'NO';

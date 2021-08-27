@@ -35,9 +35,8 @@ findnode(node);       % plot indices of all vertices
 ```
 
 
-​    
-![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_2_0.png)
-​    
+<img src="mesh_figures/meshbasicdoc_2_0.png" alt="meshbasicdoc_2_0" style="zoom:75%;" />    
+    
 
 
 Apply the uniform refinement sevreal times to obtain a fine mesh.
@@ -51,9 +50,8 @@ showmesh(node,elem);
 ```
 
 
-​    
-![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_4_0.png)
-​    
+ <img src="mesh_figures/meshbasicdoc_4_0.png" alt="meshbasicdoc_4_0" style="zoom:75%;" />   
+    
 
 
 ## Example: A Cube in 3-D
@@ -70,9 +68,8 @@ findnode3(node);
 ```
 
 
-​    
-![png]({{ site.baseurl }}/assets/images/mesh/meshbasicdoc_6_0.png)
-​    
+<img src="mesh_figures/meshbasicdoc_6_0.png" alt="meshbasicdoc_6_0" style="zoom:75%;" />    
+    
 
 
 Unlike the 2-D case, to apply uniform refinement to obtain a fine mesh with good mesh quality, a different ordering of the initial mesh, which may violate the positive ordering, should be used. See [3-D Red Refinement]({{ site.baseurl }}{% link _mesh/uniformrefine3.md %}).
