@@ -1,6 +1,4 @@
 ---
-
-
 permalink: /mesh/bd/
 title: "Data Structure: Boundary Conditions"
 sidebar:
@@ -11,8 +9,7 @@ sidebar:
 We use `bdFlag(1:NT,1:3)` to record the type of three edges of each
 triangle. Similarly in 3-D, we use `bdFlag(1:NT,1:4)` to record the type
 of four faces of each tetrahedron. The value is the type of boundary
-condition.
-search_full_content
+condition:
 - 0: non-boundary, i.e., an interior edge or face.
 - 1: first type, i.e., a Dirichlet boundary edge or face. 
 - 2: second type, i.e., a Neumann boundary edge or face. 

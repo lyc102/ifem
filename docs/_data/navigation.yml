@@ -29,18 +29,6 @@ docs:
         url: /mesh/sc/
       - title: "Simplicial complex in 3D"
         url: /mesh/sc3/
-      - title: "Uniform refinement in 3D"
-        url: /mesh/uniformrefine3/
-
-  - title: Mesh Generation and Optimization
-    url: /mesh/opt/
-    children:
-      - title: "Demo: Interface Mesh Generator"
-        url: /mesh/interfacemesh2demo/
-      - title: "Interface Mesh Generator"
-        url: /mesh/interfacemeshdoc/
-      - title: "Mesh Smoothing"
-        url: /mesh/opt/
 
   - title: Finite Element Methods
     url: /fem/
@@ -58,10 +46,6 @@ docs:
     children:
       - title: "Introduction to AFEM"
         url: /afem/
-      - title: "Bisection in 2D"
-        url: /afem/bisect/
-      - title: "Coarsen in 2D"
-        url: /afem/coarsen/
       - title: "Project: AFEM for the heat equation"
         url: /projects/heat/
 
@@ -72,6 +56,23 @@ docs:
         url: /solver/introduction/
       - title: "Solvers for Poisson-type equations"
         url: /solver/mgPoisson/
+
+  - title: Mesh Generation, Adaptation, and Optimization
+    url: /mesh/opt/
+    children:
+      - title: "Demo: Interface Mesh Generator"
+        url: /mesh/interfacemesh2demo/
+      - title: "Interface Mesh Generator"
+        url: /mesh/interfacemeshdoc/
+      - title: "Mesh Smoothing"
+        url: /mesh/opt/
+      - title: "Uniform refinement in 3D"
+        url: /mesh/uniformrefine3/
+      - title: "Bisection in 2D"
+        url: /afem/bisect/
+      - title: "Coarsen in 2D"
+        url: /afem/coarsen/
+
 
   - title: Data Structure for DoFs
     url: /dof/
@@ -195,10 +196,6 @@ afem:
     children:
       - title: "Introduction to AFEM"
         url: /afem/
-      - title: "Bisection in 2D"
-        url: /afem/bisect/
-      - title: "Coarsen in 2D"
-        url: /afem/coarsen/
       - title: "Project: AFEM for the heat equation"
         url: /projects/heat/
 
@@ -221,7 +218,7 @@ mesh:
         url: /mesh/uniformrefine3/
       - title: "Dof on Edges in 3D"
         url: /mesh/dof3edge/
-  - title: Mesh Generation and Optimization
+  - title: Mesh Generation, Adaptation and Optimization
     children:
       - title: "Demo: Interface Mesh Generator"
         url: /mesh/interfacemesh2demo/
@@ -229,6 +226,13 @@ mesh:
         url: /mesh/interfacemeshdoc/
       - title: "Mesh Smoothing"
         url: /mesh/opt/
+      - title: "Uniform refinement in 3D"
+        url: /mesh/uniformrefine3/
+      - title: "Bisection in 2D"
+        url: /afem/bisect/
+      - title: "Coarsen in 2D"
+        url: /afem/coarsen/
+
 
 dof:
   - title: "Back to main"

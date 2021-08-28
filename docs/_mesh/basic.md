@@ -64,10 +64,8 @@ clf; showmesh3(node,elem,[],'FaceAlpha',0.25);
 view([-53,8]);
 axis on
 findelem3(node,elem);
-findnode3(node);
+findnode3(node); 
 ```
-
-! [png] (mesh_figures/meshbasicdoc_6_0.png)    
 
 
 

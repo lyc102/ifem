@@ -5,26 +5,26 @@ sidebar:
     nav: mesh
 ---
 
-We describe the data structure of the simplicial complex associated to a
-two-dimensional triangulation give by `node,elem`. The `node` records
-the coordinates of vertices and `elem` is the pointer from the local to
-the global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _mesh/basic.md %} ).
-
 A brief summary.
 
-- `edge`: asecond ordering ` edge(:,1)<edge(:,2);`
+- `edge`: asecond ordering `edge(:,1)<edge(:,2);`
 - `locEdge`: the default one is the consistent orientation which will be counter-clockwise if `elem` is positive ordered. The asecond orientation is used for edge elements.
   - consistent orientation `[2 3; 3 1; 1 2];`
   - asecond orientation    `[2 3; 1 3; 1 2];` 
 - `elem`: the default one is positive ordering and the asecond ordering is used for edge elements. 
-- Use `[elem,bdFlag] = sortelem(elem,bdFlag)` to change the ordering to the ascend ordering. Note that `bdFlag` should be switched together.  
+- Use `[elem,bdFlag] = sortelem(elem,bdFlag)` to change to the ascend ordering. Note that `bdFlag` should be switched together.  
 - Use `[elem,idx,area,bdFlag] = fixorder(node,elem,bdFlag)` to change the ordering to the positive ordering.
 
-> The multigrid solvers use the original ordering of `elem` obtained from either uniform refinement or bisection methods. So let `elemold=elem` and use `elemold` in `mg`.
+> The multigrid solvers use the original ordering of `elem` obtained from either uniform refinement or bisection methods. So let `elemold=elem` and use `elemold` in multigrid solvers.
 
 - Examples on the usage: `PoissonRT0, PoissonBDM1`
 
 ## Outline
+
+We describe the data structure of the simplicial complex associated to a
+two-dimensional triangulation give by `node,elem`. The `node` records
+the coordinates of vertices and `elem` is the pointer from the local to
+the global indices of vertices. See [Basic mesh data structure]({{ site.baseurl }}{% link _mesh/basic.md %} ).
 
 
 ```matlab
@@ -344,7 +344,7 @@ elem2edgeSign(idx) = -1;
 
 ### Ascend Ordering and Orientation
 
-For H(curl) and H(div) elements and high order (cubic and above) H(grad) elements, we will use the ascend ordering and orientation.
+For H(curl) and H(div) elements and high order (cubic and above) Lagrange elements, we will use the ascend ordering and orientation.
 
 *Ordering*. The vertices of `elem` are sorted such that
 
@@ -416,6 +416,7 @@ display(elem2edgeSign);
 
 
   
+
 ![png](mesh_figures/scdoc_16_1.png)
 
 
