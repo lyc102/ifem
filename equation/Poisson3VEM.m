@@ -8,16 +8,22 @@ function [u, info] = Poisson3VEM(node, face, face2elem, pde, option)
 %   we assume all of the faces are triangles or all of them are squares.
 
 
-% number of nodes and povlyhedra
-N = size(node, 1); NP = max(face2elem);
+% number of nodes and polyhedra
+N = size(node, 1); 
+NP = max(face2elem);
 NF = size(face ,1);
 
 Ndof = N;
 
 isTriFace = face(:,4) == 0;
-elem2node = sparse(face2elem(isTriFace)*ones(1,3),face(isTriFace,1:3),1, NP, N)...
- + sparse(face2elem(~isTriFace)*ones(1,4), face(~isTriFace,1:4),1, NP, N);
 
+% connectivity degree matrix from the element to the nodes
+elem2node = sparse(face2elem(~isTriFace)*ones(1,4), face(~isTriFace,1:4),1, NP, N);
+if any(isTriFace)
+    elem2node = elem2node + sparse(face2elem(isTriFace)*ones(1,3),face(isTriFace,1:3),1, NP, N);
+end
+
+% adjacency matrix
 elem2node = (elem2node > 0);
 NV = elem2node*ones(N,1);
 centroid = elem2node*node./[NV, NV, NV];
@@ -31,6 +37,7 @@ normal = facenormal(node,face); % face normal vectors
 volume = accumarray(face2elem, coefficient.*dot(node(face(:,1),:),normal,2)); % divergence therorem
 h = volume.^(1/3);
 
+% gradient matrix, has scaling O(1)
 B = 1/6*normal./(h(face2elem).^2*ones(1, 3));
 B(~isTriFace,:) = 3/2*B(~isTriFace,:);
 
@@ -91,10 +98,10 @@ for kk = 1:length(uNV)
     ch = h(isCurrentElem);
     for i = 1:nv
         for j = 1:nv
-            Xj = (node(currentElem(:, j), :) - centroid(isCurrentElem,:))./[ch, ch, ch];
+            Xj = (node(currentElem(:, j), :) - centroid(isCurrentElem,:))./[ch, ch, ch]; % Xj is of O(1)
             IminusP(:, i, j) = - c - dot(Xj, BP(:, :, i), 2);
             if(i == j)
-                IminusP(:, i, j) = 1 + IminusP(:, i, j);
+                IminusP(:, i, j) = 1 + IminusP(:, i, j); % IminusP is O(1)
             end
         end
     end
@@ -131,8 +138,8 @@ solver = option.solver;
 switch solver
     case 'direct'
         tic;
-        u(isFreeNode) = AD(isFreeNode,isFreeNode)\b(isFreeNode);
-        residual = norm(b - AD*u);
+        u(isFreeNode) = A(isFreeNode,isFreeNode)\b(isFreeNode);
+        residual = norm(b - A*u);
         info = struct('solverTime',toc,'itStep',0,'err',residual,'flag',2,'stopErr',residual);
     case 'none'
         info = struct('solverTime',[],'itStep',0,'err',[],'flag',3,'stopErr',[]);
