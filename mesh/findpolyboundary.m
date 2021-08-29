@@ -65,7 +65,7 @@ bdFacet = allFacet(i1(i1 == i2), :);
 switch dim
     case 2
         isBdNode(bdFacet(:)) = true;
-    case 3
+    case 4
         isTriFace = bdFacet(:, 4) == 0;
         isBdNode(bdFacet(isTriFace,1:3)) = true;
         isBdNode(bdFacet(~isTriFace, :)) = true;
