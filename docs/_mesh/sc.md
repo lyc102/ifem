@@ -38,8 +38,7 @@ findnode(node);
 
 ![png](mesh_figures/scdoc_3_0.png)
 
-The basic data structure of a mesh consists of `node` and `elem`.
-The integers `N, NE, NT, NE` represents the muber of vertice, edges, triangles, edges
+The integers `N, NE, NT` represents the muber of vertice, edges, triangles
 respectively.
 
 The corresponding simplicial complex consists of vertices, edges and
@@ -62,8 +61,8 @@ For indexing, ordering and orientation, there are always two versions: local and
 ## Indexing
 
 The indexing refers to the numbering of simplexes, e.g., which edge is
-numbered as the first one. Each simplex in the simplicial complex has a unique index which is called the global index. In one triangle, the three vertices and three
-edges have their local index from 1:3. 
+numbered as the first one. Each simplex in the simplicial complex has a unique index which is called the global index. Inside one triangle, the three vertices and three
+edges have their local index  `1:3`. 
 
 In the assembling procedure of finite element methods, an element-wise
 matrix using the local index is firstly computed and then assembled to get a
@@ -77,7 +76,7 @@ is sufficient.
 
 ### Pointers of vertices
 
-The `NT x 3` matrix `elem` is indeed the pointer of the vertex indices. For example `elem(t,1)=25` means the first vertex of the triangle t is the 25-th vertex.
+The `NT x 3` matrix `elem` is indeed the pointer of the vertex indices. For example `elem(t,1)=25` means the first vertex of  `t` is the 25-th vertex.
 
 Similiary, the `NE x 2` matrix `edge` records the vertices pointer of edges.
 
@@ -196,7 +195,7 @@ display('After rotation'); display(elem); display(bdFlag);
 ​    
 
 Ascend ordering will benefit the construction of local bases for high
-order Lagrange elements or in general bases with orientation dependent.
+order Lagrange elements and in general bases with orientation dependent.
 
 We may switch the default positive ordering of `elem` to the ascend ordering
 when generating data structure for finite element basis. However such
@@ -263,7 +262,7 @@ the global ordering-orientation, it is the sign of the signed area
 In the output of `gradbasis`, `area` is always positive and an additional
 array `elemSign` is used to record the sign of the signed area.
 
-`Dlambda(t,:,k)` is the gradient of the barycentric coordinate $\lambda_k$. Therefore the outward normal direction of the `k`th edge can be obtained by `-Dlambda(t,:,k)` which is independent of the ordering and orientation of triangle `t`.
+`Dlambda(t,:,k)` is the gradient of the barycentric coordinate $\lambda_k$ associated to vertex $k$. Therefore the outward normal direction of the `k`th edge can be obtained by `-Dlambda(t,:,k)` which is independent of the orientation of triangle `t`.
 
 ### edge
 
@@ -415,7 +414,7 @@ display(elem2edgeSign);
          1     1    -1
 
 
-  
+
 
 ![png](mesh_figures/scdoc_16_1.png)
 
@@ -460,6 +459,6 @@ display(elem2edgeSign);
          1    -1     1
 
 
-  
+
 
 ![png](mesh_figures/scdoc_17_1.png)    
