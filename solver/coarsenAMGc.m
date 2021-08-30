@@ -27,7 +27,7 @@ function [isC,G] = coarsenAMGc(A,theta)
 if ~exist('theta','var'), theta = 0.025; end
 N = size(A,1);
 isC = false(N,1);       % C: coarse node
-N0 = min(sqrt(N),25);   % number of the coarest nodes
+N0 = min(floor(sqrt(N)),25);   % number of the coarest nodes
 
 %% Generate strong connectness matrix
 Dinv = spdiags(1./sqrt(diag(A)),0,N,N);
