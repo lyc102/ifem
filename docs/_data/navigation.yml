@@ -214,10 +214,6 @@ mesh:
         url: /mesh/sc/
       - title: "Simplicial complex in three dimensions"
         url: /mesh/sc3/
-      - title: "Uniform refinement in 3D"
-        url: /mesh/uniformrefine3/
-      - title: "Dof on Edges in 3D"
-        url: /mesh/dof3edge/
   - title: Mesh Generation, Adaptation and Optimization
     children:
       - title: "Demo: Interface Mesh Generator"
