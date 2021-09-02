@@ -13,6 +13,7 @@ function [sigma,u,info] = uzawapcg(M,B,C,f,g,elem,option)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 t = cputime;
+
 %% Parameters
 if ~exist('option','var'), option = []; end
 Ndof = length(f)+length(g); 
@@ -46,7 +47,7 @@ b = B*(1./diag(M).*f) - g; % approximated rhs
 nb = norm(b);
 % initial residual
 u = x0(N+1:end);
-[tempr,flag] = pcg(M,f-Bt*u,tolM,pcgmaxIt,DM); % M^{-1}(B'*u)
+[tempr,~] = pcg(M,f-Bt*u,tolM,pcgmaxIt,DM); % M^{-1}(B'*u)
 r = B*tempr - g - C*u;
 
 err = zeros(maxIt,2);
@@ -68,7 +69,7 @@ option.x0 = zeros(Ng,1);
 while (max(err(k,:)) > tol) && (k <= maxIt)
     % given r, compute Pr    
 %     Pr = Abar\r;  
-%     Pr = amg(Abar,r,option);
+%     Pr = amg(Abar,r,option);    
     Pr = mg(Abar,r,elem,option,Ai,Bi,BBi,Res,Pro,isFreeDof);
     % update tau, beta, and p
     rho = Pr'*r;  % e'*ABA*e approximates e'*A*e
@@ -79,7 +80,7 @@ while (max(err(k,:)) > tol) && (k <= maxIt)
         p = Pr + beta*p;
     end
     % update alpha, u, and r
-    [tempp,flag] = pcg(M,Bt*p,tolM,pcgmaxIt,DM); %#ok<*NASGU> % M^{-1}(B'*p)
+    [tempp,~] = pcg(M,Bt*p,tolM,pcgmaxIt,DM); %#ok<*NASGU> % M^{-1}(B'*p)
     Ap = B*tempp + C*p;  % A*p = B*M^{-1}*B'*p + C*p; 
     alpha = rho/(Ap'*p);
     r = r - alpha*Ap;

@@ -17,6 +17,24 @@ sidebar:
 
 
 
+
+
+## mg
+
+> Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND = 1.387779e-16. 
+
+> In mg/vcycle (line 674)
+
+When the matrix is singular, the coarse grid solver is changed to 'pcg' not 'direct'.
+
+```matlab
+if condest(Ai{1}) > 1e-12 % Ai{1} is singular
+    coarsegridsolver = 'pcg';
+end
+```
+
+
+
 ## coarsen3
 
 - In the input and output, the ordering of arguments is changed to `bdFlag, HB` 

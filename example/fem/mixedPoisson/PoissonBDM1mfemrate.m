@@ -38,14 +38,15 @@ option.L0 = 2;
 option.maxIt = 4;
 option.printlevel = 1;
 option.elemType = 'BDM1';
-option.solver = 'tri';
 pde = sincosNeumanndata;
 
 %% Pure Neumann boundary condition.
+option.solver = 'tri';
 mesh.bdFlag = setboundary(node,elem,'Neumann');
 mfemPoisson(mesh,pde,option);
 
 %% Pure Dirichlet boundary condition.
+option.solver = 'uzawapcg';
 mesh.bdFlag = setboundary(node,elem,'Dirichlet');
 mfemPoisson(mesh,pde,option);
 

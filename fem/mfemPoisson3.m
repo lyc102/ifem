@@ -111,7 +111,7 @@ for k = 1:maxIt
     h(k) = 1./(sqrt(size(node,1))-1);    
     if option.plotflag && N(k) < 2e3 % show mesh and solution for small size
        figure(1);  
-       showresult3(node,elem,u);    
+%        showresult3(node,elem,u);    
     end
     if N(k) > maxN
         break;

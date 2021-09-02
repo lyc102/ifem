@@ -369,7 +369,7 @@ if setupflag == false
    BTi = varargin{3};
    Res = varargin{4};
    Pro = varargin{5};
-   if isequal(length(varargin),6) 
+   if length(varargin)>=6
       isFreeDof = varargin{6};
    else
       isFreeDof = true(Ndof,1);
@@ -385,6 +385,9 @@ if setupflag == false
         A = A(isFreeDof,isFreeDof);
         x0 = x0(isFreeDof,:);
    end
+end
+if condest(Ai{1}) > 1e16 % Ai{1} is singular
+    coarsegridsolver = 'pcg';
 end
 
 %% No coarsening or coarsened nodes is small
