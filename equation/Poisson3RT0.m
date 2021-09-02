@@ -38,7 +38,7 @@ Nsigma = NF; Nu = NT; Ndof = Nsigma + Nu;
 M = getmassmatvec3(elem2face,volume,Dlambda,'RT0',K);
 
 % B. divergence operator
-B = icdmat(double(elem2face),[1 -1 1 -1]);
+B = icdmat(double(elem2face),elemSign*[1 -1 1 -1]);
 
 % C. zero matrix.
 C = sparse(Nu,Nu);
@@ -58,20 +58,21 @@ if ~isempty(pde.f)
 	nQuad = size(lambda,1);
 	for p = 1:nQuad
 		% quadrature points in the x-y coordinate
-		pxy = lambda(p,1)*node(elem(:,1),:) ...
+		pxyz = lambda(p,1)*node(elem(:,1),:) ...
 			+ lambda(p,2)*node(elem(:,2),:) ...
             + lambda(p,3)*node(elem(:,3),:) ...
 			+ lambda(p,4)*node(elem(:,4),:);
-		fp = pde.f(pxy);
+		fp = pde.f(pxyz);
 		fu = fu - fp*weight(p);
-	end
+    end
+    fu = fu.*volume;
 end
 clear fp
 F((Nsigma+1):Ndof,1) = fu;
 
 %% Boundary condition
 if ~exist('bdFlag','var'), bdFlag = []; end
-[AD,F,bigu,freeDof,freeFace,isPureNeumannBC] = getbd3RT0(F);
+[AD,F,bigu,freeDof,isPureNeumannBC] = getbd3RT0(F);
 eqn = struct('M',AD(1:NF,1:NF),'B',AD(NF+1:end,1:NF),'C',AD(NF+1:end,NF+1:end),...
              'f',F(1:NF),'g',F(NF+1:end),'freeDof',freeDof,'A',AD);
 
@@ -126,15 +127,14 @@ info.assembleTime = assembleTime;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunction getbdRT0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    function [AD,F,bigu,freeDof,freeFace,isPureNeumannBC] = getbd3RT0(F)
-        %%
-        
+    function [AD,F,bigu,freeDof,isPureNeumannBC] = getbd3RT0(F)
+    %% GETBD3RT0 Boundary conditions for Poisson equation: RT0 element in 3D.
+            
     bigu = zeros(Ndof,1);
 
     %% Boundary conditions
     if ~isfield(pde,'g_D'), pde.g_D = []; end
     if ~isfield(pde,'g_N'), pde.g_N = []; end
-    if ~isfield(pde,'d'), pde.d = []; end
 
     %% Set up bdFlag
     if (isempty(bdFlag)) % no bdFlag information
@@ -154,11 +154,11 @@ info.assembleTime = assembleTime;
     if ~isempty(bdFlag)
         % Find Dirichlet and Neumann boundary edges
         isDirichlet(elem2face(bdFlag(:) == 1)) = true;
-        isNeumann(elem2face(bdFlag(:) == 2)) = true;
+          isNeumann(elem2face(bdFlag(:) == 2)) = true;
     % Direction of boundary faces may not be the outwards normal
     % direction of the domain due to the sortelem. faceSign is
-    % introduced to record this inconsistency of ascend ordering and
-    % induced ordering.
+    % introduced to record this inconsistency of the ascend ordering and
+    % the induced ordering.
         faceSign = ones(NF,1);
         idx = (bdFlag(:,1) ~= 0) & (elemSign == -1);% first face
         faceSign(elem2face(idx,1)) = -1;
@@ -174,9 +174,9 @@ info.assembleTime = assembleTime;
     isBdDof = false(Ndof,1); 
     isBdDof(isNeumann) = true;   % for mixed method, Neumann edges are fixed
     freeDof = find(~isBdDof);
-    isFreeFace = true(NF,1);
-    isFreeFace(isNeumann) = false;
-    freeFace = find(isFreeFace);
+%     isFreeFace = true(NF,1);
+%     isFreeFace(isNeumann) = false;
+%     freeFace = find(isFreeFace);
 
     %% Dirichlet boundary condition (Neumann BC in mixed form)
     %   We need only modify the rhs on dof associated with Dirichlet boundary
@@ -214,10 +214,10 @@ info.assembleTime = assembleTime;
     if ~any(isDirichlet) && any(isNeumann)
         freeDof = freeDof(1:end-1);  % eliminate the kernel by enforcing u(NT) = 0;
         isBdDof(end) = true;
-%         F(end) = 0;
         isPureNeumannBC = true;
         F(NF+1:end) = F(NF+1:end) - mean(F(NF+1:end)); % normalize
     end
+    
     %% Modify the matrix
     %  Build Neumann boundary condition(Dirichlet BC in mixed form) into the
     %  matrix AD by enforcing  |AD(bdNode,bdNode)=I,

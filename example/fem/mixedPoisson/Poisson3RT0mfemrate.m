@@ -31,13 +31,14 @@ option.L0 = 0;
 option.maxIt = 3;
 option.printlevel = 1;
 option.elemType = 'RT0';
-option.solver = 'tri';
 pde = mixBCdata3;
 
 %% Pure Neumann boundary condition.
+option.solver = 'uzawapcg';
 mesh.bdFlag = setboundary(node,elem,'Dirichlet');
 mfemPoisson3(mesh,pde,option);
 
 %% Pure Dirichlet boundary condition.
+option.solver = 'tri';
 mesh.bdFlag = setboundary(node,elem,'Neumann');
 mfemPoisson3(mesh,pde,option);

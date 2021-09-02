@@ -107,7 +107,7 @@ F((Nsigma+1):Ndof,1) = fu;
 
 %% Boundary Conditions
 if ~exist('bdFlag','var'), bdFlag = []; end
-[AD,F,bigu,freeDof,freeEdge,isPureNeumannBC] = getbdRT0(F);
+[AD,F,bigu,freeDof,isPureNeumannBC] = getbdRT0(F);
 eqn = struct('M',AD(1:NE,1:NE),'B',AD(NE+1:end,1:NE),'C',AD(NE+1:end,NE+1:end),...
              'f',F(1:NE),'g',F(NE+1:end),'freeDof',freeDof,'A',AD);
 
@@ -144,12 +144,12 @@ switch lower(solver)
         [sigma,u,info] = tripremixPoisson(eqn.M,eqn.B,eqn.C,eqn.f,eqn.g,elemold);    
     case 'uzawapcg'
         [sigma,u,info] = uzawapcg(eqn.M,eqn.B,eqn.C,eqn.f,eqn.g,elemold);
-    case 'mg'
-        option.freeEdge = freeEdge;
-        option.isPureNeumannBC = isPureNeumannBC;
-        [sigma0,u,info] = mgDarcy(eqn.M,eqn.B,eqn.f,eqn.g,elemold,option);
-        sigma = bigu(1:NE);
-        sigma(freeEdge) = sigma0;
+%     case 'mg'
+%         option.freeEdge = freeEdge;
+%         option.isPureNeumannBC = isPureNeumannBC;
+%         [sigma0,u,info] = mgDarcy(eqn.M,eqn.B,eqn.f,eqn.g,elemold,option);
+%         sigma = bigu(1:NE);
+%         sigma(freeEdge) = sigma0;
 end
 if isPureNeumannBC % post process for u for pure Neumann boundary condition
     ubar = sum(u.*area)/sum(area);
@@ -162,7 +162,7 @@ info.assembleTime = assembleTime;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % subfunction getbdRT0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    function [AD,F,bigu,freeDof,freeEdge,isPureNeumannBC] = getbdRT0(F)
+    function [AD,F,bigu,freeDof,isPureNeumannBC] = getbdRT0(F)
     %% GETBDRT0 Boundary conditions for Poisson equation: RT0 element.
     %
     %  Created by Ming Wang. Improved the check of edgeSign by Long Chen.
@@ -183,9 +183,11 @@ info.assembleTime = assembleTime;
     end
 
     %% Find Dirichlet and Neumann dofs 
+    isDirichlet = false(NE,1);
+    isNeumann = false(NE,1);
     if ~isempty(bdFlag)
         isDirichlet(elem2edge(bdFlag(:)==1)) = true;
-        isNeumann(elem2edge(bdFlag(:)==2)) = true;
+          isNeumann(elem2edge(bdFlag(:)==2)) = true;
         % Direction of boundary edges may not be the outwards normal direction 
         % of the domain. edgeSign is introduced to record this inconsistency.
         edgeSign = ones(NE,1);
@@ -201,9 +203,9 @@ info.assembleTime = assembleTime;
     isBdDof = false(Ndof,1); 
     isBdDof(isNeumann) = true;   % for mixed method, Neumann edges are fixed
     freeDof = find(~isBdDof);
-    isFreeEdge = true(NE,1);
-    isFreeEdge(isNeumann) = false;
-    freeEdge = find(isFreeEdge);
+%     isFreeEdge = true(NE,1);
+%     isFreeEdge(isNeumann) = false;
+%     freeEdge = find(isFreeEdge);
     
     %% Dirichlet boundary condition (Neumann BC in mixed form)
     %   We need only modify the rhs on dof associated with Dirichlet
