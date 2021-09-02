@@ -2,7 +2,7 @@
 bdFlag = setboundary(node,elem,'Dirichlet'); 
 pde = mixBCdata3;
 maxIt = 3;
-option.solver = 'direct';
+option.solver = 'uzawapcg';
 
 %% Solve and plot
 err = zeros(maxIt,3); N = zeros(maxIt,1);
