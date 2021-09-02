@@ -27,7 +27,6 @@ end
 elemold = elem;
 [elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering
 [elem2face,face] = dof3face(elem);
-% localFace = [2 3 4; 1 3 4; 1 2 4; 1 2 3]; % ascend ordering
 NT = size(elem,1); NF = size(face,1);
 [Dlambda,volume,elemSign] = gradbasis3(node,elem);
 
@@ -35,10 +34,10 @@ NT = size(elem,1); NF = size(face,1);
 Nsigma = NF; Nu = NT; Ndof = Nsigma + Nu;
 
 % M. Mass matrix for RT0 element
-M = getmassmatvec3(elem2face,volume,Dlambda,'RT0',K);
+M = getmassmatvec3(elem2face,volume,Dlambda,'RT0',K); % ascend ordering of loc edge
 
 % B. divergence operator
-B = icdmat(double(elem2face),elemSign*[1 -1 1 -1]);
+B = icdmat(double(elem2face),elemSign*[1 -1 1 -1]); % inconsistency with the induced ordering
 
 % C. zero matrix.
 C = sparse(Nu,Nu);
@@ -56,12 +55,12 @@ end
 if ~isempty(pde.f)
 	[lambda,weight] = quadpts3(option.fquadorder);
 	nQuad = size(lambda,1);
-	for p = 1:nQuad
+    for p = 1:nQuad
 		% quadrature points in the x-y coordinate
 		pxyz = lambda(p,1)*node(elem(:,1),:) ...
-			+ lambda(p,2)*node(elem(:,2),:) ...
-            + lambda(p,3)*node(elem(:,3),:) ...
-			+ lambda(p,4)*node(elem(:,4),:);
+			 + lambda(p,2)*node(elem(:,2),:) ...
+             + lambda(p,3)*node(elem(:,3),:) ...
+			 + lambda(p,4)*node(elem(:,4),:);
 		fp = pde.f(pxyz);
 		fu = fu - fp*weight(p);
     end

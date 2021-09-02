@@ -62,8 +62,8 @@ end
 
 %% Data structure
 elemold = elem;
-[elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering
-[elem2edge,edge] = dofedge(elem);
+[elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering of elem
+[elem2edge,edge] = dofedge(elem);    
 NT = size(elem,1); NE = size(edge,1);
 [Dlambda,area,elemSign] = gradbasis(node,elem);
 
@@ -71,10 +71,10 @@ NT = size(elem,1); NE = size(edge,1);
 Nsigma = NE; Nu = NT; Ndof = Nsigma + Nu;
 
 % M. Mass matrix for RT0 element
-M = getmassmatvec(elem2edge,area,Dlambda,'RT0',K);
+M = getmassmatvec(elem2edge,area,Dlambda,'RT0',K); % ascend ordering of loc edge
 
 % B. divergence operator
-B = icdmat(double(elem2edge),elemSign*[1 -1 1]);
+B = icdmat(double(elem2edge),elemSign*[1 -1 1]); % inconsistency with the induced ordering
 
 % C. zero matrix.
 C = sparse(Nu,Nu);
