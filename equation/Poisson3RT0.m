@@ -27,14 +27,18 @@ end
 elemold = elem;
 [elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering
 [elem2face,face] = dof3face(elem);
-NT = size(elem,1); NF = size(face,1);
 [Dlambda,volume,elemSign] = gradbasis3(node,elem);
 
-%% Assemble matrix 
-Nsigma = NF; Nu = NT; Ndof = Nsigma + Nu;
+%% Number of DoFs
+NT = size(elem,1); 
+NF = size(face,1);
+Nsigma = NF; 
+Nu = NT; 
+Ndof = Nsigma + Nu;
 
+%% Assemble matrix 
 % M. Mass matrix for RT0 element
-M = getmassmatvec3(elem2face,volume,Dlambda,'RT0',K); % ascend ordering of loc edge
+M = getmassmatvec3(elem2face,volume,Dlambda,'RT0',K); % ascend ordering of loc faces
 
 % B. divergence operator
 B = icdmat(double(elem2face),elemSign*[1 -1 1 -1]); % inconsistency with the induced ordering
@@ -142,8 +146,6 @@ info.assembleTime = assembleTime;
         elseif ~isempty(pde.g_D)
             bdFlag = setboundary3(node,elem,'Dirichlet');
         end
-        % case: bdFlag = [], pde.g_D = pde.g_N =[];
-        % It is equivalent to homogenous Dirichlet boundary condition
     end
 
     %% Find Dirichlet and Neumann dofs         

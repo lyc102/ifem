@@ -11,7 +11,8 @@ function [r1,r2,r3] = showrate3(N1,err1,k1,opt1,str1,N2,err2,k2,opt2,str2,N3,err
 %
 % Example
 %
-% showrate2(N,energyErr,1,'r-+','||u-u_h||_A',...
+% showrate3(N,energyErr,1,'r-+','||u-u_h||_A',...
+%           N,maxErr,1,'k-+','||u-u_h||_{\infty}',...
 %           N,L2Err,1,'b-+','||u-u_h||');
 %
 % See also showrate, showresult, showmesh, showsolution
