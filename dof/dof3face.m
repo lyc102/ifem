@@ -22,4 +22,4 @@ totalFace = int32([elem(:,[2 3 4]); elem(:,[1 4 3]); ...
                    elem(:,[1 2 4]); elem(:,[1 3 2])]); % induced ordering
 [face, ~, j] = myunique(sort(totalFace,2));               
 elem2face = uint32(reshape(j,NT,4));
-elem2faceSign = int8(reshape(sum(sign(diff(totalFace(:,[1:3,1]),1,2)),2),NT,4));      
+elem2faceSign = reshape(sum(sign(diff(totalFace(:,[1:3,1]),1,2)),2),NT,4);      

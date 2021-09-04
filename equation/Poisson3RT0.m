@@ -25,7 +25,7 @@ end
 
 %% Data structure
 elemold = elem;
-[elem,bdFlag] = sortelem(elem,bdFlag);  % ascend ordering
+[elem,bdFlag] = sortelem3(elem,bdFlag);  % ascend ordering
 [elem2face,face] = dof3face(elem);
 [Dlambda,volume,elemSign] = gradbasis3(node,elem);
 
@@ -46,7 +46,7 @@ B = icdmat(double(elem2face),elemSign*[1 -1 1 -1]); % inconsistency with the ind
 % C. zero matrix.
 C = sparse(Nu,Nu);
 
-A = [M B';B C];
+A = [M B';B 1e-10*C];
 
 %% Assemble right hand side.% if ~isempty(bdEdge)
 fu = zeros(Nu,1);

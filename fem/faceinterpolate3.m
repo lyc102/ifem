@@ -2,11 +2,12 @@ function uI = faceinterpolate3(u,node,elem,quadOrder)
 %% FACEINTERPOLATE3 interpolate to face elements RT0.
 %
 % uI = faceinterpolate3(u,node,face) interpolates a given function u
-% into the lowesr order RT0. The coefficient is given by the face integral 
+% into the lowest order RT0. The coefficient is given by the face integral 
 % int_f u*n ds. 
 %
 % uI = faceinterpolate3(u,node,elem) when |face| is not given, the function
-% will generate the face by |[elem2face,face] = dof3face(elem)|.
+% will generate the face by |[elem2face,face] = dof3face(elem)| and the
+% ascend order is used |elem = sortelem3(elem)|.
 %
 % uI = faceinterpolate3(u,node,face,6) the last input is the quadrature
 % order; see quadpts. 
@@ -39,7 +40,7 @@ if size(elem,2) == 3 % the input elem is face
     face = elem;
 else
     elem = sortelem3(elem); 
-    [elem2face,face] = dof3face(elem); 
+    [~,face] = dof3face(elem); 
 end
 
 %% normal vector of each face

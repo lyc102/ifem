@@ -387,7 +387,8 @@ if setupflag == false
    end
 end
 if condest(Ai{1}) > 1e16 % Ai{1} is singular
-    coarsegridsolver = 'pcg';
+    Ai{1} = Ai{1} + 1e-12*speye(size(Ai{1}));
+%     coarsegridsolver = 'pcg';
 end
 
 %% No coarsening or coarsened nodes is small

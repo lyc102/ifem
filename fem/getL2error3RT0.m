@@ -1,10 +1,14 @@
 function err = getL2error3RT0(node,elem,sigma,sigmah,markedElem)
 %% GETL2ERROR3RT0  L2 norm of RT0 element in 3D.
 % 
-%  The input sigma can now just be function boundle. sigmah is the 
-%  flux through faces. 
 %  err = getL2error3RT0(node,elem,sigma,sigmah,markedElem)
-% 
+%
+%  The input sigma can just be a function boundle. sigmah is the flux
+%  through faces. markedElem is used to compute the error in certain region
+%  only.
+%  
+%  Note that the ascend ordering of elem is used. 
+%   
 % Example
 %   
 %   [node,elem] = cubemesh([-1,1,-1,1,-1,1],1);
@@ -38,15 +42,17 @@ err = zeros(NT,1);
 for p = 1:nQuad
     % quadrature points in the x-y-z coordinate
     pxyz = lambda(p,1)*node(elem(:,1),:) ...
-        + lambda(p,2)*node(elem(:,2),:) ... 
-        + lambda(p,3)*node(elem(:,3),:) ...
-        + lambda(p,4)*node(elem(:,4),:);
+         + lambda(p,2)*node(elem(:,2),:) ... 
+         + lambda(p,3)*node(elem(:,3),:) ...
+         + lambda(p,4)*node(elem(:,4),:);
     sigmap = sigma(pxyz);
     sigmahp = zeros(NT,3);
     for l = 1:4 % for each basis
         i = locFace(l,1); j = locFace(l,2); k = locFace(l,3);
-        % phi_k = lambda_iRot_j - lambda_jRot_i;
-        sigmahp = sigmahp + repmat(sigmah(elem2face(:,l)),1,3)*2.*...
+        % phi_l = 2(lambda_i Dlambda_j x Dlambda_k + 
+        %           lambda_j Dlambda_k x Dlambda_i + 
+        %           lambda_k Dlambda_i x Dlambda_j)
+        sigmahp = sigmahp + repmat(2*sigmah(elem2face(:,l)),1,3).*...
                    (lambda(p,i)*mycross(Dlambda(:,:,j),Dlambda(:,:,k)) + ...
                     lambda(p,j)*mycross(Dlambda(:,:,k),Dlambda(:,:,i)) + ...    
                     lambda(p,k)*mycross(Dlambda(:,:,i),Dlambda(:,:,j)));
