@@ -25,20 +25,21 @@
 
 
 %% Setting
-[node,elem] = cubemesh([-1,1,-1,1,-1,1],0.5);
+[node,elem] = cubemesh([0,1,0,1,0,1],0.5);
 mesh = struct('node',node,'elem',elem);
-option.L0 = 0;
+option.L0 = 1;
 option.maxIt = 3;
 option.printlevel = 1;
 option.elemType = 'RT0';
-pde = mixBCdata3;
+pde = mixedPossiondata;
 
-%% Pure Neumann boundary condition.
+%% Dirichelt for u and Neumann boundary condition for sigma
 option.solver = 'uzawapcg';
 mesh.bdFlag = setboundary(node,elem,'Dirichlet');
 mfemPoisson3(mesh,pde,option);
 
-%% Pure Dirichlet boundary condition.
+%% Neumann for u and Dirichlet boundary condition for sigma.
 option.solver = 'tri';
+pde = mixBCdata3;
 mesh.bdFlag = setboundary(node,elem,'Neumann');
 mfemPoisson3(mesh,pde,option);

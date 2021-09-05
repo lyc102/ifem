@@ -11,7 +11,7 @@ function pde = mixBCdata3
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-pde = struct('f',@f,'exactu',@exactu,'g_D',@g_D,'g_N',@g_N,'Du',@Du);
+pde = struct('f',@f,'u',@u,'g_D',@g_D,'g_N',@g_N,'Du',@Du);
 
     % load data (right hand side function)
     function s = f(p)
@@ -19,13 +19,13 @@ pde = struct('f',@f,'exactu',@exactu,'g_D',@g_D,'g_N',@g_N,'Du',@Du);
     s = 3*sin(x).*sin(y).*sin(z);
     end
     % exact solution
-    function s = exactu(p)
+    function s = u(p)
     x = p(:,1); y = p(:,2); z = p(:,3);
     s = sin(x).*sin(y).*sin(z);
     end
     % Dirichlet boundary condition
     function s = g_D(p)
-    s = exactu(p);
+    s = u(p);
     end
     % Neumann boundary condition,[-1,1]*[-1,1]*[-1,1].
     eps = 1.0e-14; % a small quantity.

@@ -202,7 +202,7 @@ info.assembleTime = assembleTime;
     if ~isempty(pde.g_N) && any(isNeumann)
         % modify the rhs to include Dirichlet boundary condition
         barycenter = 1/3*(node(Neumann(:,1),:)+node(Neumann(:,2),:)+node(Neumann(:,3),:));
-        ve2 = node(Neumann(:,1),:) - node(Neumann(:,3),:);
+        ve2 = node(Neumann(:,3),:) - node(Neumann(:,1),:);
         ve3 = node(Neumann(:,2),:) - node(Neumann(:,1),:);
         ve2Crossve3 = mycross(ve2,ve3);
         faceArea = 0.5*sqrt(sum(ve2Crossve3.^2,2));
@@ -232,6 +232,5 @@ info.assembleTime = assembleTime;
     else
         AD = A;
     end
-    end % end of getbdRT0
+    end % end of getbd3RT0
 end
-%% TODO: Write m-lint

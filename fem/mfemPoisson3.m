@@ -74,25 +74,27 @@ for k = 1:maxIt
     end
     % compute error
     t = cputime;
+    volume = simplexvolume(node,elem);
     if isfield(pde,'Du') && isfield(pde,'f')
         switch elemType
             case 'RT0'  % RT0-P0 mixed FEM 
                 errsigmaL2(k) = getL2error3RT0(node,elem,pde.Du,sigma);
-                errsigmaHdiv(k) = getHdiverror3RT0(node,elem,pde.f,-sigma,[]);
+                divsigma = (eqn.B*sigma)./volume;
+                errsigmaHdiv(k) = getL2error3(node,elem,pde.f,-divsigma);
                 sigmaI = faceinterpolate3(pde.Du,node,elem);
             case 'BDM1' % BDM1-P0 mixed FEM
                 errsigmaL2(k) = getL2error3BDM1(node,elem,pde.Du,sigma);
-                errsigmaHdiv(k) = getHdiverror3BDM1(node,elem,pde.f,-sigma,[]);
+                divsigma = (eqn.B*sigma)./volume;
+                errsigmaHdiv(k) = getL2error3(node,elem,pde.f,-divsigma);
                 sigmaI = faceinterpolate3(pde.Du,node,elem,'BDM1');
         end
         errsigmaIsigmah(k)=sqrt((sigma-sigmaI)'*eqn.M*(sigma-sigmaI));
     end
-    if isfield(pde,'exactu')
-        erruL2(k) = getL2error3(node,elem,pde.exactu,u);
+    if isfield(pde,'u')
+        erruL2(k) = getL2error3(node,elem,pde.u,u);
         % interpolation
-        uI = Lagrangeinterpolate(pde.exactu,node,elem,'P0');
-        area = simplexvolume(node,elem);
-        erruIuhL2(k) = sqrt(dot((uI-u).^2,area));
+        uI = Lagrangeinterpolate(pde.u,node,elem,'P0');
+        erruIuhL2(k) = sqrt(dot((uI-u).^2,volume));
     end
     errTime(k) = cputime - t;
     % record time
@@ -132,12 +134,12 @@ if option.rateflag
     set(gcf,'Units','normal'); 
     set(gcf,'Position',[0.25,0.25,0.55,0.4]);
     subplot(1,2,1)
-    showrateh2(h(1:k),erruIuhL2(1:k),1,'-*','||u_I-u_h||_{\infty}',...
-               h(1:k),erruL2(1:k),1,'k-+','||u-u_h||');
+    showrateh2(h(1:k),erruIuhL2(1:k),1,'-*','|| u_I-u_h||_{\infty}',...
+               h(1:k),erruL2(1:k),1,'k-+','|| u-u_h||');
     subplot(1,2,2)
-    showrateh3(h(1:k),errsigmaHdiv(1:k),1,'-+','||div(\sigma - \sigma_h)||',... 
-               h(1:k),errsigmaL2(1:k),1,'k-*','||\sigma - \sigma_h||',...
-               h(1:k),errsigmaIsigmah(1:k),1,'m-+','||\sigma_I - \sigma_h||');
+    showrateh3(h(1:k),errsigmaHdiv(1:k),1,'-+','|| div(\sigma - \sigma_h)||',... 
+               h(1:k),errsigmaL2(1:k),1,'k-*','|| \sigma - \sigma_h||',...
+               h(1:k),errsigmaIsigmah(1:k),1,'m-+','|| \sigma_I - \sigma_h||');
 end
 
 %% Output

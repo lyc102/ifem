@@ -1,6 +1,6 @@
 
 h0 = 0.5;
-[node,elem,~] = cubemesh([0,1,0,1,0,1],h0);
+[node,elem] = cubemesh([0,1,0,1,0,1],h0);
 bdFlag = setboundary(node,elem,'Dirichlet'); 
 % pde = mixBCdata3;
 pde = mixedPossiondata;
