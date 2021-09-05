@@ -8,7 +8,7 @@ function pde = mixedPossiondata
 
 pde.Du = @Du;
 pde.f = @f;
-pde.u = @u;
+pde.exactu = @u;
 
     function s = u(p)
         x = p(:,1); y = p(:,2); z = p(:,3);

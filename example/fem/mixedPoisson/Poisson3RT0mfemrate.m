@@ -31,10 +31,12 @@ option.L0 = 1;
 option.maxIt = 3;
 option.printlevel = 1;
 option.elemType = 'RT0';
-pde = mixedPossiondata;
+% pde = mixedPossiondata;
 
 %% Dirichelt for u and Neumann boundary condition for sigma
 option.solver = 'uzawapcg';
+% pde = mixBCdata3;
+pde = sincosdata3;
 mesh.bdFlag = setboundary(node,elem,'Dirichlet');
 mfemPoisson3(mesh,pde,option);
 

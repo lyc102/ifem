@@ -90,10 +90,10 @@ for k = 1:maxIt
         end
         errsigmaIsigmah(k)=sqrt((sigma-sigmaI)'*eqn.M*(sigma-sigmaI));
     end
-    if isfield(pde,'u')
-        erruL2(k) = getL2error3(node,elem,pde.u,u);
+    if isfield(pde,'exactu')
+        erruL2(k) = getL2error3(node,elem,pde.exactu,u);
         % interpolation
-        uI = Lagrangeinterpolate(pde.u,node,elem,'P0');
+        uI = Lagrangeinterpolate(pde.exactu,node,elem,'P0');
         erruIuhL2(k) = sqrt(dot((uI-u).^2,volume));
     end
     errTime(k) = cputime - t;

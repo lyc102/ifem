@@ -183,6 +183,7 @@ info.assembleTime = assembleTime;
     end
 
     %% Find Dirichlet and Neumann dofs 
+    edgeSign = ones(NE,1);
     isDirichlet = false(NE,1);
     isNeumann = false(NE,1);
     if ~isempty(bdFlag)
@@ -207,7 +208,7 @@ info.assembleTime = assembleTime;
 %     isFreeEdge(isNeumann) = false;
 %     freeEdge = find(isFreeEdge);
     
-    %% Dirichlet boundary condition (Neumann BC in mixed form)
+    %% Dirichlet boundary condition (Neumann BC in the mixed form)
     %   We need only modify the rhs on dof associated with Dirichlet
     %   boundary. Compute the int_e g_D \phi_e\cdot n ds on the boundary.
     if ~isempty(pde.g_D) && isnumeric(pde.g_D) && (pde.g_D==0)

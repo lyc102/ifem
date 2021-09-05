@@ -173,27 +173,28 @@ info.assembleTime = assembleTime;
     Dirichlet = face(isDirichlet,:);
     Neumann = face(isNeumann,:);
     isBdDof = false(Ndof,1); 
-    isBdDof(isNeumann) = true;   % for mixed method, Neumann edges are fixed
+    isBdDof(isNeumann) = true;   % for mixed method, Neumann faces are fixed
     freeDof = find(~isBdDof);
 %     isFreeFace = true(NF,1);
 %     isFreeFace(isNeumann) = false;
 %     freeFace = find(isFreeFace);
 
-    %% Dirichlet boundary condition (Neumann BC in mixed form)
-    %   We need only modify the rhs on dof associated with Dirichlet boundary
-    %   Compute the integration of g_D on the boundary Face with middle point
-    %   quadrature rule. \Phi\cdot n = |F|.
-    %   int_F \Phi\cdot n g_D = g_D(F_barycenter)
-    %
+    %% Dirichlet boundary condition (Neumann BC in the mixed form)
+    %   We need only modify the rhs on dofs associated with Dirichlet
+    %   boundary of u. Compute the integration of g_D on the boundary face
+    %   with the middle point quadrature rule: 
+    %          int_F \phi_F\cdot n g_D = g_D(F_barycenter)
+    %   as int_F\phi_F\cdot n = 1.
+    
     if ~isempty(pde.g_D) && isnumeric(pde.g_D) && (pde.g_D==0)
         pde.g_D = [];
     end        
     if ~isempty(pde.g_D) && (~isempty(Dirichlet))
-        barycenter = 1/3*(node(Dirichlet(:,1),:)+node(Dirichlet(:,2),:)+ ...
-                          node(Dirichlet(:,3),:));
+        barycenter = 1/3*(node(Dirichlet(:,1),:) ...
+                        + node(Dirichlet(:,2),:) ...
+                        + node(Dirichlet(:,3),:));
         F(isDirichlet) = pde.g_D(barycenter).*faceSign(isDirichlet);
     end
-    clear barycenter
 
     %% Neumann boundary condition (Dirichlet BC in mixed form)
     if ~isempty(pde.g_N) && isnumeric(pde.g_N) && (pde.g_N==0)
@@ -201,15 +202,16 @@ info.assembleTime = assembleTime;
     end    
     if ~isempty(pde.g_N) && any(isNeumann)
         % modify the rhs to include Dirichlet boundary condition
-        barycenter = 1/3*(node(Neumann(:,1),:)+node(Neumann(:,2),:)+node(Neumann(:,3),:));
         ve2 = node(Neumann(:,3),:) - node(Neumann(:,1),:);
         ve3 = node(Neumann(:,2),:) - node(Neumann(:,1),:);
         ve2Crossve3 = mycross(ve2,ve3);
         faceArea = 0.5*sqrt(sum(ve2Crossve3.^2,2));
+        barycenter = 1/3*(node(Neumann(:,1),:)+node(Neumann(:,2),:)+node(Neumann(:,3),:));
         bigu(isNeumann) = faceArea.*pde.g_N(barycenter).*faceSign(isNeumann); % 2<1,g_N>
         F = F - A*bigu;
         F(isNeumann) = bigu(isNeumann);
     end
+    
     %% Pure Neumann boundary condition
     isPureNeumannBC = false;
     if ~any(isDirichlet) && any(isNeumann)

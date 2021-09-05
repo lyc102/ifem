@@ -11,7 +11,7 @@ function pde = mixBCdata3
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-pde = struct('f',@f,'u',@u,'g_D',@g_D,'g_N',@g_N,'Du',@Du);
+pde = struct('f',@f,'exactu',@u,'g_D',@g_D,'g_N',@g_N,'Du',@Du);
 
     % load data (right hand side function)
     function s = f(p)
