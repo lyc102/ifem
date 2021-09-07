@@ -55,14 +55,9 @@ kramdown:
 permalink   : date
 
 comments:
-  # provider : "facebook"
-  # facebook:
-  #   appid : 349839066775394
-  #   num_posts : 5
-  #   colorscheme : "light"
  provider: "disqus"
-  disqus:
-    shortname: "https-lyc102-github-io"
+ disqus:
+  shortname: "https-lyc102-github-io"
 
 include:
   - _pages
