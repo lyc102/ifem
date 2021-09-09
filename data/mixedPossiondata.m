@@ -9,10 +9,15 @@ function pde = mixedPossiondata
 pde.Du = @Du;
 pde.f = @f;
 pde.exactu = @u;
+pde.g_D = @g_D;
 
     function s = u(p)
         x = p(:,1); y = p(:,2); z = p(:,3);
         s = (sin(pi.*x)).^2.*(sin(pi.*y)).^2.*(sin(pi.*z)).^2;
+    end
+    % Dirichlet boundary condition
+    function s = g_D(p)
+    s = u(p);
     end
 
     function s = Du(p)

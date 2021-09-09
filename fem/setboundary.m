@@ -51,6 +51,12 @@ function bdFlag = setboundary(node,elem,varargin)
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
+%% Dimension check
+if size(elem,2) >= 4 % 3D case
+    bdFlag = setboundary3(node,elem,varargin{:});
+    return
+end
+
 %% Find boundary edges
 nv = size(elem,2);
 if nv == 3 % triangles 
@@ -60,7 +66,7 @@ elseif nv == 4 % quadrilateral
 end
 ne = nv; % number of edges in one element
 Neall = length(allEdge);
-[edge, i2, j] = myunique(allEdge);
+[~, i2, j] = myunique(allEdge);
 NT = size(elem,1);
 i1(j(Neall:-1:1)) = Neall:-1:1; 
 i1 = i1';

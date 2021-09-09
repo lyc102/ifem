@@ -1,8 +1,8 @@
 function pde = sincosdata3
 %% SINCOSDATA3 trigonometric data for Poisson equation in 3-D
 %
-%     f = 3*pi^2*cos(pi*x)*cos(pi*y)*cos(pi*z);
 %     u = cos(pi*x)*cos(pi*y)*cos(pi*z);
+%     f = - Delta u = 3*pi^2*cos(pi*x)*cos(pi*y)*cos(pi*z);
 %     Du = (-pi*sin(pi*x)*cos(pi*y)*cos(pi*z), 
 %           -pi*cos(pi*x)*sin(pi*y)*cos(pi*z),
 %           -pi*cos(pi*x)*cos(pi*y)*sin(pi*z));

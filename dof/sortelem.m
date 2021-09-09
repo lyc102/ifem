@@ -12,6 +12,7 @@ function [elem,bdFlag] = sortelem(elem,bdFlag)
 %% Dimension check
 if size(elem,2) >= 4 % 3D case
     [elem,bdFlag] = sortelem3(elem,bdFlag);
+    return
 end
 
 %% Step 1: make elem(:,3) to the largest one

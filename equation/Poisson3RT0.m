@@ -128,7 +128,7 @@ end
 info.assembleTime = assembleTime; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% subfunction getbdRT0
+% subfunction getbd3RT0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function [AD,F,bigu,freeDof,isPureNeumannBC] = getbd3RT0(F)
     %% GETBD3RT0 Boundary conditions for Poisson equation: RT0 element in 3D.
@@ -156,10 +156,10 @@ info.assembleTime = assembleTime;
         % Find Dirichlet and Neumann boundary edges
         isDirichlet(elem2face(bdFlag(:) == 1)) = true;
           isNeumann(elem2face(bdFlag(:) == 2)) = true;
-    % Direction of boundary faces may not be the outwards normal
-    % direction of the domain due to the sortelem. faceSign is
-    % introduced to record this inconsistency of the ascend ordering and
-    % the induced ordering.
+        % Direction of boundary faces may not be the outwards normal
+        % direction of the domain due to the sortelem. faceSign is
+        % introduced to record this inconsistency of the ascend ordering and
+        % the induced ordering.
         faceSign = ones(NF,1);
         idx = (bdFlag(:,1) ~= 0) & (elemSign == -1);% first face
         faceSign(elem2face(idx,1)) = -1;
@@ -167,7 +167,7 @@ info.assembleTime = assembleTime;
         faceSign(elem2face(idx,2)) = -1;            
         idx = (bdFlag(:,3) ~= 0) & (elemSign == -1);% third face
         faceSign(elem2face(idx,3)) = -1;
-        idx = (bdFlag(:,4) ~= 0) & (elemSign == 1);% fourth face
+        idx = (bdFlag(:,4) ~= 0) & (elemSign == 1); % fourth face
         faceSign(elem2face(idx,4)) = -1;
     end
     Dirichlet = face(isDirichlet,:);
@@ -189,7 +189,7 @@ info.assembleTime = assembleTime;
     if ~isempty(pde.g_D) && isnumeric(pde.g_D) && (pde.g_D==0)
         pde.g_D = [];
     end        
-    if ~isempty(pde.g_D) && (~isempty(Dirichlet))
+    if ~isempty(pde.g_D) && any(isDirichlet) 
         barycenter = 1/3*(node(Dirichlet(:,1),:) ...
                         + node(Dirichlet(:,2),:) ...
                         + node(Dirichlet(:,3),:));

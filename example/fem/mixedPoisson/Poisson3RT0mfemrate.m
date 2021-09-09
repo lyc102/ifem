@@ -35,13 +35,12 @@ option.elemType = 'RT0';
 
 %% Dirichelt for u and Neumann boundary condition for sigma
 option.solver = 'uzawapcg';
-% pde = mixBCdata3;
 pde = sincosdata3;
-mesh.bdFlag = setboundary(node,elem,'Dirichlet');
+mesh.bdFlag = setboundary3(node,elem,'Dirichlet');
 mfemPoisson3(mesh,pde,option);
 
 %% Neumann for u and Dirichlet boundary condition for sigma.
 option.solver = 'tri';
-pde = mixBCdata3;
-mesh.bdFlag = setboundary(node,elem,'Neumann');
+pde = sincosdata3;
+mesh.bdFlag = setboundary3(node,elem,'Neumann');
 mfemPoisson3(mesh,pde,option);

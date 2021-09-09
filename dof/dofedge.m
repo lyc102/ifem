@@ -8,10 +8,9 @@ function [elem2edge,edge,elem2edgeSign,edgeSign] = dofedge(elem)
 % In the input elem is the connectivity matrix for a 2-D triangulation. In
 % the output
 %
-% - elem2edge: the elementwise pointer from elem to edge indices. In each
-% triangle, opposite indexing is used for its three edges, e.g.,
-% elem2edge(t,1) is the global index of the first edge consisting of [2 3]
-% vertices of t.
+% - elem2edge: the elementwise pointer from elem to edge. In each triangle,
+% the opposite indexing is used for its three edges, e.g., elem2edge(t,1)
+% is the global index of the first edge consisting of [2 3] vertices of t.
 %
 % - edge: the edge matrix satisfying edge(:,1)<edge(:,2). The orientation
 % of edge is induced by the ordering of vertices, i.e., from the vertex
@@ -27,8 +26,10 @@ function [elem2edge,edge,elem2edgeSign,edgeSign] = dofedge(elem)
 % induced ordering [2 3; 3 1; 1 2], then elem2edgeSign = [1 -1 1], i.e.,
 % only the edge [3 1] is inconsistent.
 %
-% - edgeSign: edgeSign equals 1 if the edge is consistent with the local edge of its
-% first element, equals -1 otherwise.
+% - edgeSign: As the lcoal edge is the induced ordering, one interior edge
+% will be shared by two triangles with opposite orientation. edgeSign equals
+% 1 if the edge is consistent with the local edge of its first element,
+% equals -1 otherwise.
 %
 % See also dof3edge
 %

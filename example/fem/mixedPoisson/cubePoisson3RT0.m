@@ -1,13 +1,14 @@
 
 h0 = 0.5;
 [node,elem] = cubemesh([0,1,0,1,0,1],h0);
-bdFlag = setboundary(node,elem,'Dirichlet'); 
+% bdFlag = setboundary3(node,elem,'Dirichlet');
+bdFlag = setboundary3(node,elem,'Neumann');
 % pde = mixBCdata3;
 % pde = mixedPossiondata;
 pde = sincosdata3;
-maxIt = 4;
-% option.solver = 'uzawapcg';
-option.solver = 'tri';
+maxIt = 3;
+option.solver = 'uzawapcg';
+% option.solver = 'tri';
 
 %% Solve and plot
 err = zeros(maxIt,2); 
@@ -20,6 +21,7 @@ for i = 1:maxIt
     err(i,1) = getL2error3RT0(node,elem,pde.Du,sigma);
     err(i,2) = getL2error3(node,elem,pde.exactu,u);
     sigmaI = faceinterpolate3(pde.Du,node,elem);
+%     err(i,3) = getL2error3RT0(node,elem,pde.Du,sigmaI);
     err(i,3) = sqrt((sigma-sigmaI)'*eqn.M*(sigma-sigmaI));
 %     err(i,4) = getHdiverror3RT0(node,elem,pde.f,-sigma,[]);
     h(i) = h0/2^i;
