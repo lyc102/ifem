@@ -1,15 +1,13 @@
-```
+---
 permalink: /dof/dof3edge/
 title: "DoF on Edges in Three Dimensions"
 sidebar:
     nav: dof
-```
+---
 
 
 
-# DoF on Edges in Three Dimensions
-
-We describe general idea of the data structures generated in subroutine 
+We describe general idea of the data structures generated in subroutine
 `dof3edge` for three dimensional simplex grids. We refer to [Simplicial Complex in Two Dimensions](../mesh/sc3.html) for the discussion of ordering and orientation of edges.
 
 `[elem2edge,edge] = dof3edge(elem)` constructs data structure for the
@@ -17,7 +15,7 @@ lowest order edge element. In the output `elem2edge` is the elementwise
 pointer from `elem` to `edge`. The orientation of edges is from the smaller
 index to the bigger one. The indexing is the lexicographic order
 `locEdge = [1 2], [1 3], [1 4], [2 3], [2 4], [3 4]`
-and the ascend ordering is used. 
+and the ascend ordering is used.
 
 `[elem2edge,edge,elem2edgeSign] = dof3edge(elem)` also outputs elem2edgeSign
 which records the consistency of the local and the global edge orientation.
@@ -37,7 +35,7 @@ edge = zeros(20,2);
 edge([1 12 5 20 11 4],:) = localEdge;
 elem2edge = [1 12 5 20 11 4];
 figure(1); clf;
-set(gcf,'Units','normal'); 
+set(gcf,'Units','normal');
 set(gcf,'Position',[0,0,0.6,0.4]);
 subplot(1,2,1)
 showmesh3(node,elem);
@@ -82,7 +80,7 @@ edge = sort(localEdge,2);
 elem2edge = [1 2 3 4 5 6];
 elem2edgeSign = [1 1 -1 -1 -1 -1];     
 figure(1); clf;
-set(gcf,'Units','normal'); 
+set(gcf,'Units','normal');
 set(gcf,'Position',[0,0,0.6,0.4]);
 subplot(1,2,1)
 showmesh3(node,elem);
@@ -108,7 +106,7 @@ display(elem2edgeSign)
 ​    
 ​    elem2edgeSign =
 ​    
-         1     1    -1    -1    -1    -1
+​         1     1    -1    -1    -1    -1
 
 
 
@@ -123,7 +121,7 @@ are the *global* indices. The local 6 edges may not be consistent with this orie
 
 The nodal indices in the left figure is local while that in the right is the global one. The local direction and global direction of edges is indicated by different edge vectors.
 
-The local vertex index and orientation of local edges are shown on the left while the right is the global version. Note that we intentionally set `elem = [2 4 3 1]` such that inconsistency arises. 
+The local vertex index and orientation of local edges are shown on the left while the right is the global version. Note that we intentionally set `elem = [2 4 3 1]` such that inconsistency arises.
 
 ## Example
 
@@ -156,12 +154,12 @@ display(elem2edgeSign);
 ​    
 ​    elem2edgeSign =
 ​    
-         1     1     1     1     1     1
-         1     1     1     1     1     1
-         1     1     1     1     1     1
-         1     1     1     1     1     1
-         1     1     1     1     1     1
-         1     1     1     1     1     1
+​         1     1     1     1     1     1
+​         1     1     1     1     1     1
+​         1     1     1     1     1     1
+​         1     1     1     1     1     1
+​         1     1     1     1     1     1
+​         1     1     1     1     1     1
 
 
 
@@ -169,4 +167,3 @@ display(elem2edgeSign);
 ​    
 ![png](dof3edgedoc_files/dof3edgedoc_9_1.png)
 ​    
-

@@ -1,13 +1,13 @@
-```
+---
 permalink: /dof/dofedge/
 title: "DoF on Edges in Three Dimensions"
 sidebar:
     nav: dof
-```
+---
 
-# DoF on Edges in Two Dimensions
 
-We describe general idea of the data structures generated in subroutine 
+
+We describe general idea of the data structures generated in subroutine
 `dofedge` for two dimensional triangular grids. We refer to [Simplicial Complex in Two Dimensions](../mesh/sc.html) for the discussion of ordering and orientation of edges.
 
 `[elem2edge,edge,elem2edgeSign,edgeSign] = dofedge(elem)` constructs data structure for finite elements associated to edges including CR nonconforming element, Ravairt-Thomas element, and Nedelec element etc.
@@ -18,15 +18,15 @@ In the output
 
 -`edge`: the edge matrix is sorted s.t. `edge(:,1)<edge(:,2)`. The orientation of edge is induced by the ascend ordering of vertices.
 
--`elem2edgeSign`: records the consistency of the local edge `locEdge = [2 3; 3 1; 1 2]` and the global edge orientation. 
+-`elem2edgeSign`: records the consistency of the local edge `locEdge = [2 3; 3 1; 1 2]` and the global edge orientation.
 
-  `elem2edgeSign = -1` if the local edge orientation is inconsistent with the global one, i.e. `elem(:,locEdge(:,1)) > elem(:,locEdge(:,2))`. 
+  `elem2edgeSign = -1` if the local edge orientation is inconsistent with the global one, i.e. `elem(:,locEdge(:,1)) > elem(:,locEdge(:,2))`.
 
-  When both `elem` and local edges are ascend ordered (i.e. `locEdge = [2 3; 1 3; 1 2]` and `elem(:,1)<elem(:,2)<elem(:,3)` ), `elem2edgeSign = [1 1 1]`. In this case, no need to use `elem2edgeSign`. 
+  When both `elem` and local edges are ascend ordered (i.e. `locEdge = [2 3; 1 3; 1 2]` and `elem(:,1)<elem(:,2)<elem(:,3)` ), `elem2edgeSign = [1 1 1]`. In this case, no need to use `elem2edgeSign`.
 
   When `elem` is the ascend ordering and `locEdge = [2 3; 3 1; 1 2]` is the induced ordering, then `elem2edgeSign = [1 -1 1]`, i.e., only the 2nd edge `[3 1]` is inconsistent. In this case, the pattern is also known and no need to call `dofedge`.
 
--`edgeSign`: As the lcoal edge is the induced ordering, one interior edge will be shared by two triangles with opposite orientation. `edgeSign = 1` if the edge is consistent with the local edge of its first element, equals `-1` otherwise. 
+-`edgeSign`: As the lcoal edge is the induced ordering, one interior edge will be shared by two triangles with opposite orientation. `edgeSign = 1` if the edge is consistent with the local edge of its first element, equals `-1` otherwise.
 
 See also `dof3edge`, `dof3face`
 
@@ -67,8 +67,8 @@ display(edge);
 ​    
 ​    elem2edge =
 ​    
-      8�3 uint32 matrix
-    
+​      8�3 uint32 matrix
+
         3    2    8
         6    5   11
        10    9   15
@@ -82,8 +82,8 @@ display(edge);
 ​    
 ​    edge =
 ​    
-      16�2 uint32 matrix
-    
+​      16�2 uint32 matrix
+
        1   2
        1   4
        1   5

@@ -243,6 +243,18 @@ dof:
     children:
       - title: "DoF on Edges in 3D"
         url: /dof/dof3edge/
+  - title: "Basic mesh data structure"
+    children:
+      - title: "Basic mesh data structure"
+        url: /mesh/basic/
+      - title: "Boundary conditions"
+        url: /mesh/bd/
+      - title: "Auxiliary mesh data structures"
+        url: /mesh/auxstructure/
+      - title: "Simplicial complex in two dimensions"
+        url: /mesh/sc/
+      - title: "Simplicial complex in three dimensions"
+        url: /mesh/sc3/
 
 # sidebar navigation list sample
 project:
