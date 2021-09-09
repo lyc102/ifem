@@ -49,7 +49,7 @@ docs:
       - title: "Project: AFEM for the heat equation"
         url: /projects/heat/
 
-  - title: Solvers of Linear Algebraic Equations
+  - title: Fast Solvers
     url: /solver/
     children:
       - title: "Introduction to solvers"
@@ -57,7 +57,7 @@ docs:
       - title: "Solvers for Poisson-type equations"
         url: /solver/mgPoisson/
 
-  - title: Mesh Generation, Adaptation, and Optimization
+  - title: Mesh
     url: /mesh/opt/
     children:
       - title: "Demo: Interface Mesh Generator"
@@ -100,7 +100,7 @@ docs:
 solver:
   - title: "Back to main"
     url: /
-  - title: "Linear solver"
+  - title: "Fast solvers"
     url: /solver/
     children:
       - title: "Linear solver"
@@ -216,7 +216,7 @@ mesh:
         url: /mesh/sc/
       - title: "Simplicial complex in three dimensions"
         url: /mesh/sc3/
-  - title: Mesh Generation, Adaptation and Optimization
+  - title: Mesh
     children:
       - title: "Demo: Interface Mesh Generator"
         url: /mesh/interfacemesh2demo/
