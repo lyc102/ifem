@@ -12,3 +12,4 @@ for t, f in l:
 print("Update the following files:\n", files)
 for f in files:
     os.system('jupyter nbconvert --template ifemdoc/basic-linkcss.tpl ' +f)
+    os.system('jupyter nbconvert --to markdown ' +f)

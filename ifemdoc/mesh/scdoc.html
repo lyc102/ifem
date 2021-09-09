@@ -35,7 +35,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -60,14 +60,16 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Simplicial-Complex-in-Two-Dimensions">Simplicial Complex in Two Dimensions<a class="anchor-link" href="#Simplicial-Complex-in-Two-Dimensions">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We dsecribe the data structure of the simplicial complex associated to a
 two dimensional trianglulation give by <code>node,elem</code> . The <code>node</code> records
@@ -98,7 +100,8 @@ global incices of vertices. See <a href="meshbasicdoc.html">Basic mesh data stru
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h2>
 </div>
@@ -117,7 +120,7 @@ global incices of vertices. See <a href="meshbasicdoc.html">Basic mesh data stru
 <span class="n">findnode</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -127,7 +130,7 @@ global incices of vertices. See <a href="meshbasicdoc.html">Basic mesh data stru
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 
@@ -256,7 +259,8 @@ AFEQJACiIEgAREGQAIiCIAEQhf8PoYmM/qPwB0QAAAAASUVORK5CYII=
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The basic data structure of a mesh consists of node and elem:
 In iFEM, <code>N, NE, NT</code> represents the muber of vertice, edges, triangles
@@ -279,7 +283,8 @@ the geometry emembdding of vertices.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Indexing-of-Simplexes">Indexing of Simplexes<a class="anchor-link" href="#Indexing-of-Simplexes">&#182;</a></h2><p>The indexing refers to the numbering of simplexes, e.g., which edge is
 numbered as the first one. There are two types of the indexing: local and
@@ -331,13 +336,14 @@ index.</p>
 <span class="n">NE</span> <span class="p">=</span> <span class="nb">size</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Edge-pointer">Edge pointer<a class="anchor-link" href="#Edge-pointer">&#182;</a></h3><p><code>elem2edge(1:NT,1:3)</code> records the pointer from the local index to the
 global index of edges. For example, <code>elem2edge(t,1)</code> = 10 means the first
@@ -353,7 +359,8 @@ three local edges is used.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Ordering-of-Vertices">Ordering of Vertices<a class="anchor-link" href="#Ordering-of-Vertices">&#182;</a></h2><p>We discuss the ordering of vertices of simplexes. Again there are local
 ordering and global ordering. They may not be consistent and a sign array
@@ -410,7 +417,7 @@ accordingly using <code>sortelem</code>.</p>
 <span class="n">display</span><span class="p">(</span><span class="s">&#39;After rotation&#39;</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span> <span class="n">display</span><span class="p">(</span><span class="n">bdFlag</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -420,7 +427,7 @@ accordingly using <code>sortelem</code>.</p>
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -459,7 +466,8 @@ bdFlag =
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Ascend ordering will benefit the construction of local bases for high
 order basis or basis with orientation.</p>
@@ -472,7 +480,8 @@ requiring ordering is generated; see <code>PoissonRT0</code> and <code>PoissonBD
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="edge">edge<a class="anchor-link" href="#edge">&#182;</a></h3><p>The global ordering of edges is always ascended, i.e.</p>
 
@@ -498,7 +507,8 @@ the corresponding orientation.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Orientation-of-Simplexes">Orientation of Simplexes<a class="anchor-link" href="#Orientation-of-Simplexes">&#182;</a></h2><p>The orientation of a triangle is either positive or negative. The
 orientation of an edge is given by a tangential or normal vector. A
@@ -570,7 +580,8 @@ elem2edgeSign(idx) = -1;</code></pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There is one more inconsistency between the induced orientation and the
 global orientation of edges. If a triangle is positive orientated, the
@@ -595,7 +606,8 @@ the counter clockwise orientation.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Positive-Ordering-and-Orientation">Positive Ordering and Orientation<a class="anchor-link" href="#Positive-Ordering-and-Orientation">&#182;</a></h2><p>The vertice of the <code>eleme</code> is sorted such that the area is always
 positive. i.e. the three vertices of the elem are ordered
@@ -644,7 +656,8 @@ coarsening.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="An-Example">An Example<a class="anchor-link" href="#An-Example">&#182;</a></h2>
 </div>
@@ -671,7 +684,7 @@ coarsening.</p>
 <span class="n">display</span><span class="p">(</span><span class="n">elem2edgeSign</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -681,7 +694,7 @@ coarsening.</p>
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -718,7 +731,7 @@ elem2edgeSign =
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 
@@ -917,7 +930,7 @@ ECQAgBIIEgBACQQJAKAEggQAUAJBAgAogSABAJRAkAAASiBIAAAlECQAgBIIEgBACf8LaLkiIIqv
 <span class="n">display</span><span class="p">(</span><span class="n">elem2edgeSign</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -927,7 +940,7 @@ ECQAgBIIEgBACQQJAKAEggQAUAJBAgAogSABAJRAkAAASiBIAAAlECQAgBIIEgBACf8LaLkiIIqv
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -964,7 +977,7 @@ elem2edgeSign =
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+<div class="prompt"></div>
 
 
 
