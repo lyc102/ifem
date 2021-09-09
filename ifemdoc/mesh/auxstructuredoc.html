@@ -35,7 +35,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -60,16 +60,14 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Auxiliary-Mesh-Data-Structure">Auxiliary Mesh Data Structure<a class="anchor-link" href="#Auxiliary-Mesh-Data-Structure">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We discuss ways to extract the combinatorial structure of a triangulation by using <code>elem</code> array only. Auxiliary data structure includes:</p>
 <ul>
@@ -85,8 +83,7 @@ div#notebook {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The auxiliary data structure can be constructed by <em>sparse matrixlization</em> efficiently; see <a href="auxstructuredoc.pdf">Auxiliary Mesh Data Structure</a> for detailed explanation. In the following, we present two examples.</p>
 
@@ -94,8 +91,7 @@ div#notebook {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="edge">edge<a class="anchor-link" href="#edge">&#182;</a></h2><p>We first complete the 2-D simplicial complex represented by <code>elem</code> by constructing 1-dimensional simplices, i.e., edges of the triangulation. We use <code>edge(1:NE,1:2)</code> to store indices of the starting and ending points of edges. The column is sorted in a way such that for the k-th edge, <code>edge(k,1)&lt;edge(k,2)</code>. The following code will generate an <code>edge</code> matrix.</p>
 
@@ -116,7 +112,7 @@ div#notebook {
 <span class="n">findedge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">edge</span><span class="p">,</span><span class="n">s</span><span class="o">==</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -126,7 +122,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -323,8 +319,7 @@ TkSuQmCC
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The first line collects all edges from the set of triangles and sorts the column such that <code>totalEdge(k,1)&lt;totalEdge(k,2)</code>. The interior edges are repeated twice in <code>totalEdge</code>. We use the summation property of <code>sparse</code> command to merge the duplicated indices. The nonzero vector <code>s</code> takes value 1 (for boundary edges) or 2 (for interior edges). We then use <code>find</code> to return the nonzero indices which forms the <code>edge</code> set. We can also find the boundary edges using the subset of indices pair corresponding to the nonzero value 1. Note that we switch the order of <code>(i,j)</code> in line 3 to sort the edge set row-wise since the output of <code>find(sparse)</code> is sorted column-wise.</p>
 
@@ -332,8 +327,7 @@ TkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>To construct <code>edge</code> matrix only, the above 3 line code can be further simplified to one line:
 <code>edge = unique(sort([elem(:,[2,3]); elem(:,[3,1]); elem(:,[1,2])],2),'rows');</code>
@@ -343,8 +337,7 @@ The <code>unique</code> function provides more functionality which we shall expl
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Node-Star">Node Star<a class="anchor-link" href="#Node-Star">&#182;</a></h2><p>The <code>elem</code> matrix, by the definition, is a link from triangles to vertices, i.e., <code>elem</code> is <code>elem2node</code>. The link from vertices to triangles, namely given a vertex, to find all triangles containing this vertex, is stored in the sparse matrix:</p>
 
@@ -365,7 +358,7 @@ The <code>unique</code> function provides more functionality which we shall expl
 <span class="n">findnode</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -375,7 +368,7 @@ The <code>unique</code> function provides more functionality which we shall expl
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -394,7 +387,7 @@ The <code>unique</code> function provides more functionality which we shall expl
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -546,8 +539,7 @@ sML/A8LpHitCO+rRAAAAAElFTkSuQmCC
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The NT x N matrix <code>t2v</code> is the incidence matrix between triangles and vertices. <code>t2v(t,i)=1</code> means the i-th node is a vertex of triangle t. If we look at <code>t2v</code> column-wise, the nonzero in the i-th column of <code>t2v(:,i)</code> will give all triangles containing the $i$-th node. Since sparse matrix is stored column-wise, the star of the $i$-th node can be efficiently found by <code>nodeStar = find(t2v(:,i))</code>.</p>
 
@@ -555,8 +547,7 @@ sML/A8LpHitCO+rRAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="elem2edge">elem2edge<a class="anchor-link" href="#elem2edge">&#182;</a></h2><p>We label three edges of a triangle such that the i-th edge is opposite to the i-th vertex. We define the matrix <code>elem2edge</code> as the map of local index of edges in each triangle to its global index. The following 3 line code will construct <code>elem2edge</code> using more output from <code>unique</code> function.</p>
 
@@ -575,14 +566,13 @@ sML/A8LpHitCO+rRAAAAAElFTkSuQmCC
 <span class="n">elem2edge</span> <span class="p">=</span> <span class="nb">reshape</span><span class="p">(</span><span class="nb">j</span><span class="p">,</span><span class="n">NT</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Line 1 collects all edges element-wise. The size of <code>totalEdge</code> is thus 3NT x 2. By the construction, there is a natural index mapping from <code>totalEdge</code> to <code>elem</code>. In line 2, we apply <code>unique</code> function to obtain the edge matrix. The output index vectors <code>i2</code> and <code>j</code> contain the index mapping between <code>edge</code> and <code>totalEdge</code>. Here <code>i2</code> is a NE x 1 vector to index the last (2-nd in our case) occurrence of each unique value in <code>totalEdge</code> such that <code>edge = totalEdge(i2,:)</code>, while <code>j</code> is a 3NT x 1 vector such that <code>totalEdge = edge(j,:)</code>. (Try <code>help unique</code> in MATLAB to learn more examples. <code>legacy</code> is used since the version change of MATLAB.) Then using the natural index mapping from <code>totalEdge</code> to <code>elem</code>, we reshape the 3NT x 1 vector <code>j</code> to a NT x 3 matrix which is <code>elem2edge</code>.</p>
 
@@ -600,7 +590,7 @@ sML/A8LpHitCO+rRAAAAAElFTkSuQmCC
 <span class="n">display</span><span class="p">(</span><span class="n">elem2edge</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -610,7 +600,7 @@ sML/A8LpHitCO+rRAAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -632,7 +622,7 @@ elem2edge =
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -777,8 +767,7 @@ AIAVCBIAwAoECQBgBYIEALACQQIAWIEgAQCsQJAAAFb4f2Csdm8Og8C9AAAAAElFTkSuQmCC
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="edge2elem">edge2elem<a class="anchor-link" href="#edge2elem">&#182;</a></h2><p>We then define a NE x 4 matrix <code>edge2elem</code> such that <code>edge2elem(k,1)</code> and <code>edge2elem(k,2)</code> are two triangles sharing the k-th edge for an interior edge. If the k-th edge is on the boundary, then we set <code>edge2elem(k,1) = edge2elem(k,2)</code>. Furthermore, we shall record the local indices in <code>edge2elem(k,3:4)</code> such that <code>elem2edge(edge2elem(k,1),edge2elem(k,3))=k</code>. Similarly <code>edge2elem(k,4)</code> is the local index of k-th edge in <code>edge2elem(k,2)</code>.</p>
 <p>To construct <code>edge2elem</code> matrix, we need to find out the index map from <code>edge</code> to <code>elem</code>. The following code is a continuation of the code constructing <code>elem2edge</code>.</p>
@@ -797,14 +786,13 @@ AIAVCBIAwAoECQBgBYIEALACQQIAWIEgAQCsQJAAAFb4f2Csdm8Og8C9AAAAAElFTkSuQmCC
 <span class="n">edge2elem</span> <span class="p">=</span> <span class="p">[</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="n">k1</span><span class="p">,</span><span class="n">k2</span><span class="p">];</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The code in line 1 uses <code>j</code> to find the first occurrence of each unique edge in the <code>totalEdge</code>. In MATLAB, when assign values using an index vector with duplication, the value at the repeated index will be the last one assigned to this location. Obvious <code>j</code> contains duplication of edge indices. For example, <code>j(1)=j(2)=4</code> which means <code>totalEdge(1,:)=totalEdge(2,:)=edge(4,:)</code>. We reverse the order of <code>j</code> such that <code>i1(4)=1</code> which is the first occurrence.</p>
 <p>Using the natural index mapping from <code>totalEdge</code> to <code>elem</code>, for an index <code>i</code> between <code>1:N</code>, the formula <code>k=ceil(i/NT)</code> computes the local index of i-th edge, and <code>t=i-NT*(k-1)</code> is the global index of the triangle which <code>totalEdge(i,:)</code> belongs to. The <code>edge2elem</code> is just composed by <code>t1,t2,k1</code> and <code>k2</code>.</p>
@@ -823,7 +811,7 @@ AIAVCBIAwAoECQBgBYIEALACQQIAWIEgAQCsQJAAAFb4f2Csdm8Og8C9AAAAAElFTkSuQmCC
 <span class="n">display</span><span class="p">(</span><span class="n">edge2elem</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -833,7 +821,7 @@ AIAVCBIAwAoECQBgBYIEALACQQIAWIEgAQCsQJAAAFb4f2Csdm8Og8C9AAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -863,7 +851,7 @@ edge2elem =
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 

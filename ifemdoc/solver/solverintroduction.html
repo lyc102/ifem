@@ -35,7 +35,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -60,16 +60,14 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Solvers-for-Linear-Algebraic-Equations">Solvers for Linear Algebraic Equations<a class="anchor-link" href="#Solvers-for-Linear-Algebraic-Equations">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We have implemented multigrid solvers for linear algebraic systems arising from various finite element methods. Here we briefly present the usage for a symmetric and positive definite matrix equation <code>Ax = b</code>.</p>
 
@@ -89,8 +87,7 @@ x = mg(A,b,elem);
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example:-2-D-Linear-Element">Example: 2-D Linear Element<a class="anchor-link" href="#Example:-2-D-Linear-Element">&#182;</a></h2>
 </div>
@@ -118,7 +115,7 @@ x = mg(A,b,elem);
          <span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">),</span><span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x3</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">));</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -128,7 +125,7 @@ x = mg(A,b,elem);
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -151,7 +148,7 @@ Difference between direct and mg, amg solvers 1.4e-09, 7.8e-08
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -232,8 +229,7 @@ qOD7E6gAAAAASUVORK5CYII=
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>For problem size of $2.6 \times 10^5$, <code>mg</code> ties with direct solver <code>\</code>. But <code>amg</code> is aroud 3-4 times slover.</p>
 
@@ -241,8 +237,7 @@ qOD7E6gAAAAASUVORK5CYII=
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example:-2-D-Adaptive-Meshes">Example: 2-D Adaptive Meshes<a class="anchor-link" href="#Example:-2-D-Adaptive-Meshes">&#182;</a></h2>
 </div>
@@ -269,7 +264,7 @@ qOD7E6gAAAAASUVORK5CYII=
          <span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">),</span><span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x3</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">));</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -279,7 +274,7 @@ qOD7E6gAAAAASUVORK5CYII=
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -302,7 +297,7 @@ Difference between direct and mg, amg solvers 1.2e-08, 6e-08
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -473,8 +468,7 @@ UIEgAQBUIEgAABUIEgBABYIEAFCBIAEAVCBIAAAV/h90BlRfclZCBAAAAABJRU5ErkJggg==
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The finest mesh is several uniform refinement of an adaptive mesh shown above. Now the multigrid outperforms the direct solver around the size of 7e5. amg is 4-5 times slower.</p>
 
@@ -482,8 +476,7 @@ UIEgAQBUIEgAABUIEgBABYIEAFCBIAEAVCBIAAAV/h90BlRfclZCBAAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example:-3-D-Linear-Element">Example: 3-D Linear Element<a class="anchor-link" href="#Example:-3-D-Linear-Element">&#182;</a></h2>
 </div>
@@ -510,7 +503,7 @@ UIEgAQBUIEgAABUIEgBABYIEAFCBIAEAVCBIAAAV/h90BlRfclZCBAAAAABJRU5ErkJggg==
          <span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">),</span><span class="n">norm</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="n">x3</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">eqn</span><span class="p">.</span><span class="n">b</span><span class="p">));</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -520,7 +513,7 @@ UIEgAQBUIEgAABUIEgBABYIEAFCBIAEAVCBIAAAV/h90BlRfclZCBAAAAABJRU5ErkJggg==
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
@@ -543,7 +536,7 @@ Difference between direct and mg, amg solvers 1e-09, 4.2e-09
 
 <div class="output_area">
 
-<div class="prompt"></div>
+    <div class="prompt"></div>
 
 
 
@@ -741,8 +734,7 @@ ABIIJACABAIJACCBQAIASCCQAAASCCQAgIT/A/atmRzsFwPsAAAAAElFTkSuQmCC
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>For 3-D linear element, <code>mg</code> wins at an even smaller size $3.6\times 10^4$. Again <code>amg</code> is 3-4 times slower than <code>mg</code>.</p>
 
