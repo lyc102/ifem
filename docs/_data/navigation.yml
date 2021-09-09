@@ -77,8 +77,10 @@ docs:
   - title: Data Structure for DoFs
     url: /dof/
     children:
-      - title: "Dof on Edges in 3D"
-        url: /mesh/dof3edge/
+      - title: "DoF on Edges in 2D"
+        url: /dof/dofedge/
+      - title: "DoF on Edges in 3D"
+        url: /dof/dof3edge/
 
 
   - title: Research and Projects
@@ -233,9 +235,14 @@ mesh:
 dof:
   - title: "Back to main"
     url: /
-  - title: "Lagrange element"
-    url: /
-
+  - title: "2D element"
+    children:
+      - title: "DoF on Edges in 2D"
+        url: /dof/dofedge/
+  - title: "3D element"
+    children:
+      - title: "DoF on Edges in 3D"
+        url: /dof/dof3edge/
 
 # sidebar navigation list sample
 project:
