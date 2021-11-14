@@ -148,6 +148,9 @@ if setupflag == false
    cl  = varargin{6};
    level = size(Ai,1);   
 end
+if condest(Ai{cl}) > 1e12 % Ai{1} is singular
+    Ai{cl} = Ai{cl} + 1e-12*speye(size(Ai{cl}));
+end
 
 %% Krylov iterative methods use Multigrid-type Preconditioners
 % set up preconditioner
