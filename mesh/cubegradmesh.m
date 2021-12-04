@@ -9,6 +9,11 @@ function [node,elem,HB] = cubegradmesh(xh,yh,zh)
 %     [node,elem] = cubegradmesh(xh,yh,zh);
 %     showmesh3(node,elem);
 %
+%   xh = (0:0.125:1).^2;
+%   yh = (0:0.125:1).^2;
+%   zh = 0:0.125:0.5;
+%   [node,elem] = cubegradmesh(xh,yh,zh);
+%   showmesh3(node,elem);
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
