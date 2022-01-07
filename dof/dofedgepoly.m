@@ -1,9 +1,9 @@
 function [elem2edge,edge,elem2edgeSign,edge2elem,edgeSign] = dofedgepoly(elem)
 %% DOFEDGEPOLY dof structure for edges on a polygonal mesh.
 %
-% [elem2edge,edge,elem2edgeSign,edgeSign] = DOFEDGE(elem) constructs data
-% structure for finite elements associated to edges including CR
-% nonconforming element, Ravairt-Thomas element, and Nedelec element etc.
+% [elem2edge,edge,elem2edgeSign,edgeSign] = DOFEDGEPOLY(elem) constructs data
+% structure for finite elements associated to edges on POLYGONAL mesh 
+% including CR nonconforming element, Ravairt-Thomas element, and Nedelec element etc.
 %
 % In the input elem is the connectivity cell array for a 2-D polygonal mesh. In
 % the output

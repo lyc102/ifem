@@ -23,7 +23,14 @@ function [d2c, c2d] = transferDG3(elem2dof)
 %       d2c = sparse((1:NF)', face2elemIdx1, ones(NF, 1), NF, 4*NT);
 %       d2c = d2c + sparse((1:NF)', face2elemIdx2, isIntFace, NF, 4*NT);
 %
-% See also Poisson3Hybrid, coarsen
+% Example: construct the transfer matrix from discrete face quadratic Nedelec dof 
+% to continuous face quadratic Nedelec dof, given elem2face(t, i) represents the
+% global indexing of the t-th element's i-th face
+% 
+%       elem2dof = dof3expand(elem2face, 12); % 12 dofs per face for Nd2
+%       d2c = transferDG3(elem2dof);
+%
+% See also Poisson3Hybrid, dof3expand, coarsen
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details. 
 
