@@ -145,7 +145,8 @@ if strcmp(elemType,'ND2m')
                1 2 0; 1 3 0; 1 4 0; 2 3 0; 2 4 0; 3 4 0; ... % grad(P2)
                3 2 4; 3 1 4; 2 1 4; 2 1 3; ...
                4 2 3; 4 1 3; 4 1 2; 3 1 2]; % face bubbles
-    ii = zeros(210*NT,1); jj = zeros(210*NT,1); 
+    ii = zeros(210*NT,1); jj = zeros(210*NT,1);
+    sM = zeros(210*NT,1);
     index = 0;
     for i = 1:20
         for j = i:20
@@ -233,7 +234,8 @@ if strcmp(elemType,'ND2')
                1 3 4; 3 4 1; 4 1 3; ... % face 2
                1 2 4; 2 4 1; 4 1 2; ... % face 3
                1 2 3; 2 3 1; 3 1 2]; % face 4
-    ii = zeros(465*NT,1); jj = zeros(465*NT,1); 
+    ii = zeros(465*NT,1); jj = zeros(465*NT,1);
+    sM = zeros(465*NT,1);
     index = 0;
     for i = 1:30
         for j = i:30
