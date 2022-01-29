@@ -41,7 +41,7 @@ dim = size(elem,2)-1;
 
 %% Options
 % Assign default values to unspecified parameters
-if ~exist('option','var'), 
+if ~exist('option','var')
     option = []; 
 end
 option = mgoptions(option,Ndof);    % parameters
