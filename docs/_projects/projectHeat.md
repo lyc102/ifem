@@ -30,7 +30,7 @@ Adaptive FEM is further applied to capture the singularity of the solution.
 
 - Given a time step size `dt`, final time `T`, code a for loop over time to involve the solution by either forward Euler, backward Euler or Crack-Nicolson methods.
 
-> Please do not store the approximation at all time steps. Instead only the solution in the previous step `uold` and the current step `u` .
+  > Please do not store the approximation at all time steps. Instead only the solution in the previous step `uold` and the current step `u` .
 
 - For implicit methods, use direct solver `A\b` or multigrid solvers to solve the linear system `Au=b`. For meshes generated in `ifem`, `mg(A,b,elem)` is faster than `amg(A,b)`.
 
@@ -48,7 +48,7 @@ Adaptive FEM is further applied to capture the singularity of the solution.
 
 - Use `showsolution(node,elem,u)` to plot the solution and together with `pause(0.01)` to get an animation. Use `axis` to fix the axis scaling as the height may change in time.
 
-> For small time step, do not plot the solution at every time step. Instead plot every 10 or 20 steps.
+  > For small time step, do not plot the solution at every time step. Instead plot every 10 or 20 steps.
 
 - You can save the plot into a movie. Use [gif](https://www.mathworks.com/matlabcentral/fileexchange/63239-gif) function to save a gif file.
 
