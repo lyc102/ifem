@@ -22,7 +22,7 @@ Adaptive FEM is further applied to capture the singularity of the solution.
 
 ## Step 1: Forward Euler, Backward Euler, and Crack-Nicolson methods
 
-- Given a mesh, construct the stiffness matrix `A` for the Laplace operator and the mass matrix `M` for the $L^2$-inner product.
+- Given a mesh `node,elem`, construct the stiffness matrix `A` for the Laplace operator and the mass matrix `M` for the $L^2$-inner product.
 
 - Given a time step size `dt`, final time `T`, code a for loop over time to involve the solution by either forward Euler, backward Euler or Crack-Nicolson methods.
 
