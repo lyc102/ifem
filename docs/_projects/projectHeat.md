@@ -10,7 +10,11 @@ The purpose of this project is to implement explicit and implicit numerical meth
 $$
 u_t -\Delta u  = f, \quad u |_{\partial \Omega} = g, \; u(\cdot,0) = u_0.
 $$
-We consider a 2-D problem on the unit square $\Omega = (0,1)^2$​ with the exact solution
+
+
+We consider a 2-D problem on the unit square $\Omega = (0,1)^2$​​ with the exact solution
+
+
 $$
 u(x,t) = \beta (t)\, \exp(-[(x-t+0.5)^2+(y-t+0.5)^2]/0.04),
 $$
