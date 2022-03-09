@@ -1,4 +1,4 @@
-function [c2d, d2c] = transferDG3(elem2dof)
+function [c2d, d2c] = transferDG3(elem2dof, elem2dofSign)
 % TRANSFERDG3 constructs the sparse transfer matrix from a discrete data
 % structure (DG, double-valued face-hybrid variable) to a continuous data
 % structure (continuous nodal DoFs, singled-valued face-hybrid). The discrete
@@ -6,9 +6,9 @@ function [c2d, d2c] = transferDG3(elem2dof)
 %
 %     elem2discreteDof = reshape(1:numDofK*NT, numDofK, NT)'
 % 
-% [d2c, c2d] = transferDG3(elem) computes the transfer matrix from the
+% [c2d, d2c] = transferDG3(elem) computes the transfer matrix from the
 % discrete nodal dofs to continuous or vice versa, suppose one assembles a
-% bilinear form matrix B_{ij}:= B(u_j,v_i) using a discrete space, then the 
+% bilinear form matrix B_{ij}:= B(u_j,v_i) using a scalar discrete space, then the 
 % continuous one can be simply done by 
 %
 %       B = c2d'*B*c2d
@@ -36,6 +36,15 @@ function [c2d, d2c] = transferDG3(elem2dof)
 % 
 %       c2d = transferDG3(elem2face);
 %       uhat = 0.5*c2d'*uh;
+% 
+% Example 3: compute boundary integral matrix involving elementwise normal vector 
+% (v x n_{F}, w)_{F} where n is globally defined, and w is a bulk variable.
+% if the locally assembly is done for (v x n_K, w)_{F as a face on \partial K}
+% then elem2dofSign must provide as an input
+% 
+%        c2d = transferDG3(elem2face,elem2faceSign);
+%        C = c2d'*C_dis
+% 
 %
 % See also Poisson3Hybrid, dof3expand, coarsen
 %
@@ -46,6 +55,13 @@ NT = size(elem2dof,1);
 Ndof = max(elem2dof(:));
 numDofK = size(elem2dof,2);
 elem2disdof = reshape(1:numDofK*NT, numDofK, NT)';
-c2d = sparse(elem2disdof(:), elem2dof(:), 1, numDofK*NT, Ndof);
+
+if nargin == 1
+    s = 1;
+else
+    s = elem2dofSign(:);
+end
+
+c2d = sparse(elem2disdof(:), elem2dof(:), s, numDofK*NT, Ndof);
 d2c = c2d';
 end

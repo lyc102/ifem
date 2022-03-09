@@ -8,7 +8,7 @@ function elem2dof = dof3expand(elem2dof, n)
 %
 % elem2faceDoF = dof3expand(elem2face, 12) assigns 12 DoFs per face.
 %
-% See also transferDG3
+% See also transferDG3, dofsign3expand
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
