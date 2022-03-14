@@ -10,7 +10,9 @@ The purpose of this project is to implement Newton's method, two-grid method, an
 $$
 -\Delta u + k^2 \sinh (u) = \rho (x), \quad x\in \Omega\subset \mathbb R^d,
 $$
-and with Dirichlet boundary condition $u|_{\partial \Omega} = g.$​
+
+
+with Dirichlet boundary condition $u|_{\partial \Omega} = g.$​​
 
 We consider a 2-d problem on the unit square $\Omega = (0,1)^2$. Let $\boldsymbol a=(1.0,2.0)/\sqrt{5}$.  We choose $k =1, \rho$, and $g$  such that the exact solution is 
 
