@@ -11,10 +11,9 @@ $$
 -\Delta u + k^2 \sinh (u) = \rho (x), \quad x\in \Omega\subset \mathbb R^d,
 $$
 
-
 with Dirichlet boundary condition $u|_{\partial \Omega} = g.$​​
 
-We consider a 2-d problem on the unit square $\Omega = (0,1)^2$. Let $\boldsymbol a=(1.0,2.0)/\sqrt{5}$.  We choose $k =1, \rho$, and $g$  such that the exact solution is 
+We consider a 2-d problem on the unit square $\Omega = (0,1)^2$. Let $\boldsymbol a=(1.0,2.0)/\sqrt{5}$.  We choose $k =1, \rho$, and $g$  such that the exact solution is
 
 $$
 u(\boldsymbol x) = \bar u(0.1+\boldsymbol a\cdot\boldsymbol x),\quad \bar u(s) = \ln \left ( \frac{1+\cos (s)}{1-\cos (s)}\right).
