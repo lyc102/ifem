@@ -8,16 +8,16 @@ function elem2dof = dof3expand(elem2dof, n)
 %
 % elem2faceDoF = dof3expand(elem2face, 12) assigns 12 DoFs per face.
 %
-% See also transferDG3, dofsign3expand
+% See also transferDG3, facesign3expand
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
-%%
-d = size(elem2dof, 2);
-elem2dofNew = cell(d,1);
+%% he ordering local DoF is collated
+% d = size(elem2dof, 2);
+elem2dofNew = cell(n,1);
 assert(iscolumn(elem2dof(:,1)))
-for i = 1:d
-    elem2dofNew{i} = (elem2dof(:,i)-1)*n + (1:n);
+for i = 1:n
+    elem2dofNew{i} = (elem2dof-1)*n + i;
 end
 elem2dof = horzcat(elem2dofNew{:});
 end

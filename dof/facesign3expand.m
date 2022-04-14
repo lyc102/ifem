@@ -12,11 +12,10 @@ function elem2faceSign = facesign3expand(elem2faceSign, n)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 %%
-d = size(elem2faceSign, 2); % number of original dof on each K
-elem2dofSignNew = cell(d,1);
+elem2dofSignNew = cell(n,1);
 assert(iscolumn(elem2faceSign(:,1)))
-for i = 1:d
-    elem2dofSignNew{i} = repmat(elem2faceSign(:,i), 1, n);
+for i = 1:n
+    elem2dofSignNew{i} = elem2faceSign;
 end
 elem2faceSign = horzcat(elem2dofSignNew{:});
 end
