@@ -40,7 +40,7 @@ if (nargin >= 3) && (any(expr))
     elem = elem(any(ismember(elem,incl),2),:);
 end
 h = tetramesh(elem(:,1:4),node,ones(size(elem,1),1));
-set(h,'facecolor',[0.35 0.75 0.35],'edgecolor','k');
+set(h,'facecolor',[0.5 0.9 0.45],'edgecolor','k');
 if nargin > 3 
     set(h,varargin{1:end})
 else % default display properties

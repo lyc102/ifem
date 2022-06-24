@@ -55,7 +55,7 @@ cutFace = setdiff(bdFace,allBdFace,'rows');
 
 %% Plot surface mesh
 % bcol=.9*ones(1,3); icol=.6*ones(1,3);
-bcol=[0.45 1 0.45]; icol=.75*bcol;
+bcol=[0.5 0.9 0.45]; icol=.75*bcol;
 h1 = showmesh(node,bdFace,'facecolor',bcol,'edgecolor','k');
 hold on
 if ~isempty(cutFace)

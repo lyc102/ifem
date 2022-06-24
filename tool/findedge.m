@@ -21,14 +21,25 @@ function findedge(node,edge,range,varargin)
 %     showmesh(node,elem);
 %     findedge(node,T.edge);
 %
+% Example: local labeling of edges
+%
+%     node = [1,0; 1,1; 0,0];
+%     elem = [1 2 3];
+%     edge = [2 3; 1 3; 1 2];
+%     showmesh(node,elem);
+%     findnode(node);
+%     findedge(node,edge,'all','MarkerSize',28);
+%
 %   See also findelem3, findnode3.
 %
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 hold on
+dotColor = 'k.';
 % set up range
 if (nargin==2) || isempty(range) || (ischar(range) && strcmp(range,'all'))
     range = (1:size(edge,1))'; 
+    dotColor = 'r.';
 end
 if islogical(range)
     range = find(range); 
@@ -39,17 +50,14 @@ end
 % draw edges in red
 ndim = size(node,2);
 midEdge = (node(edge(range,1),:)+node(edge(range,2),:))/2;
+if ndim == 2
+    h = plot(midEdge(:,1),midEdge(:,2),dotColor,'MarkerSize',20);
+elseif ndim == 3
+    h = plot3(midEdge(:,1),midEdge(:,2),midEdge(:,3),dotColor,'MarkerSize',20);
+end    
 varidx = 1;
 if nargin > 3 && strcmp(varargin{1},'noindex') % not showing index
     varidx = 2;
-else
-    if ndim == 2
-        h = plot(midEdge(:,1),midEdge(:,2),'o','LineWidth',1,'MarkerEdgeColor','k',...
-             'MarkerFaceColor',[0.6 0.5 0.8],'MarkerSize',20);
-    elseif ndim == 3
-        h = plot3(midEdge(:,1),midEdge(:,2),midEdge(:,3),'o','LineWidth',1,'MarkerEdgeColor','k',...
-             'MarkerFaceColor',[0.6 0.5 0.8],'MarkerSize',20);
-    end    
 end
 if nargin > 3
     if strcmp(varargin{varidx},'draw') 
@@ -80,12 +88,13 @@ if nargin > 3
         h = quiver(midEdge(:,1),midEdge(:,2),-edgeVec(:,2),edgeVec(:,1));
         set(h,'Linewidth',3)
     end
-    if (strcmp(varargin{1},'noindex') ...
-           && (strcmp(varargin{varidx},'vec') || strcmp(varargin{varidx},'rotvec')...
-            || strcmp(varargin{varidx},'draw')) )
-        startidx = 3;
-    else
-        startidx = 2;
+    startidx = 1;
+    if strcmp(varargin{1},'noindex') 
+        startidx = startidx + 1;
+    end
+    if (strcmp(varargin{varidx},'vec') || strcmp(varargin{varidx},'rotvec')...
+            || strcmp(varargin{varidx},'draw'))
+        startidx = startidx + 1;
     end
     if  length(varargin) >= startidx
         set(h,varargin{startidx:end});
@@ -93,10 +102,10 @@ if nargin > 3
 end
 if (nargin <= 4) || ~(strcmp(varargin{1},'noindex'))
     if ndim == 2
-        text(midEdge(:,1)-0.025,midEdge(:,2),int2str(range), ...
+        text(midEdge(:,1)+0.025,midEdge(:,2)+0.015,int2str(range), ...
              'FontSize',12,'FontWeight','bold','Color','k');
     elseif ndim == 3
-        text(midEdge(:,1)-0.025,midEdge(:,2),midEdge(:,3),int2str(range), ...
+        text(midEdge(:,1)+0.025,midEdge(:,2)+0.015,midEdge(:,3),int2str(range), ...
          'FontSize',12,'FontWeight','bold','Color','k');
     end
 end
