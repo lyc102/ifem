@@ -26,7 +26,7 @@ function [elem2edge,edge,elem2edgeSign,edgeSign] = dofedge(elem)
 % induced ordering [2 3; 3 1; 1 2], then elem2edgeSign = [1 -1 1], i.e.,
 % only the edge [3 1] is inconsistent.
 %
-% - edgeSign: As the lcoal edge is the induced ordering, one interior edge
+% - edgeSign: As the local edge is the induced ordering, one interior edge
 % will be shared by two triangles with opposite orientation. edgeSign equals
 % 1 if the edge is consistent with the local edge of its first element,
 % equals -1 otherwise.
@@ -34,6 +34,8 @@ function [elem2edge,edge,elem2edgeSign,edgeSign] = dofedge(elem)
 % See also dof3edge
 %
 % Doc: <a href="matlab:ifem dofedgedoc">dofedgedoc</a>
+% See also 
+% <a href="https://lyc102.github.io/ifem/mesh/auxstructure/">Auxiliary Structure</a>
 %
 % Modified by Long Chen and Ming Wang.
 %
