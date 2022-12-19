@@ -8,8 +8,8 @@ function [sortA,i2,j] = myunique(A)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 matlabversion = extractBetween(version,"(",")");
-if str2double(matlabversion{1}(2:end-1)) > 2012
-    [edge, i2, j] = unique(allEdge,'rows','legacy'); %#ok<ASGLU>
+if str2double(matlabversion{1}(2:end-1)) <= 2012
+    [sortA, i2, j] = unique(A,'rows');
 else
-    [edge, i2, j] = unique(allEdge,'rows'); %#ok<ASGLU>
+    [sortA, i2, j] = unique(A,'rows','legacy');
 end
