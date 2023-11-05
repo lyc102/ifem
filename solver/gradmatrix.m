@@ -24,7 +24,6 @@ s = [-ones(NE,1),ones(NE,1)];
 isBdNode = false(N,1);
 if any(isBdEdge) % no grad on boundary edges
     bdEdge = edge(isBdEdge,:);
-    isBdNode = false(N,1);
     isBdNode(bdEdge(:)) = true;
     idx = ~(isBdEdge(i) | isBdNode(j)); 
 else
