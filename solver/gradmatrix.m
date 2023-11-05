@@ -21,6 +21,7 @@ NE = size(edge,1); N  = double(max(edge(:)));
 i = repmat((1:NE)',2,1);
 j = double(edge(:));
 s = [-ones(NE,1),ones(NE,1)];
+isBdNode = false(N,1);
 if any(isBdEdge) % no grad on boundary edges
     bdEdge = edge(isBdEdge,:);
     isBdNode = false(N,1);
