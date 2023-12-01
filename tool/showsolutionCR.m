@@ -1,4 +1,4 @@
-function showsolutionCR(node,elem,u,varargin)
+function h = showsolutionCR(node,elem,u,varargin)
 %% SHOWSOLUTIONCR plots a CR function u on a triangular mesh in 2-D.
 %
 %  Example: a basis 
@@ -46,4 +46,4 @@ unew(NT+(1:NT)) = u(elem2edge(:,1)) - u(elem2edge(:,2)) + u(elem2edge(:,3));
 unew(2*NT+(1:NT)) = u(elem2edge(:,1)) + u(elem2edge(:,2)) - u(elem2edge(:,3));
 
 %% Plot the solution
-showsolution(nodenew,elemnew,unew,varargin{:});
+h = showsolution(nodenew,elemnew,unew,varargin{:});

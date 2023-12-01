@@ -1,4 +1,4 @@
-function showsolution(node,elem,u,varargin)
+function h = showsolution(node,elem,u,varargin)
 %% SHOWSOLUTION plots the solution u on a triangular mesh in 2-D.
 %
 %    showsolution(node,elem,u) displays the functoin u on a topological
@@ -64,18 +64,18 @@ switch Nu
             view(3);
         end
     case NE  % CR nonconforming P1 element
-        showsolutionCR(node,elem,u,varargin{:});
+        h = showsolutionCR(node,elem,u,varargin{:});
         return
     case NP2 % P2 element
 %         [node,elem] = uniformrefine(node,elem);
 %         showsolution(node,elem,u,varargin{:});
-        showsolution(node,elem,u(1:N),varargin{:});
+        h = showsolution(node,elem,u(1:N),varargin{:});
         return;
     case NP3 % P3 element
-        showsolution(node,elem,u(1:N),varargin{:});
+        h = showsolution(node,elem,u(1:N),varargin{:});
         return;
     case NE + NT  % Weak Galerkin method
-        showsolutionCR(node,elem,u(NT+1:end),varargin{:});
+        h = showsolutionCR(node,elem,u(NT+1:end),varargin{:});
         return;        
 end
 
