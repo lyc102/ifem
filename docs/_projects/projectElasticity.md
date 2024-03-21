@@ -9,14 +9,22 @@ The objective of this project is to implement finite element methods for solving
 
 ## Part I: Conforming Linear Element
 
-Given a force $\boldsymbol{f}\in L^2(\Omega;\mathbb{R}^3)$, we seek $\boldsymbol{u}\in H_0^1(\Omega; \mathbb{R}^3)$ such that
+Given a force $\boldsymbol{f}\in L^2(\Omega;\mathbb{R}^3)$, we seek $\boldsymbol{u}\in H_0^1(\Omega; \mathbb{R}^3)$​ such that
+
+
 $$
 2\mu (\nabla ^s \boldsymbol{u}, \nabla ^s \boldsymbol{v}) + \lambda (\text{div} \boldsymbol{u}, \text{div} \boldsymbol{v}) = (\boldsymbol{f}, \boldsymbol{v}) \quad \forall \boldsymbol{v}\in H_0^1(\Omega; \mathbb{R}^3),
 $$
-where $\lambda$ and $\mu$ are Lamé constants. In materials that are nearly incompressible, the parameter $\lambda \gg 1$ while $\mu = \mathcal{O}(1)$. Utilizing the identity $2 \text{div} \nabla^s \boldsymbol{u} = \Delta \boldsymbol{u} + \text{grad div} \boldsymbol{u}$, we can derive an equivalent bilinear form
+
+
+where $\lambda$ and $\mu$ are Lamé constants. In materials that are nearly incompressible, the parameter $\lambda \gg 1$ while $\mu = \mathcal{O}(1)$. Utilizing the identity $2 \text{div} \nabla^s \boldsymbol{u} = \Delta \boldsymbol{u} + \text{grad div} \boldsymbol{u}$​, we can derive an equivalent bilinear form
+
+
 $$
 a(\boldsymbol{u}, \boldsymbol{v}) = \mu (\nabla \boldsymbol{u}, \nabla \boldsymbol{v}) + (\lambda + \mu )(\text{div} \boldsymbol{u}, \text{div} \boldsymbol{v}).
 $$
+
+
 We consider $\Omega$ as a unit square. Given a triangulation, the displacement space $\mathbf{u} = (u_1, \; u_2)$ is the linear finite element space.
 
 ## Step 1: Assemble the matrix equation
@@ -43,7 +51,9 @@ For a fixed $h$, choose $\lambda = 10, 100, 1000$ and compute the approximation 
 
 ## Part II: Locking Free Schemes
 
-In this part, we introduce an artificial pressure $p = \lambda \text{div} \boldsymbol{u}$ and rewrite the equation into perturbed Stokes equations: Find $\boldsymbol u\in H_0^1(\Omega; \mathbb R^3)$ and $p\in L^2_0(\Omega)$ such that
+In this part, we introduce an artificial pressure $p = \lambda \text{div} \boldsymbol{u}$ and rewrite the equation into perturbed Stokes equations: Find $\boldsymbol u\in H_0^1(\Omega; \mathbb R^3)$ and $p\in L^2_0(\Omega)$​ such that
+
+
 $$
 \begin{aligned}
 2\mu (\nabla ^s \boldsymbol u, \nabla ^s \boldsymbol v) + (p, {\rm div} \boldsymbol v) & = (\boldsymbol f, \boldsymbol v), &\text{for all } \boldsymbol v\in \boldsymbol H_0^1(\Omega),\\
