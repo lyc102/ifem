@@ -36,10 +36,10 @@ function [u,A,b] = PoissonS(node,elem,Dirichlet,Neumann,f,g_D,g_N)
 %     end
 %     figure; showrate(N,err);     
 %
-% See also Poisson, Poisson3
+% See also squarePoissonS, Poisson, Poisson3
 %
 % The code is based on the following reference but optimized using
-% vectorization to avoid for loops.
+% vectorization to avoid large for loops.
 %
 % Reference:
 %

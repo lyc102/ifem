@@ -51,13 +51,13 @@ edge2newNode = uint32((N+1:N+NE)');
 % 5- 4
 % |\ |\
 % 1- 6- 2
-t = 1:NT;
+t = 1:NT; t1 = t; t2 = NT+t; t3 = 2*NT+t; t4 = 3*NT+t;
 p(t,1:3) = elem(t,1:3);
 p(t,4:6) = edge2newNode(elem2edge(t,1:3));
-elem(t,:) = [p(t,1), p(t,6), p(t,5)];
-elem(NT+1:2*NT,:) = [p(t,6), p(t,2), p(t,4)];
-elem(2*NT+1:3*NT,:) = [p(t,5), p(t,4), p(t,3)];
-elem(3*NT+1:4*NT,:) = [p(t,4), p(t,5), p(t,6)];
+elem(t4,:) = [p(t,4), p(t,5), p(t,6)];
+elem(t1,:) = [p(t,1), p(t,6), p(t,5)];
+elem(t2,:) = [p(t,6), p(t,2), p(t,4)];
+elem(t3,:) = [p(t,5), p(t,4), p(t,3)];
 
 %% Update boundary edges
 if exist('bdFlag','var') && ~isempty(bdFlag)
