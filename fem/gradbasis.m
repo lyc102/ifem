@@ -3,7 +3,7 @@ function [Dlambda,area,elemSign] = gradbasis(node,elem)
 %
 % [Dlambda,area,elemSign] = GRADBASIS(node,elem) compute gradient of
 % barycentric basis and areas of triangles. The array area is NT by 1 and
-% area(t) is the volume of the t-th tetrahedron. Dlambda(1:NT, 1:3, 1:3)
+% area(t) is the volume of the t-th tetrahedron. Dlambda(1:NT, 1:2, 1:3)
 % the first index is the label of tetrahedron, the second is the x-y
 % coordinate, and the last one is the label of three indices of a triangle.
 % For example, Dlambda(t,:,1) is the gradient of lambda of the 1st index of

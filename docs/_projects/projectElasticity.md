@@ -56,10 +56,12 @@ In this part, we introduce an artificial pressure $p = \lambda \text{div} \bolds
 
 $$
 \begin{aligned}
-2\mu (\nabla ^s \boldsymbol u, \nabla ^s \boldsymbol v) + (p, {\rm div} \boldsymbol v) & = (\boldsymbol f, \boldsymbol v), &\text{for all } \boldsymbol v\in \boldsymbol H_0^1(\Omega),\\
-({\rm div} \boldsymbol u, q) - \frac{1}{\lambda}(p,q) & = 0, &\text{for all } q\in L_2(\Omega).
+\mu (\nabla \boldsymbol u, \nabla \boldsymbol v) + (p, {\rm div} \boldsymbol v) & = (\boldsymbol f, \boldsymbol v), &\text{for all } \boldsymbol v\in \boldsymbol H_0^1(\Omega),\\
+({\rm div} \boldsymbol u, q) - \frac{1}{\lambda + \mu}(p,q) & = 0, &\text{for all } q\in L_2(\Omega).
 \end{aligned}
 $$
+
+
 
 ## Step 1: Stokes pair
 
