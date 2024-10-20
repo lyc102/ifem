@@ -53,8 +53,8 @@ function bdFlag = setboundary(node,elem,varargin)
 
 %% Dimension check
 if size(node,2) >= 3 % 3D case
-   bdFlag = setboundary3(node,elem,varargin{:});
-   return
+    bdFlag = setboundary3(node,elem,varargin{:});
+    return
 end
 
 %% Find boundary edges
