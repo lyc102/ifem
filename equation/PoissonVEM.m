@@ -78,8 +78,8 @@ for nv = min(elemVertexNumber):max(elemVertexNumber)
     bdIntegral = x1.*y2 - y1.*x2;
     area = sum(bdIntegral,2)/2; % the area per element
     h = repmat(sign(area).*sqrt(abs(area)),1,nv); % h is not the diameter
-    cx = sum(reshape(node(nvElem(:),1),NT,nv),2)/nv;
-    cy = sum(reshape(node(nvElem(:),2),NT,nv),2)/nv;
+    cx = sum(x1,2)/nv;
+    cy = sum(y1,2)/nv;
     normVecx = y2 - y1; % normal vector is a rotation of edge vector
     normVecy = x1 - x2;
     % matrix B, D, I - P

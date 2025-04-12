@@ -63,19 +63,19 @@ measure(k,3) = u;
 k = k+1;
 % post(p,t,fh)
 
-pause;    disp('(4) Polygons')
-
-fd=inline('ddiff(dpoly(p,fix),dpoly(p,.5*fix*[cos(pi/6),-sin(pi/6);sin(pi/6),cos(pi/6)]))','p','fix');
-n=6;
-phi=(0:n)'/n*2*pi;
-box=[-1,-1;1,1];
-fix=[cos(phi),sin(phi)];
-[p,t,q,u]=odtmesh2d(fd,@huniform,0.05,box,[fix;.5*fix*[cos(pi/6),-sin(pi/6);sin(pi/6),cos(pi/6)]],1,fix);
-% % post(p,t,@huniform)
-measure(k,1) = min(q);
-measure(k,2) = mean(q);
-measure(k,3) = u;
-k = k+1;
+% pause;    disp('(4) Polygons')
+% 
+% fd=inline('ddiff(dpoly(p,fix),dpoly(p,.5*fix*[cos(pi/6),-sin(pi/6);sin(pi/6),cos(pi/6)]))','p','fix');
+% n=6;
+% phi=(0:n)'/n*2*pi;
+% box=[-1,-1;1,1];
+% fix=[cos(phi),sin(phi)];
+% [p,t,q,u]=odtmesh2d(fd,@huniform,0.05,box,[fix;.5*fix*[cos(pi/6),-sin(pi/6);sin(pi/6),cos(pi/6)]],1,fix);
+% % % post(p,t,@huniform)
+% measure(k,1) = min(q);
+% measure(k,2) = mean(q);
+% measure(k,3) = u;
+% k = k+1;
 
 % 
 
