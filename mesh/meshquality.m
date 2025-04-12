@@ -32,7 +32,7 @@ function [q,u,idx] = meshquality(node,elem,fh,varargin)
 % Copyright (C) Long Chen. See COPYRIGHT.txt for details.
 
 q = simpqual(node,elem);
-if nargin <= 2
+if nargin <= 2  || (isempty(fh))
     fh = 1;
 end
 u = myuniformity(node,elem,fh);
