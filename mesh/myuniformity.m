@@ -4,10 +4,10 @@ N = size(node,1);
 NT = size(elem,1);
 if size(node,2) == 3
     trep = triangulation(elem,node(:,1),node(:,2),node(:,3));
+    [pc,r] = circumcenter(trep);
 elseif size(node,2) == 2
-    trep = triangulation(elem,node(:,1),node(:,2));
+    [pc,r] = circumcenterodt(node,elem);
 end
-[pc,r] = circumcenters(trep);
 
 if ~isnumeric(fh) 
     hc = feval(fh,pc,varargin{:});

@@ -9,7 +9,7 @@ N = size(p,1);  h0 = 1/sqrt(N);
 dptol = 0.001; ttol = 0.1; geps = 0.001*h0; 
 deps = sqrt(eps)*h0; alpha = 0.85; 
 
-[bdNode,tempvar,isBdNode] = findboundary(t);
+[bdNode,~,isBdNode] = findboundary(t);
 % N = size(node,1); 
 % NT = size(t,1);
 isInNode = ~isBdNode;
@@ -24,7 +24,7 @@ for k = 1:step
            density = 1./fh(center).^2;
         case 'ODT'
            density = 1./fh(center).^3;
-           center = circumcenter(p,t);
+           center = circumcenterodt(p,t);
            isBdElem = isBdNode(t(:,1)) | isBdNode(t(:,2)) | isBdNode(t(:,3));
            center(isBdElem,:) = (p(t(isBdElem,1),:) + p(t(isBdElem,2),:) ...
                                + p(t(isBdElem,3),:))/3;

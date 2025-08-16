@@ -1,4 +1,4 @@
-function [c,r] = circumcenter(node,elem)
+function [c,r] = circumcenterodt(node,elem)
 %% CIRCUMCENTER computes circumcenters of a triangulation
 %
 % [c,r] = circumcenter(node,elem) returns circumcenters of triangles in the
