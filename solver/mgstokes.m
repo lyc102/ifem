@@ -159,7 +159,7 @@ if strcmp(option.smootherbarSp,'VCYCLE')
     innerMGoption.solver = 'NO';
     innerMGoption.N0 = 10;
     for j = 2:level
-        [tempvar,tempvar,Ai_IU{j},Si_IU{j},SSi_IU{j},Res_IU{j},Pro_IU{j}] = ...
+        [~,~,Ai_IU{j},Si_IU{j},SSi_IU{j},Res_IU{j},Pro_IU{j}] = ...
                 mg(auxMat{j}.BBt,ones(Np(j),1),elemi{j},innerMGoption); 
     end
 end

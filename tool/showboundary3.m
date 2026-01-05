@@ -121,7 +121,7 @@ function printOutput
         'x', '[', num2str(min(node(:,3))),',', num2str(max(node(:,3))),']',...
         '_node',num2str(size(node,1)),...
         '_elem',num2str(size(elem,1)));
-    print(fig,filename,'-dpdf','-painters');
+    print(fig,filename,'-dpdf','-vector');
 end
 
 end

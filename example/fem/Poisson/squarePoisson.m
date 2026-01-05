@@ -23,11 +23,12 @@ errH1 = zeros(maxIt,1);
 erruIuh = zeros(maxIt,1);
 
 %% Generate an initial mesh 
-[node,elem] = squaremesh([0 1 0 1], 0.25);
-bdFlag = setboundary(node,elem,'Dirichlet','~(x==0)','Neumann','x==0');
-% bdFlag = setboundary(node,elem,'Dirichlet','all','Neumann','y==1');
+% [node,elem] = squaremesh([0 1 0 1], 0.25);
+load fourholes.mat
+% bdFlag = setboundary(node,elem,'Dirichlet','~(x==0)','Neumann','x==0');
+bdFlag = setboundary(node,elem,'Dirichlet','all','Neumann','y==1');
 % bdFlag = setboundary(node,elem,'Neumann');
-for k = 1:2
+for k = 1:0
     [node,elem,bdFlag] = uniformrefine(node,elem,bdFlag);
 %     [node,elem,bdFlag] = uniformbisect(node,elem,bdFlag);
 end
