@@ -74,13 +74,13 @@ docs:
         url: /afem/coarsen/
 
 
-  - title: Data Structure for DoFs
-    url: /dof/
-    children:
-      - title: "DoF on Edges in 2D"
-        url: /dof/dofedge/
-      - title: "DoF on Edges in 3D"
-        url: /dof/dof3edge/
+  # - title: Data Structure for DoFs
+  #   url: /dof/
+  #   children:
+  #     - title: "DoF on Edges in 2D"
+  #       url: /dof/dofedge/
+  #     - title: "DoF on Edges in 3D"
+  #       url: /dof/dof3edge/
 
 
   - title: Research and Projects
