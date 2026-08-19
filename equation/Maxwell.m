@@ -6,12 +6,12 @@ function [u,edge,eqn,info] = Maxwell(node,elem,bdFlag,pde,option,varargin)
 %   Maxwell equation.
 %
 % curl(mu^(-1)curl u) - omega^2*epsilon u = J    in \Omega,  
-%                                   n ×\times u = n \times g_D  on \Gamma_D,
+%                                   n \times u = n \times g_D  on \Gamma_D,
 %                     n \times (mu^(-1)curl u) = n \times g_N  on \Gamma_N.
 % 
 % based on the weak formulation
 %
-% (mu^{-1}curl u, curl v) - (epsilon' u,v) = (J,v) - <n × g_N,v>_{\Gamma_N}.
+% (mu^{-1}curl u, curl v) - (epsilon' u,v) = (J,v) - <n ï¿½ g_N,v>_{\Gamma_N}.
 %
 % The data of the equation is enclosed in the pde structure:
 %   - pde.mu      : permeability, i.e., magnetic constant/tensor
@@ -126,7 +126,7 @@ tstart = cputime;
 % edge indices of 6 local bases: 
 % [1 2], [1 3], [1 4], [2 3], [2 4], [3 4]
 % phi = lambda_iDlambda_j - lambda_jDlambda_i;
-% curl phi = 2*Dlambda_i × Dlambda_j;
+% curl phi = 2*Dlambda_i ï¿½ Dlambda_j;
 [Dlambda,volume] = gradbasis3(node,elem);
 curlPhi(:,:,6) = 2*mycross(Dlambda(:,:,3),Dlambda(:,:,4),2);
 curlPhi(:,:,1) = 2*mycross(Dlambda(:,:,1),Dlambda(:,:,2),2);
@@ -402,7 +402,7 @@ info.assembleTime = assembleTime;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function bdb = bdfaceintegral(isBdElem,face,face2locdof)
     %% Compute boundary surface integral of lowest order edge element.
-    %  bdb(k) = \int_{face} (n×g_N, phi_k) dS
+    %  bdb(k) = \int_{face} (nï¿½g_N, phi_k) dS
 
     %% Compute scaled normal
     faceIdx = true(4,1);

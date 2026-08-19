@@ -6,14 +6,14 @@ function [u,edge,eqn,info] = eddycurrent(node,elem,bdFlag,pde,option)
 %   current equation.
 %
 % curl(mu^(-1)curl u) + beta u = J    in \Omega,  
-%                        n × u = n × g_D  on \Gamma_D,
-%          n × (mu^(-1)curl u) = n × g_N  on \Gamma_N.
+%                        n \times u = n \times g_D  on \Gamma_D,
+%          n \times (mu^(-1)curl u) = n \times g_N  on \Gamma_N.
 % 
 % which is from the time discretization of 
 %        d_t(sigma E) + curl(mu^(-1)curl u) = - d_t j.
 %
 % The weak formulation is
-% (mu^{-1}curl u, curl v) + (beta u,v) = (J,v) - <n × g_N,v>_{\Gamma_N}.
+% (mu^{-1}curl u, curl v) + (beta u,v) = (J,v) - <n \times g_N,v>_{\Gamma_N}.
 %
 % It is the 2-D and positive definite version of Maxwell equation. For 3-D
 % eddy current equation, use Maxwell.
@@ -84,7 +84,7 @@ tstart = cputime;
 % edge indices of 3 local bases: 
 % [2,3;3,1;1,2];
 % phi = lambda_iDlambda_j - lambda_jDlambda_i;
-% curl phi = 2*Dlambda_i × Dlambda_j;
+% curl phi = 2*Dlambda_i \times Dlambda_j;
 [Dlambda,area] = gradbasis(node,elem);
 curlPhi(:,3)=-2*(Dlambda(:,1,1).*Dlambda(:,2,2)-Dlambda(:,1,2).*Dlambda(:,2,1));
 curlPhi(:,1)=-2*(Dlambda(:,1,2).*Dlambda(:,2,3)-Dlambda(:,1,3).*Dlambda(:,2,2));
